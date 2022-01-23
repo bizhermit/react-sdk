@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});const react_1=require("react"),useProp=e=>{const r=(0,react_1.useRef)(e);return r.current=e,r};exports.default=useProp;
