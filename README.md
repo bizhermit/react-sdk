@@ -9,9 +9,6 @@ React向けのSDKを提供します。
 [https//bzihermit.com](https://bizhermit.com/)  
 npm packagesから、@bizhermit/react-sdkのdemoを参照（随時更新中）。
 
-# ISSUE
-要望・バグ報告は[https://github.com/bizhermit/react-sdk/issues](https://github.com/bizhermit/react-sdk/issues)へお願いします。
-
 ---
 
 ## Components
@@ -57,6 +54,9 @@ npm packagesから、@bizhermit/react-sdkのdemoを参照（随時更新中）�
 - PageableListView
 - TreeView
 - MenuList
+
+### テキスト系
+- Label
 
 ### その他
 - DialogWindow

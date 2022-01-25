@@ -1825,6 +1825,7 @@ declare module "@bizhermit/react-sdk/dist/controls/textbox" {
         setValue: (value: string) => TextBoxController;
     };
     export type TextBoxOptions = {
+        type?: "text" | "password";
         textAlign?: "left" | "center" | "right";
         placeholder?: string;
         maxLength?: number;
@@ -2260,4 +2261,32 @@ declare module "@bizhermit/react-sdk/dist/hooks/message" {
         closeHistory: () => void;
     };
     export default useMessage;
+}
+declare module "@bizhermit/react-sdk/dist/texts/code" {
+    import { CSSProperties, VFC } from "react";
+    import { FitToOuter } from "@bizhermit/react-sdk/dist/utils/classname-utils";
+    export const codeClassName = "bh-code";
+    export type CodeProps = {
+        className?: string;
+        style?: CSSProperties;
+        fitToOuter?: FitToOuter;
+        language?: "ts" | "tsx" | "js" | "jsx" | "html" | "css" | "scss" | "sass";
+        children: string;
+    };
+    const Code: VFC<CodeProps>;
+    export default Code;
+    export const CodeStyle: JSX.Element;
+}
+declare module "@bizhermit/react-sdk/dist/texts/label" {
+    import { CSSProperties, FC } from "react";
+    export const labelClassName = "bh-lbl";
+    export type LabelProps = {
+        className?: string;
+        style?: CSSProperties;
+        bold?: boolean;
+        padding?: boolean;
+    };
+    const Label: FC<LabelProps>;
+    export default Label;
+    export const LabelStyle: JSX.Element;
 }

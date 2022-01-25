@@ -8,6 +8,7 @@ export declare type TextBoxController = {
     setValue: (value: string) => TextBoxController;
 };
 export declare type TextBoxOptions = {
+    type?: "text" | "password";
     textAlign?: "left" | "center" | "right";
     placeholder?: string;
     maxLength?: number;
