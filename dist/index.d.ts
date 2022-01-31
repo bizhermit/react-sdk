@@ -1628,6 +1628,7 @@ declare module "@bizhermit/react-sdk/dist/controls/numericbox" {
         incrementInterval?: number;
         incrementWhenKeydown?: boolean;
         buttons?: boolean;
+        thousandsSeparator?: boolean;
         resize?: boolean;
         validation?: InputValidation<number>;
     };

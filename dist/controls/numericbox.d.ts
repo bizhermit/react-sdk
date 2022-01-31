@@ -17,6 +17,7 @@ export declare type NumericBoxOptions = {
     incrementInterval?: number;
     incrementWhenKeydown?: boolean;
     buttons?: boolean;
+    thousandsSeparator?: boolean;
     resize?: boolean;
     validation?: InputValidation<number>;
 };
