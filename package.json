@@ -1,6 +1,6 @@
 {
   "name": "@bizhermit/react-sdk",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "React SDK",
   "repository": {
     "type": "git",
@@ -10,95 +10,37 @@
     "url": "https://github.com/bizhermit/react-sdk/issues",
     "email": "support@bizhermit.com"
   },
-  "author": "Ryoichi Senda <rsenda@bizhermit.com> (https://bizhermit.com)",
+  "author": "Senda Ryoichi <rsenda@bizhermit.com> (https://bizhermit.com)",
   "homepage": "https://bizhermit.com",
   "license": "MIT",
   "main": "dist",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "CREDIT"
   ],
   "scripts": {
-    "clean:next": "npx rimraf main src/.next src/out",
-    "server": "npm run clean:next && npx tsc -p src-nexpress && node main/index.js -dev",
-    "start": "npm run clean:next && npx tsc -p src-nexpress && npx tsc -p src && npx next build src && npx minifier main && npx minifier src/.next && node main/index.js",
-    "electron": "npm run clean:next && npx tsc -p src-nextron && npx electron main/src-nextron/index.js",
-    "pack:win": "npm run clean:next && npx rimraf build && npx license-checker --production > AUTHORS && npx next build src && npx next export src && npx tsc -p src-nextron && npx minifier ./main && electron-builder --win --dir",
-    "pack": "npm run pack:win",
-    "confirm:win": "npm run pack:win && .\\build\\win-unpacked\\react-sdk.exe",
-    "confirm": "npm run confirm:win",
-    "license": "npx license-checker --production > AUTHORS",
-    "build:types": "npx rimraf @bizhermit && npx cpx src-react-sdk/**/*.{ts,tsx} @bizhermit/react-sdk/dist && npx tsc -p src-react-sdk/tsconfig.types.json --emitDeclarationOnly && npx rimraf @bizhermit",
-    "build": "npx rimraf dist && npm run license && npx tsc -p src-react-sdk/tsconfig.dist.json && npx rimraf dist/test.js dist/test.d.ts && npx minifier ./dist && npx rimraf ./dist/cli.d.ts && npm run build:types",
-    "postpublish": "git tag && git push origin tags/v%npm_package_version% && node ./imitation"
+    "license": "npx rimraf CREDIT && npx license -o CREDIT --returnError",
+    "build:types": "npx rimraf @bizhermit && npx cpx src/**/*.{ts,tsx} @bizhermit/react-sdk/dist && npx tsc -p src/tsconfig.types.json --emitDeclarationOnly && npx rimraf @bizhermit",
+    "build": "npm run license && npx rimraf dist && npx tsc -p src/tsconfig.json && npx minifier ./dist && npm run build:types",
+    "prepare": "npm run build && git add -A && git diff --quiet --exit-code --cached || git commit -m \"build v%npm_package_version%\" && git push origin",
+    "postpublish": "git tag && git push origin tags/v%npm_package_version%"
   },
   "dependencies": {
-    "@bizhermit/basic-utils": "^1.0.8",
+    "@bizhermit/basic-utils": "^1.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "styled-jsx": "^4.0.1"
   },
   "devDependencies": {
-    "@bizhermit/minifier": "^1.0.2",
-    "@bizhermit/nexpress": "^1.0.1",
-    "@bizhermit/nextron": "^1.0.2",
+    "@bizhermit/license": "^1.0.9",
+    "@bizhermit/minifier": "^1.0.4",
     "@types/node": "^17.0.1",
     "@types/react": "17.0.37",
     "@types/react-dom": "^17.0.11",
     "cpx": "^1.5.0",
-    "electron": "^16.0.5",
-    "electron-builder": "^22.14.5",
-    "eslint": "8.5.0",
-    "eslint-config-next": "12.0.7",
-    "license-checker": "^25.0.1",
-    "next": "^12.0.7",
     "rimraf": "^3.0.2",
     "typescript": "4.5.4"
-  },
-  "build": {
-    "appId": "com.seekones.react-sdk",
-    "productName": "react-sdk",
-    "asar": true,
-    "extends": null,
-    "extraMetadata": {
-      "main": "main/src-nextron/index.js"
-    },
-    "files": [
-      "main",
-      "src/out"
-    ],
-    "extraFiles": [
-      {
-        "from": "LICENSE",
-        "to": "LICENSE"
-      },
-      {
-        "from": "AUTHORS",
-        "to": "AUTHORS"
-      },
-      {
-        "from": "src/i18n.json",
-        "to": "resources/i18n.json"
-      }
-    ],
-    "directories": {
-      "output": "build"
-    },
-    "win": {
-      "icon": "src/public/favicon.ico",
-      "target": {
-        "target": "nsis",
-        "arch": [
-          "x64"
-        ]
-      }
-    },
-    "mac": {},
-    "linux": {},
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
-    }
   },
   "browser": {
     "fs": false,
