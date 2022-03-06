@@ -1,1 +1,334 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,n,a,s){void 0===s&&(s=a),Object.defineProperty(e,s,{enumerable:!0,get:function(){return n[a]}})}:function(e,n,a,s){void 0===s&&(s=a),e[s]=n[a]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,n){Object.defineProperty(e,"default",{enumerable:!0,value:n})}:function(e,n){e.default=n}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var n={};if(null!=e)for(var a in e)"default"!==a&&Object.prototype.hasOwnProperty.call(e,a)&&__createBinding(n,e,a);return __setModuleDefault(n,e),n},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.MenuContainerStyle=exports.menuContainerClassName=void 0;const react_1=__importStar(require("react")),menu_list_1=__importStar(require("../controls/menu-list")),icon_1=__importDefault(require("../graphics/icon")),mask_1=require("../hooks/mask"),style_1=__importStar(require("../layouts/style")),classname_utils_1=__importStar(require("../utils/classname-utils")),dom_utils_1=require("../utils/dom-utils");exports.menuContainerClassName="bh-menu_ctr";const MenuContainer=e=>{const[n,a]=(0,react_1.useState)(!1),s=(0,react_1.useRef)(e.menu?.width),t=e.menu?.position??"left",o=e.menu?.mode??"visible",r="top"===t||"bottom"===t?"horizontal":"vertical",m=(0,dom_utils_1.horizontalResizeMousedown)({resized:e=>s.current=e},"right"===t);return react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{className:(0,classname_utils_1.className)(exports.menuContainerClassName,classname_utils_1.default.fitToOuter(e.fitToOuter??"fill"),e.className),style:e.style},null==e.header&&"closeToHeader"!==e.menu?.mode?react_1.default.createElement(react_1.default.Fragment,null):react_1.default.createElement("div",{className:`${exports.menuContainerClassName}-header-wrap`},react_1.default.createElement("div",{className:`${exports.menuContainerClassName}-header`,style:{height:e.header?.height},"data-pos":t},"closeToHeader"===e.menu?.mode?react_1.default.createElement("div",{className:`${exports.menuContainerClassName}-header-menu_icon`,onClick:()=>a((e=>!e))},react_1.default.createElement(icon_1.default,{image:n?"close":"menu"})):react_1.default.createElement(react_1.default.Fragment,null),react_1.default.createElement("div",{className:`${exports.menuContainerClassName}-header-content`},e.header?.jsx))),react_1.default.createElement("div",{className:`${exports.menuContainerClassName}-body`,"data-pos":t,"data-mode":o},null==e.menu?react_1.default.createElement(react_1.default.Fragment,null):react_1.default.createElement(react_1.default.Fragment,null,"closeToEdge"===o?react_1.default.createElement("div",{className:`${exports.menuContainerClassName}-nav-dummy`}):react_1.default.createElement(react_1.default.Fragment,null),react_1.default.createElement("nav",{className:`${exports.menuContainerClassName}-nav`,style:{width:s.current,display:n||"closeToHeader"!==o?null:"none"},"data-opened":n,onMouseEnter:()=>{"closeToEdge"===o&&a(!0)},onMouseLeave:()=>{"closeToEdge"===o&&a(!1)}},react_1.default.createElement(menu_list_1.default,{items:e.menu.items,direction:r,reverse:"bottom"===t,openChildren:"vertical"===r,clicked:(e,n)=>{(e.childItems?.length??0)>0||!1!==n&&a(!1)},selected:e.menu.judgeSelected}),"vertical"===r&&!1!==e.menu.resize?react_1.default.createElement("div",{className:`${exports.menuContainerClassName}-nav-resizer`,onMouseDown:m}):react_1.default.createElement(react_1.default.Fragment,null))),react_1.default.createElement("div",{className:`${exports.menuContainerClassName}-content`},react_1.default.createElement("div",{className:`${style_1.scrollbarClassName} ${exports.menuContainerClassName}-content-body`},e.children),react_1.default.createElement("div",{className:`${exports.menuContainerClassName}-mask`,"data-role":mask_1.maskClassName,"data-name":e.maskName??"_"})))),exports.MenuContainerStyle)};exports.default=MenuContainer,exports.MenuContainerStyle=react_1.default.createElement(style_1.default,{id:exports.menuContainerClassName,notDepsColor:!0,css:({design:e})=>`\n.${exports.menuContainerClassName} {\n  ${style_1.CssPV.flex_c}\n  flex: none;\n  overflow: hidden;\n}\n${style_1.CssPV.fitToOuter(exports.menuContainerClassName)}\n.${exports.menuContainerClassName}-header-wrap {\n  ${style_1.CssPV.flex_r}\n  flex: none;\n  width: 100%;\n  overflow: visible;\n  z-index: 1;\n}\n.${exports.menuContainerClassName}-header {\n  ${style_1.CssPV.flex_r}\n  flex: none;\n  width: 100%;\n  height: calc(${style_1.CssVar.size} + 10px);\n}\n.${exports.menuContainerClassName}-header[data-pos="right"] {\n  flex-direction: row-reverse;\n}\n.${exports.menuContainerClassName}-header-menu_icon {\n  margin-left: 5px;\n  margin-right: 5px;\n  cursor: pointer;\n}\n.${exports.menuContainerClassName}-header-content {\n  ${style_1.CssPV.flex_r}\n  ${style_1.CssPV.f_x}\n  overflow: hidden;\n}\n.${exports.menuContainerClassName}-body {\n  ${style_1.CssPV.flex_c}\n  ${style_1.CssPV.f_y}\n  overflow: hidden;\n  z-index: 0;\n}\n.${exports.menuContainerClassName}-nav {\n  ${style_1.CssPV.flex_r_t}\n  flex: none;\n  z-index: 2;\n  overflow: hidden;\n  min-width: ${style_1.CssVar.size};\n  min-height: ${style_1.CssVar.size};\n  background: ${style_1.CssVar.bg.c};\n  max-height: 100%;\n  max-width: 100%;\n}\n.${exports.menuContainerClassName}-nav-dummy {\n  box-sizing: border-box;\n  z-index: 0;\n  height: ${style_1.CssVar.size};\n  width: ${style_1.CssVar.size};\n}\n.${exports.menuContainerClassName}-nav > .${menu_list_1.menuClassName}-list {\n  ${style_1.CssPV.f_x}\n  z-index: 0;\n}\n.${exports.menuContainerClassName}-nav-resizer {\n  box-sizing: border-box;\n  height: 100%;\n  width: 5px;\n  cursor: col-resize;\n  z-index: 1;\n}\n.${exports.menuContainerClassName}-content {\n  ${style_1.CssPV.flex_c}\n  flex: none;\n  z-index: 0;\n}\n.${exports.menuContainerClassName}-content-body {\n  ${style_1.CssPV.flex_c}\n  ${style_1.CssPV.fill}\n}\n.${exports.menuContainerClassName}-mask {\n  z-index: 1;\n}\n.${exports.menuContainerClassName}-body[data-pos="top"] {\n  flex-direction: column;\n}\n.${exports.menuContainerClassName}-body[data-pos="bottom"] {\n  flex-direction: column-reverse;\n}\n.${exports.menuContainerClassName}-body[data-pos="top"] > nav,\n.${exports.menuContainerClassName}-body[data-pos="bottom"] > nav {\n  width: 100% !important;\n  overflow: visible;\n  height: ${style_1.CssVar.size};\n}\n.${exports.menuContainerClassName}-body[data-pos="bottom"] > nav {\n  align-items: flex-end;\n}\n.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-content,\n.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-content {\n  width: 100%;\n  min-height: 0px;\n  flex: 1;\n}\n.${exports.menuContainerClassName}-body[data-pos="left"] {\n  flex-direction: row;\n}\n.${exports.menuContainerClassName}-body[data-pos="right"],\n.${exports.menuContainerClassName}-body[data-pos="right"] > nav {\n  flex-direction: row-reverse;\n}\n.${exports.menuContainerClassName}-body[data-pos="left"] > nav,\n.${exports.menuContainerClassName}-body[data-pos="right"] > nav {\n  height: 100%;\n}\n.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-content,\n.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-content {\n  height: 100%;\n  min-width: 0px;\n  flex: 1;\n}\n.${exports.menuContainerClassName}-body[data-mode="closeToHeader"] > nav,\n.${exports.menuContainerClassName}-body[data-mode="closeToEdge"] > nav {\n  position: absolute;\n}\n.${exports.menuContainerClassName}-body[data-mode="closeToEdge"][data-pos="left"] > nav[data-opened="false"],\n.${exports.menuContainerClassName}-body[data-mode="closeToEdge"][data-pos="right"] > nav[data-opened="false"] {\n  max-width: ${style_1.CssVar.size} !important;\n}\n.${exports.menuContainerClassName}-body[data-mode="closeToEdge"] > nav[data-opened="false"] .${exports.menuContainerClassName}-nav-resizer {\n  display: none;\n}\n.${exports.menuContainerClassName}-body[data-mode="closeToEdge"] > nav[data-opened="false"] > .${menu_list_1.menuClassName}-list {\n  overflow: hidden;\n}\n${"material"===e?`\n.${exports.menuContainerClassName}-header {\n  box-shadow: ${style_1.CssParam.m.sdBtm};\n  background: ${style_1.CssVar.bg.c_h};\n}\n.${exports.menuContainerClassName}-header-menu_icon {\n  border: 1px solid transparent;\n  border-radius: ${style_1.CssParam.m.r};\n}\n.${exports.menuContainerClassName}-header-menu_icon:hover {\n  border-color: ${style_1.CssVar.bdc};\n  margin-top: -${style_1.CssParam.m.updownMargin};\n  box-shadow: ${style_1.CssParam.m.sdBtm_f};\n}\n.${exports.menuContainerClassName}-header-menu_icon:hover:active {\n  box-shadow: none;\n  margin-top: 0px;\n}\n.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-nav {\n  box-shadow: ${style_1.CssParam.m.sdRight};\n  padding-top: ${style_1.CssParam.m.sdPdd};\n}\n.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-nav,\n.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-nav-dummy {\n  margin-right: ${style_1.CssParam.m.sdPdd};\n}\n.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-nav {\n  box-shadow: ${style_1.CssParam.m.sdLeft};\n  padding-top: ${style_1.CssParam.m.sdPdd};\n}\n.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-nav,\n.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-nav-dummy {\n  margin-left: ${style_1.CssParam.m.sdPdd};\n}\n.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-nav {\n  box-shadow: ${style_1.CssParam.m.sdBtm};\n}\n.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-nav,\n.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-nav-dummy,\n.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-nav,\n.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-nav-dummy {\n  margin-top: ${style_1.CssParam.m.sdPdd};\n}\n.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-nav {\n  box-shadow: ${style_1.CssParam.m.sdTop};\n}\n.${exports.menuContainerClassName}-body > .${exports.menuContainerClassName}-content {\n  padding-top:  ${style_1.CssParam.m.sdPdd};\n}\n.${exports.menuContainerClassName}-nav,\n.${exports.menuContainerClassName}-nav .${menu_list_1.menuClassName}-list[data-dirc="horizontal"] .${menu_list_1.menuClassName}-children {\n  background: ${style_1.CssVar.bg.c_h};\n}\n.${exports.menuContainerClassName}-nav,\n.${exports.menuContainerClassName}-nav-dummy {\n  min-height: calc(${style_1.CssVar.size} + ${style_1.CssParam.m.sdPdd} * 2);\n  min-width: calc(${style_1.CssVar.size} + ${style_1.CssParam.m.sdPdd} * 2);\n}\n.${exports.menuContainerClassName}-body[data-pos="left"][data-mode="closeToEdge"] > .${exports.menuContainerClassName}-nav[data-opened="false"] .${menu_list_1.menuClassName}-item,\n.${exports.menuContainerClassName}-body[data-pos="right"][data-mode="closeToEdge"] > .${exports.menuContainerClassName}-nav[data-opened="false"] .${menu_list_1.menuClassName}-item {\n  border: none;\n}\n`:""}\n${"neumorphism"===e?`\n.${exports.menuContainerClassName}-header-wrap {\n  padding: ${style_1.CssParam.n.accent.sdPdd};\n}\n.${exports.menuContainerClassName}-header {\n  box-shadow: ${style_1.CssParam.n.accent.cvxSd};\n  background: ${style_1.CssParam.n.headerCvxBg};\n  border-radius: ${style_1.CssParam.n.r};\n}\n.${exports.menuContainerClassName}-header-menu_icon {\n  border-radius: ${style_1.CssParam.n.r};\n}\n.${exports.menuContainerClassName}-header-menu_icon:hover {\n  box-shadow: ${style_1.CssParam.n.cvxSd_f};\n  background: ${style_1.CssParam.n.cvxBg};\n}\n.${exports.menuContainerClassName}-header-menu_icon:hover:active {\n  padding-top: 1px;\n  box-shadow: ${style_1.CssParam.n.ccvSd};\n  background: ${style_1.CssParam.n.ccvBg};\n}\n.${exports.menuContainerClassName}-nav {\n  box-shadow: ${style_1.CssParam.n.accent.cvxSd};\n  background: ${style_1.CssParam.n.headerCvxBg};\n  border-radius: ${style_1.CssParam.n.r};\n}\n.${exports.menuContainerClassName}-nav .${menu_list_1.menuClassName}-list[data-dirc="horizontal"] .${menu_list_1.menuClassName}-children {\n  box-shadow: ${style_1.CssParam.n.accent.cvxSd};\n  background: ${style_1.CssParam.n.headerCvxBg};\n}\n.${exports.menuContainerClassName}-body:not([data-mode="visible"]) > .${exports.menuContainerClassName}-nav {\n  max-height: calc(100% - ${style_1.CssParam.n.accent.sdPdd});\n  max-width: calc(100% - ${style_1.CssParam.n.accent.sdPdd} * 2);\n}\n.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-nav,\n.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-nav-dummy {\n  margin-right: ${style_1.CssParam.n.accent.sdPdd};\n}\n.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-nav,\n.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-nav-dummy {\n  margin-left: ${style_1.CssParam.n.accent.sdPdd};\n}\n.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-nav,\n.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-nav-dummy {\n  margin-bottom: ${style_1.CssParam.n.accent.sdPdd};\n}\n.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-nav,\n.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-nav-dummy {\n  margin-top: ${style_1.CssParam.n.accent.sdPdd};\n}\n.${exports.menuContainerClassName}-body {\n  padding: 0px ${style_1.CssParam.n.accent.sdPdd} ${style_1.CssParam.n.accent.sdPdd} ${style_1.CssParam.n.accent.sdPdd};\n}\n.${exports.menuContainerClassName}-body:only-child {\n  padding-top: ${style_1.CssParam.n.accent.sdPdd};\n}\n.${exports.menuContainerClassName}-nav,\n.${exports.menuContainerClassName}-nav-dummy {\n  min-height: calc(${style_1.CssVar.size} + ${style_1.CssParam.n.sdPdd} * 2);\n  min-width: calc(${style_1.CssVar.size} + ${style_1.CssParam.n.sdPdd} * 2);\n}\n`:""}\n`});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MenuContainerStyle = exports.menuContainerClassName = void 0;
+const react_1 = __importStar(require("react"));
+const menu_list_1 = __importStar(require("../controls/menu-list"));
+const icon_1 = __importDefault(require("../graphics/icon"));
+const mask_1 = require("../hooks/mask");
+const style_1 = __importStar(require("../layouts/style"));
+const classname_utils_1 = __importStar(require("../utils/classname-utils"));
+const dom_utils_1 = require("../utils/dom-utils");
+exports.menuContainerClassName = "bh-menu_ctr";
+const MenuContainer = (props) => {
+    const [opened, setOpened] = (0, react_1.useState)(false);
+    const width = (0, react_1.useRef)(props.menu?.width);
+    const pos = props.menu?.position ?? "left";
+    const mode = props.menu?.mode ?? "visible";
+    const direction = pos === "top" || pos === "bottom" ? "horizontal" : "vertical";
+    const resizeMouseDown = (0, dom_utils_1.horizontalResizeMousedown)({
+        resized: (w) => width.current = w,
+    }, pos === "right");
+    const mouseEnter = () => {
+        if (mode !== "closeToEdge")
+            return;
+        setOpened(true);
+    };
+    const mouseLeave = () => {
+        if (mode !== "closeToEdge")
+            return;
+        setOpened(false);
+    };
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { className: (0, classname_utils_1.className)(exports.menuContainerClassName, classname_utils_1.default.fitToOuter(props.fitToOuter ?? "fill"), props.className), style: props.style },
+            props.header == null && props.menu?.mode !== "closeToHeader" ? react_1.default.createElement(react_1.default.Fragment, null) : react_1.default.createElement("div", { className: `${exports.menuContainerClassName}-header-wrap` },
+                react_1.default.createElement("div", { className: `${exports.menuContainerClassName}-header`, style: { height: props.header?.height }, "data-pos": pos },
+                    props.menu?.mode === "closeToHeader" ? react_1.default.createElement("div", { className: `${exports.menuContainerClassName}-header-menu_icon`, onClick: () => setOpened(c => !c) },
+                        react_1.default.createElement(icon_1.default, { image: opened ? "close" : "menu" })) : react_1.default.createElement(react_1.default.Fragment, null),
+                    react_1.default.createElement("div", { className: `${exports.menuContainerClassName}-header-content` }, props.header?.jsx))),
+            react_1.default.createElement("div", { className: `${exports.menuContainerClassName}-body`, "data-pos": pos, "data-mode": mode },
+                props.menu == null ? react_1.default.createElement(react_1.default.Fragment, null) : react_1.default.createElement(react_1.default.Fragment, null,
+                    mode === "closeToEdge" ? react_1.default.createElement("div", { className: `${exports.menuContainerClassName}-nav-dummy` }) : react_1.default.createElement(react_1.default.Fragment, null),
+                    react_1.default.createElement("nav", { className: `${exports.menuContainerClassName}-nav`, style: { width: width.current, display: opened || mode !== "closeToHeader" ? null : "none" }, "data-opened": opened, onMouseEnter: mouseEnter, onMouseLeave: mouseLeave },
+                        react_1.default.createElement(menu_list_1.default, { items: props.menu.items, direction: direction, reverse: pos === "bottom", openChildren: direction === "vertical", clicked: (p, retFlag) => {
+                                if ((p.childItems?.length ?? 0) > 0)
+                                    return;
+                                if (retFlag !== false)
+                                    setOpened(false);
+                            }, selected: props.menu.judgeSelected }),
+                        direction === "vertical" && props.menu.resize !== false ? react_1.default.createElement("div", { className: `${exports.menuContainerClassName}-nav-resizer`, onMouseDown: resizeMouseDown }) : react_1.default.createElement(react_1.default.Fragment, null))),
+                react_1.default.createElement("div", { className: `${exports.menuContainerClassName}-content` },
+                    react_1.default.createElement("div", { className: `${style_1.scrollbarClassName} ${exports.menuContainerClassName}-content-body` }, props.children),
+                    react_1.default.createElement("div", { className: `${exports.menuContainerClassName}-mask`, "data-role": mask_1.maskClassName, "data-name": props.maskName ?? "_" })))),
+        exports.MenuContainerStyle));
+};
+exports.default = MenuContainer;
+exports.MenuContainerStyle = react_1.default.createElement(style_1.default, { id: exports.menuContainerClassName, depsDesign: true, css: ({ design }) => `
+.${exports.menuContainerClassName} {
+  ${style_1.CssPV.flex_c}
+  flex: none;
+  overflow: hidden;
+}
+${style_1.CssPV.fitToOuter(exports.menuContainerClassName)}
+.${exports.menuContainerClassName}-header-wrap {
+  ${style_1.CssPV.flex_r}
+  flex: none;
+  width: 100%;
+  overflow: visible;
+  z-index: 1;
+}
+.${exports.menuContainerClassName}-header {
+  ${style_1.CssPV.flex_r}
+  flex: none;
+  width: 100%;
+  height: calc(${style_1.CssVar.size} + 10px);
+}
+.${exports.menuContainerClassName}-header[data-pos="right"] {
+  flex-direction: row-reverse;
+}
+.${exports.menuContainerClassName}-header-menu_icon {
+  margin-left: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+.${exports.menuContainerClassName}-header-content {
+  ${style_1.CssPV.flex_r}
+  ${style_1.CssPV.f_x}
+  overflow: hidden;
+}
+.${exports.menuContainerClassName}-body {
+  ${style_1.CssPV.flex_c}
+  ${style_1.CssPV.f_y}
+  overflow: hidden;
+  z-index: 0;
+}
+.${exports.menuContainerClassName}-nav {
+  ${style_1.CssPV.flex_r_t}
+  flex: none;
+  z-index: 2;
+  overflow: hidden;
+  min-width: ${style_1.CssVar.size};
+  min-height: ${style_1.CssVar.size};
+  background: ${style_1.CssVar.bg.c};
+  max-height: 100%;
+  max-width: 100%;
+}
+.${exports.menuContainerClassName}-nav-dummy {
+  box-sizing: border-box;
+  z-index: 0;
+  height: ${style_1.CssVar.size};
+  width: ${style_1.CssVar.size};
+}
+.${exports.menuContainerClassName}-nav > .${menu_list_1.menuClassName}-list {
+  ${style_1.CssPV.f_x}
+  z-index: 0;
+}
+.${exports.menuContainerClassName}-nav-resizer {
+  box-sizing: border-box;
+  height: 100%;
+  width: 5px;
+  cursor: col-resize;
+  z-index: 1;
+}
+.${exports.menuContainerClassName}-content {
+  ${style_1.CssPV.flex_c}
+  flex: none;
+  z-index: 0;
+}
+.${exports.menuContainerClassName}-content-body {
+  ${style_1.CssPV.flex_c}
+  ${style_1.CssPV.fill}
+  z-index: 0;
+}
+.${exports.menuContainerClassName}-mask {
+  z-index: 1;
+}
+.${exports.menuContainerClassName}-body[data-pos="top"] {
+  flex-direction: column;
+}
+.${exports.menuContainerClassName}-body[data-pos="bottom"] {
+  flex-direction: column-reverse;
+}
+.${exports.menuContainerClassName}-body[data-pos="top"] > nav,
+.${exports.menuContainerClassName}-body[data-pos="bottom"] > nav {
+  width: 100% !important;
+  overflow: visible;
+  height: ${style_1.CssVar.size};
+}
+.${exports.menuContainerClassName}-body[data-pos="bottom"] > nav {
+  align-items: flex-end;
+}
+.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-content,
+.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-content {
+  width: 100%;
+  min-height: 0px;
+  flex: 1;
+}
+.${exports.menuContainerClassName}-body[data-pos="left"] {
+  flex-direction: row;
+}
+.${exports.menuContainerClassName}-body[data-pos="right"],
+.${exports.menuContainerClassName}-body[data-pos="right"] > nav {
+  flex-direction: row-reverse;
+}
+.${exports.menuContainerClassName}-body[data-pos="left"] > nav,
+.${exports.menuContainerClassName}-body[data-pos="right"] > nav {
+  height: 100%;
+}
+.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-content,
+.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-content {
+  height: 100%;
+  min-width: 0px;
+  flex: 1;
+}
+.${exports.menuContainerClassName}-body[data-mode="closeToHeader"] > nav,
+.${exports.menuContainerClassName}-body[data-mode="closeToEdge"] > nav {
+  position: absolute;
+}
+.${exports.menuContainerClassName}-body[data-mode="closeToEdge"][data-pos="left"] > nav[data-opened="false"],
+.${exports.menuContainerClassName}-body[data-mode="closeToEdge"][data-pos="right"] > nav[data-opened="false"] {
+  max-width: ${style_1.CssVar.size} !important;
+}
+.${exports.menuContainerClassName}-body[data-mode="closeToEdge"] > nav[data-opened="false"] .${exports.menuContainerClassName}-nav-resizer {
+  display: none;
+}
+.${exports.menuContainerClassName}-body[data-mode="closeToEdge"] > nav[data-opened="false"] > .${menu_list_1.menuClassName}-list {
+  overflow: hidden;
+}
+${design === "material" ? `
+.${exports.menuContainerClassName}-header {
+  box-shadow: ${style_1.CssParam.m.sdBtm};
+  background: ${style_1.CssVar.bg.c_h};
+}
+.${exports.menuContainerClassName}-header-menu_icon {
+  border: 1px solid transparent;
+  border-radius: ${style_1.CssParam.m.r};
+}
+.${exports.menuContainerClassName}-header-menu_icon:hover {
+  border-color: ${style_1.CssVar.bdc};
+  margin-top: -${style_1.CssParam.m.updownMargin};
+  box-shadow: ${style_1.CssParam.m.sdBtm_f};
+}
+.${exports.menuContainerClassName}-header-menu_icon:hover:active {
+  box-shadow: none;
+  margin-top: 0px;
+}
+.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-nav {
+  box-shadow: ${style_1.CssParam.m.sdRight};
+  padding-top: ${style_1.CssParam.m.sdPdd};
+}
+.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-nav,
+.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-nav-dummy {
+  margin-right: ${style_1.CssParam.m.sdPdd};
+}
+.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-nav {
+  box-shadow: ${style_1.CssParam.m.sdLeft};
+  padding-top: ${style_1.CssParam.m.sdPdd};
+}
+.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-nav,
+.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-nav-dummy {
+  margin-left: ${style_1.CssParam.m.sdPdd};
+}
+.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-nav {
+  box-shadow: ${style_1.CssParam.m.sdBtm};
+}
+.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-nav,
+.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-nav-dummy,
+.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-nav,
+.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-nav-dummy {
+  margin-top: ${style_1.CssParam.m.sdPdd};
+}
+.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-nav {
+  box-shadow: ${style_1.CssParam.m.sdTop};
+}
+.${exports.menuContainerClassName}-body > .${exports.menuContainerClassName}-content {
+  padding-top:  ${style_1.CssParam.m.sdPdd};
+}
+.${exports.menuContainerClassName}-nav,
+.${exports.menuContainerClassName}-nav .${menu_list_1.menuClassName}-list[data-dirc="horizontal"] .${menu_list_1.menuClassName}-children {
+  background: ${style_1.CssVar.bg.c_h};
+}
+.${exports.menuContainerClassName}-nav,
+.${exports.menuContainerClassName}-nav-dummy {
+  min-height: calc(${style_1.CssVar.size} + ${style_1.CssParam.m.sdPdd} * 2);
+  min-width: calc(${style_1.CssVar.size} + ${style_1.CssParam.m.sdPdd} * 2);
+}
+.${exports.menuContainerClassName}-body[data-pos="left"][data-mode="closeToEdge"] > .${exports.menuContainerClassName}-nav[data-opened="false"] .${menu_list_1.menuClassName}-item,
+.${exports.menuContainerClassName}-body[data-pos="right"][data-mode="closeToEdge"] > .${exports.menuContainerClassName}-nav[data-opened="false"] .${menu_list_1.menuClassName}-item {
+  border: none;
+}
+` : ""}
+${design === "neumorphism" ? `
+.${exports.menuContainerClassName}-header-wrap {
+  padding: ${style_1.CssParam.n.accent.sdPdd};
+}
+.${exports.menuContainerClassName}-header {
+  box-shadow: ${style_1.CssParam.n.accent.cvxSd};
+  background: ${style_1.CssParam.n.headerCvxBg};
+  border-radius: ${style_1.CssParam.n.r};
+}
+.${exports.menuContainerClassName}-header-menu_icon {
+  border-radius: ${style_1.CssParam.n.r};
+}
+.${exports.menuContainerClassName}-header-menu_icon:hover {
+  box-shadow: ${style_1.CssParam.n.cvxSd_f};
+  background: ${style_1.CssParam.n.cvxBg};
+}
+.${exports.menuContainerClassName}-header-menu_icon:hover:active {
+  padding-top: 1px;
+  box-shadow: ${style_1.CssParam.n.ccvSd};
+  background: ${style_1.CssParam.n.ccvBg};
+}
+.${exports.menuContainerClassName}-nav {
+  box-shadow: ${style_1.CssParam.n.accent.cvxSd};
+  background: ${style_1.CssParam.n.headerCvxBg};
+  border-radius: ${style_1.CssParam.n.r};
+}
+.${exports.menuContainerClassName}-nav .${menu_list_1.menuClassName}-list[data-dirc="horizontal"] .${menu_list_1.menuClassName}-children {
+  box-shadow: ${style_1.CssParam.n.accent.cvxSd};
+  background: ${style_1.CssParam.n.headerCvxBg};
+}
+.${exports.menuContainerClassName}-body:not([data-mode="visible"]) > .${exports.menuContainerClassName}-nav {
+  max-height: calc(100% - ${style_1.CssParam.n.accent.sdPdd});
+  max-width: calc(100% - ${style_1.CssParam.n.accent.sdPdd} * 2);
+}
+.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-nav,
+.${exports.menuContainerClassName}-body[data-pos="left"] > .${exports.menuContainerClassName}-nav-dummy {
+  margin-right: ${style_1.CssParam.n.accent.sdPdd};
+}
+.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-nav,
+.${exports.menuContainerClassName}-body[data-pos="right"] > .${exports.menuContainerClassName}-nav-dummy {
+  margin-left: ${style_1.CssParam.n.accent.sdPdd};
+}
+.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-nav,
+.${exports.menuContainerClassName}-body[data-pos="top"] > .${exports.menuContainerClassName}-nav-dummy {
+  margin-bottom: ${style_1.CssParam.n.accent.sdPdd};
+}
+.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-nav,
+.${exports.menuContainerClassName}-body[data-pos="bottom"] > .${exports.menuContainerClassName}-nav-dummy {
+  margin-top: ${style_1.CssParam.n.accent.sdPdd};
+}
+.${exports.menuContainerClassName}-body {
+  padding: 0px ${style_1.CssParam.n.accent.sdPdd} ${style_1.CssParam.n.accent.sdPdd} ${style_1.CssParam.n.accent.sdPdd};
+}
+.${exports.menuContainerClassName}-body:only-child {
+  padding-top: ${style_1.CssParam.n.accent.sdPdd};
+}
+.${exports.menuContainerClassName}-nav,
+.${exports.menuContainerClassName}-nav-dummy {
+  min-height: calc(${style_1.CssVar.size} + ${style_1.CssParam.n.sdPdd} * 2);
+  min-width: calc(${style_1.CssVar.size} + ${style_1.CssParam.n.sdPdd} * 2);
+}
+` : ""}
+` });

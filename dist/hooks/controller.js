@@ -1,1 +1,17 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.initController=void 0;const react_1=require("react"),initController=(e,t,r=[])=>{(0,react_1.useEffect)((()=>{e&&t?.(e)}),[e,...r])};exports.initController=initController;const useController=()=>(0,react_1.useMemo)((()=>({})),[]);exports.default=useController;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.initController = void 0;
+const react_1 = require("react");
+const initController = (controller, func, dependencyList = []) => {
+    (0, react_1.useEffect)(() => {
+        if (controller)
+            func?.(controller);
+    }, [controller, ...dependencyList]);
+};
+exports.initController = initController;
+const useController = () => {
+    return (0, react_1.useMemo)(() => {
+        return {};
+    }, []);
+};
+exports.default = useController;

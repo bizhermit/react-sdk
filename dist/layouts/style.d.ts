@@ -10,6 +10,8 @@ export declare const StyleDesign: {
 export declare type StyleContextProps = {
     color: StyleColor;
     design: keyof typeof StyleDesign;
+    touchable: boolean;
+    screenSize: "" | "s";
     setColor: (color?: StyleColor) => void;
     setDesign: (design?: keyof typeof StyleDesign) => void;
 };
@@ -17,6 +19,7 @@ export declare const StyleContext: React.Context<StyleContextProps>;
 export declare const LayoutProvider: FC<{
     color?: StyleColor;
     design?: keyof typeof StyleDesign;
+    preventTouchLayout?: boolean;
 }>;
 export declare const useLayout: () => StyleContextProps;
 export declare type StyledJsxProps = {
@@ -25,8 +28,9 @@ export declare type StyledJsxProps = {
         color: StyleColor;
         design: keyof typeof StyleDesign;
     }) => string;
-    notDepsDesign?: boolean;
-    notDepsColor?: boolean;
+    depsDesign?: boolean;
+    depsColor?: boolean;
+    depsScreenSize?: boolean;
 };
 declare const Style: VFC<StyledJsxProps>;
 export default Style;

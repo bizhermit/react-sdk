@@ -1,1 +1,2475 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,t,s,l){void 0===l&&(l=s),Object.defineProperty(e,l,{enumerable:!0,get:function(){return t[s]}})}:function(e,t,s,l){void 0===l&&(l=s),e[l]=t[s]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var s in e)"default"!==s&&Object.prototype.hasOwnProperty.call(e,s)&&__createBinding(t,e,s);return __setModuleDefault(t,e),t},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.ListViewStyle=exports.cloneListViewEditColumnElement=exports.createListViewEditColumnElement=exports.$ListView=exports.listViewDefaultRowHeight=exports.listViewClassName=void 0;const string_utils_1=__importDefault(require("@bizhermit/basic-utils/dist/string-utils")),react_1=__importStar(require("react")),controller_1=require("../hooks/controller"),input_1=require("../layouts/input"),input_column_1=require("../layouts/input-column"),style_1=__importStar(require("../layouts/style")),classname_utils_1=__importStar(require("../utils/classname-utils")),dom_utils_1=require("../utils/dom-utils");exports.listViewClassName="bh-lv";const listViewDefaultRowHeight=()=>(0,style_1.cssParamsSize)()+4;exports.listViewDefaultRowHeight=listViewDefaultRowHeight;const ListView=e=>{const t=(0,react_1.useRef)(),s=(0,react_1.useRef)(),l=(0,react_1.useRef)(!1),i=(0,style_1.useLayout)();return(0,react_1.useEffect)((()=>(s.current=new $ListView(t.current,e,i),l.current=!0,()=>{s.current?.dispose()})),[]),(0,react_1.useEffect)((()=>{l.current&&s.current?.setItems(e.value)}),[e.value]),(0,react_1.useEffect)((()=>{l.current&&s.current?.setColumns(e.columns)}),[e.columns]),(0,react_1.useEffect)((()=>{l.current&&s.current?.setOptions(e.options)}),[e.options]),(0,react_1.useEffect)((()=>{l.current&&s.current.setStyleContext(i)}),[i]),(0,controller_1.initController)(e.controller,(e=>{e.focus=()=>(t.current?.focus(),e),e.getItems=()=>s.current.getValue(),e.setItems=t=>(s.current.setItems(t),e),e.getFilteredItems=()=>s.current.getFilteredValue(),e.getDisplayedItems=()=>s.current.getSortedValue(),e.getLength=()=>s.current.getLength(),e.getFilteredLength=()=>s.current.getFilteredLength(),e.select=(t,l)=>(s.current.select(t,l),e),e.clearSelect=()=>(s.current.clearSelect(),e),e.getSelectedRows=()=>s.current.getSelectedRows(),e.getSelectedCells=()=>s.current.getSelectedCells()})),react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{className:(0,classname_utils_1.className)(`${exports.listViewClassName}-wrap`,classname_utils_1.default.fitToOuter(e.fitToOuter),e.className),style:e.style},(0,react_1.useMemo)((()=>react_1.default.createElement("div",{ref:t})),[])),exports.ListViewStyle,(0,react_1.useMemo)((()=>{const t=[],s=e=>{null!=e&&e.forEach((e=>{e.jsxStyle&&t.push(react_1.default.createElement(react_1.default.Fragment,{key:e.name??string_utils_1.default.generateUuidV4()},e.jsxStyle)),e._rows?.forEach((e=>s(e.columns)))}))};return s(e.columns),t}),[e.columns]))};exports.default=ListView;class $ListView extends dom_utils_1.DomComponentClass{element;styleCtx;initialized;resizeObserver;headerElement;headerRowElement;bodyElement;dummyElement;footerElement;footerRowElement;editElement;editMaskElement;columns;renderColumns;originItems;bindingItems;filteredItems;sortedItems;rows;selectedRows;lastSelectedCell;lastSelectedBaseCell;lastScrolledTop;lastScrolledLeft;maxFirstIndex;firstIndex;hasFillColumn;editTarget;scrollingMode;scrollingId;scrollingInterval;cloneBase;rowNumberColumn;headerVisible;headerHeight;footerVisible;footerHeight;rowHeight;selectMode;multiSelect;oddEven;dragScroll;rowNumber;sort;sorted;externalSort;filter;cellClicked;rowClicked;filtered;enterIsClick;scrollTimeoutInterval;endEditEventListener;itemsCallBindedRev=0;colCallBindedRev=0;constructor(e,t,s){if(super(),this.element=e,this.styleCtx=s,this.initialized=!1,this.itemsCallBindedRev=0,this.colCallBindedRev=0,null==e)throw new Error("ListView: not found root element.");this.columns=[],this.renderColumns=[],this.sortedItems=[],this.rows=[],this.selectedRows={},this.lastSelectedCell=null,this.lastSelectedBaseCell=null,this.editTarget=null,this.lastScrolledTop=-1,this.lastScrolledLeft=-1,this.firstIndex=-1,this.scrollingMode="stop",this.scrollingId=0,this.scrollingInterval=0,this.scrollTimeoutInterval=10,this.endEditEventListener=null,this.generateElements(),this.rowNumberColumn={name:"_rnum",label:"row number",dataType:"number",width:40,minWidth:40,cells:[],headerCellElement:(0,dom_utils_1.cloneElement)(this.cloneBase.cellElem),footerCellElement:(0,dom_utils_1.cloneElement)(this.cloneBase.cellElem),initializeParameters:null,dispose:null,cellInitialize:e=>{const t=(0,dom_utils_1.cloneElement)(this.cloneBase.labelCellElem);e.contentElements.push(t),e.element.appendChild(t)},cellRender:e=>{e.cache.index!==e.row.index&&(e.contentElements[0].textContent=String(e.row.index+1),e.cache.index=e.row.index)},textAlign:"center",sort:null,sortOrder:"",fill:!1,fixed:!0,fixedLeft:0,left:0,resize:!1,tabStop:!1,notScrollFocusWhenTabStop:!1,preventClearSelected:!1,disabled:!1,render:!0,editedRowData:null},this.setOptions(t.options),this.initialized=!0,this.optimizeElementsPosition(),this.bindColumns(t.columns),this.bindItems(t.value),this.optimizeDummySize(),this.render()}dispose(){this.disposeColumns(),this.disposeRows(),this.resizeObserver&&this.resizeObserver.disconnect(),super.dispose()}setOptions(e={}){return this.setHeaderVisible(e.header),this.setHeaderHeight(e.headerHeight),this.setFooterVisible(e.footer),this.setFooterHeight(e.footerHeight),this.setRowHeight(e.rowHeignt),this.setRowNumber(e.rowNumber),this.setSelectMode(e.selectMode),this.setMultiSelect(e.multiSelect),this.setOddEven(e.oddEven),this.setDragScroll(e.dragScroll),this.setSort(e.sort),this.setSorted(e.sorted),this.setExternalSort(e.externalSort),this.setFilter(e.filter),this.setCellClicked(e.clickedCell),this.setRowClicked(e.clickedRow),this.setFiltered(e.filtered),this.setEnterIsClick(e.enterIsClick),this.setScrollTimeoutInterval(e.scrollTimeoutInterval),this}optimizeElementsPosition(){if(!this.initialized)return;let e=0;this.headerVisible?(e+=this.headerHeight,(0,dom_utils_1.setStyleProps)(this.bodyElement,{top:this.headerHeight+"px"})):(0,dom_utils_1.setStyleProps)(this.bodyElement,{top:"0px"}),this.footerVisible&&(e+=this.footerHeight),(0,dom_utils_1.setStyleProps)(this.bodyElement,{height:0===e?"100%":`calc(100% - ${e}px)`}),this.renderWhenResized()}setHeaderVisible(e){const t=!1!==e;return t===this.headerVisible||(this.headerVisible=t,(0,dom_utils_1.setStyleProps)(this.headerElement,{display:this.headerVisible?null:"none"}),this.optimizeElementsPosition()),this}setHeaderHeight(e){const t=e||(0,exports.listViewDefaultRowHeight)();return t===this.headerHeight||(this.headerHeight=t,(0,dom_utils_1.setStyleProps)(this.headerElement,{height:this.headerHeight+"px"}),this.optimizeElementsPosition()),this}setFooterVisible(e){const t=!0===e;return t===this.footerVisible||(this.footerVisible=t,(0,dom_utils_1.setStyleProps)(this.footerElement,{display:this.footerVisible?null:"none"}),this.optimizeElementsPosition()),this}setFooterHeight(e){const t=e||(0,exports.listViewDefaultRowHeight)();return t===this.footerHeight||(this.footerHeight=t,(0,dom_utils_1.setStyleProps)(this.footerElement,{height:this.footerHeight+"px",top:`calc(100% - ${this.footerHeight}px)`}),this.optimizeElementsPosition()),this}setRowHeight(e){const t=e||(0,exports.listViewDefaultRowHeight)();if(t===this.rowHeight)return this;this.rowHeight=t;const s={height:`${this.rowHeight}px`};(0,dom_utils_1.setStyleProps)(this.cloneBase.rowElem,s);for(const e of this.rows)(0,dom_utils_1.setStyleProps)(e.element,s);return this}setRowNumber(e){const t=!1!==e;return t===this.rowNumber?this:(this.rowNumber=t,this.initialized?(this.buildColumns(),this):this)}setSelectMode(e){const t=e||"cell";if(t===this.selectMode)return this;switch(this.selectMode=t,this.bodyElement.classList.remove("bh-select-row","bh-select-cell"),this.selectMode){case"none":break;case"row":this.bodyElement.classList.add("bh-select-row");break;default:this.bodyElement.classList.add("bh-select-cell")}return this}setMultiSelect(e){const t=!0===e;return t===this.multiSelect||(this.multiSelect=t,this.clearSelectedRows()),this}setOddEven(e){const t=!1!==e;return t===this.oddEven||(this.oddEven=t,this.initialized&&this.renderWhenScrolled()),this}setDragScroll(e){const t=e??!0;return t===this.dragScroll||(this.dragScroll=t),this}setSort(e){const t=this.sort===e;return this.sort=e,this.initialized&&!t&&(this.sortItems(),this.optimizeMaxFirstIndex(),this.render()),this}setSorted(e){return this.sorted=e,this}setExternalSort(e){return this.externalSort=!0===e,this}setFilter(e){const t=this.filter===e;return this.filter=e,this.initialized&&!t&&(this.filterItems(),this.optimizeMaxFirstIndex(),this.render()),this}setCellClicked(e){return this.cellClicked=e,this}setRowClicked(e){return this.rowClicked=e,this}setFiltered(e){return this.filtered=e,this}setEnterIsClick(e){return!0===e===this.enterIsClick||(this.enterIsClick=e),this}setScrollTimeoutInterval(e){return this.scrollTimeoutInterval=Math.max(0,e??1),this}generateElements(){this.element.classList.add(exports.listViewClassName,style_1.scrollbarClassName),this.element.tabIndex=-1,this.element.textContent="";const e=document.createElement("div");this.cloneBase={div:e,rowElem:(0,dom_utils_1.cloneElement)(e,`${exports.listViewClassName}-row`),cellElem:(0,dom_utils_1.cloneElement)(e,`${exports.listViewClassName}-cell`),labelCellElem:(0,dom_utils_1.cloneElement)(e,`${exports.listViewClassName}-lbl`)},this.headerElement=(0,dom_utils_1.cloneElement)(e,`${exports.listViewClassName}-header`),this.headerElement.appendChild(this.headerRowElement=(0,dom_utils_1.cloneElement)(this.cloneBase.rowElem)),this.footerElement=(0,dom_utils_1.cloneElement)(e,`${exports.listViewClassName}-footer`),this.footerElement.appendChild(this.footerRowElement=(0,dom_utils_1.cloneElement)(this.cloneBase.rowElem)),this.element.appendChild(this.dummyElement=(0,dom_utils_1.cloneElement)(e,`${exports.listViewClassName}-body-dummy`)),this.element.appendChild(this.headerElement),this.element.appendChild(this.bodyElement=(0,dom_utils_1.cloneElement)(e,`${exports.listViewClassName}-body`)),this.element.appendChild(this.footerElement),this.element.appendChild(this.editMaskElement=(0,dom_utils_1.setStyleProps)((0,dom_utils_1.cloneElement)(e,`${exports.listViewClassName}-mask`),{display:"none"})),this.element.appendChild(this.editElement=(0,dom_utils_1.setStyleProps)((0,dom_utils_1.cloneElement)(e,`${exports.listViewClassName}-edit`),{visibility:"hidden",display:"none"}));let t=null;this.addEvent(this.element,"scroll",(()=>{t||(t=setTimeout((()=>{this.endEdit(!1),this.renderWhenScrolled(),t=null}),this.scrollTimeoutInterval))}),{passive:!0}),this.addEvent(this.element,"keydown",(e=>{switch(e.key){case"ArrowUp":this.arrowUp(e.ctrlKey?10:1,this.multiSelect&&e.shiftKey),e.preventDefault();break;case"ArrowDown":this.arrowDown(e.ctrlKey?10:1,this.multiSelect&&e.shiftKey),e.preventDefault();break;case"ArrowLeft":this.arrowLeft(e.ctrlKey,this.multiSelect&&e.shiftKey),e.preventDefault();break;case"ArrowRight":this.arrowRight(e.ctrlKey,this.multiSelect&&e.shiftKey),e.preventDefault();break;case"Enter":if(this.endEdit(!0),this.enterIsClick)this.lastSelectedCell&&"none"!==this.selectMode&&this.cellClickedImpl(this.lastSelectedCell.item,this.lastSelectedCell.column,this.lastSelectedCell.index,e.ctrlKey,e.shiftKey);else{let t=this.element.scrollTop;e.shiftKey?this.arrowUp():this.arrowDown(),this.beginEditLastSelectedCell(t)}e.preventDefault();break;case"Tab":this.endEdit(!0);let t=this.element.scrollTop;e.shiftKey?this.arrowLeft():this.arrowRight(),this.beginEditLastSelectedCell(t),e.preventDefault();break;case" ":this.lastSelectedCell&&"none"!==this.selectMode&&this.cellClickedImpl(this.lastSelectedCell.item,this.lastSelectedCell.column,this.lastSelectedCell.index,e.ctrlKey,e.shiftKey),e.preventDefault();break;case"F2":e.preventDefault(),this.beginEditLastSelectedCell();break;case"Escape":this.endEdit(!1)}}),!1),this.addEvent(this.bodyElement,"mousedown",(e=>{if(0==this.dragScroll)return;const t=this.bodyElement.scrollLeft,s=this.element.scrollTop,l=e.clientX,i=e.clientY;let o=null,n=!0;const r=e=>{o||(o=setTimeout((()=>{if("vertical"!==this.dragScroll){const s=l-e.clientX+t;this.headerElement.scrollLeft=s,this.footerElement.scrollLeft=s,this.element.scrollLeft=s}"horizontal"!==this.dragScroll&&(this.element.scrollTop=i-e.clientY+s),o=null}),this.scrollTimeoutInterval))};document.onselectstart=()=>!1,setTimeout((()=>{}),200);const d=()=>{this.removeEvent(window,"mousemove",r),this.removeEvent(window,"mouseup",d),n=!1,this.lastScrolledLeft=this.element.scrollLeft,this.lastScrolledTop=this.element.scrollTop};this.addEvent(window,"mouseup",d,{passive:!0}),this.addEvent(window,"mousemove",r,{passive:!0})})),this.resizeObserver=new ResizeObserver((()=>{this.renderWhenResized(),this.optimizeDummySize()})),this.resizeObserver.observe(this.element),this.addEvent(this.editMaskElement,"click",(()=>{this.endEdit(!0)})),this.addEvent(this.editElement,"mousedown",(e=>{e.stopPropagation()})),this.addEvent(this.editElement,"keydown",(e=>{"Tab"!==e.key&&"Enter"!==e.key&&"Escape"!==e.key&&e.stopPropagation()}))}clearSelectedRows(e){Object.keys(this.selectedRows).forEach((e=>{const t=this.selectedRows[e];t.rowSelected=!1,t.cellSelected={},delete this.selectedRows[e]}));for(const e of this.rows){e.cache._lv_selected=null;for(const t of e.cells)t.cache._lv_selected=null}e&&this.renderWhenScrolled()}rangeSelectRow(e,t,s){if(null==e||null==this.lastSelectedBaseCell)return;if(e.cellSelected[t.name]=!0,this.lastSelectedBaseCell.index===s)this.selectedRows[e.id]=e;else if(this.lastSelectedBaseCell.index>s)for(let e=s;e<=this.lastSelectedBaseCell.index;e++){const t=this.sortedItems[e];t.rowSelected=!0,this.selectedRows[t.id]=t}else for(let e=this.lastSelectedBaseCell.index;e<=s;e++){const t=this.sortedItems[e];t.rowSelected=!0,this.selectedRows[t.id]=t}let l=null;const i=[];this.columnForEach((e=>{if(null==l&&(e.name===this.lastSelectedBaseCell.column.name?l=t.name:e.name===t.name&&(l=this.lastSelectedBaseCell.column.name)),null!=l&&(i.push(e.name),l===e.name))return!1})),Object.keys(this.selectedRows).forEach((e=>{i.forEach((t=>this.selectedRows[e].cellSelected[t]=!0))}))}scrollToIndex(e,t){const s=this.bodyElement.scrollTop;e<this.firstIndex||(e-this.firstIndex)*this.rowHeight<s?this.element.scrollTop=e*this.rowHeight:this.bodyElement.clientHeight+s<(e-this.firstIndex+1)*this.rowHeight?this.element.scrollTop=(e+1)*this.rowHeight-this.bodyElement.clientHeight:!1!==t&&this.renderWhenScrolled()}scrollToColumn(e,t){if(null==e)return!1;if(e.notScrollFocusWhenTabStop)return!1!==t&&this.renderWhenScrolled(),!1;let s=0,l=0,i=0;const o=e=>{if(null==e.parent)s=e.left,i=e.fixedLeft;else{o(e.parent);const t=e.cells[0];if(null==t)return;s+=t.element.offsetLeft}};o(e),l=s+e.width;const n=this.element.clientWidth;let r=this.lastScrolledLeft;return s-i<this.lastScrolledLeft&&(r=s-i),l>this.lastScrolledLeft+n&&(r=l-n),r!==this.lastScrolledLeft&&(this.headerElement.scrollLeft=r,this.footerElement.scrollLeft=r,this.element.scrollLeft=r,this.element.scrollLeft==r)||(!1!==t&&this.renderWhenScrolled(),!1)}arrowUpDown(e,t,s){if("none"===this.selectMode)return!1;const l=Math.max(0,Math.min((null==this.lastSelectedCell?t:this.lastSelectedCell.index)+e,this.sortedItems.length-1)),i=this.sortedItems[l];if(null==i||this.lastSelectedCell?.index===l)return!1;this.clearSelectedRows();const o=this.lastSelectedCell?.column||this.findColumn((e=>e.tabStop));if("row"===this.selectMode)i.rowSelected=!0;else{if(0===this.columns.length)return!1;if(null==o)return!1;i.cellSelected[o.name]=!0}return this.selectedRows[i.id]=i,this.lastSelectedCell={index:l,item:i,column:o},!0===s?this.rangeSelectRow(i,o,l):this.lastSelectedBaseCell={index:l,item:i,column:o},this.scrollToIndex(l),!0}arrowUp(e,t){return this.arrowUpDown(-1*(e||1),Math.max(0,this.firstIndex),t)}arrowDown(e,t){return this.arrowUpDown(e||1,Math.min(this.sortedItems.length,this.firstIndex)-1,t)}arrowLeftRightOptimize(e,t,s){if(null==t)return!1;const l=this.sortedItems[Math.max(0,Math.min(this.sortedItems.length-1,e))];return null!=l&&(this.clearSelectedRows(),l.cellSelected[t.name]=!0,this.selectedRows[l.id]=l,this.lastSelectedCell={index:e,item:l,column:t},!0===s?this.rangeSelectRow(l,t,e):this.lastSelectedBaseCell={index:e,item:l,column:t},this.scrollToIndex(e,!1),this.scrollToColumn(t))}arrowLeft(e,t){if("cell"!==this.selectMode||0===this.columns.length)return!1;let s=null==this.lastSelectedCell?this.firstIndex:this.lastSelectedCell.index,l=this.lastSelectedCell?.column;if(e||null==l)l=this.findFirstColumn();else{const e=this.findPrevColumn(l.name);if(l=e.column,e.nextRow){const e=Math.max(0,s-1);if(e===s)return!1;s=e}}return this.arrowLeftRightOptimize(s,l,t)}arrowRight(e,t){if("cell"!==this.selectMode||0===this.columns.length)return!1;let s=null==this.lastSelectedCell?this.firstIndex:this.lastSelectedCell.index,l=this.lastSelectedCell?.column;if(e)l=this.findLastColumn();else if(null==l)l=this.findFirstColumn();else{const e=this.findNextColumn(l.name);if(l=e.column,e.nextRow){const e=Math.min(s+1,this.sortedItems.length-1);if(e===s)return!1;s=e}}return this.arrowLeftRightOptimize(s,l,t)}render(){return this.renderWhenResized(),this.renderHeaderCells(),this.renderFooterCells(),this}renderHeaderCells(){if(!this.headerVisible)return this;const e=t=>{if(null!=t)for(const s of t)if(s.headerCellRender&&s.headerCellRender(s.headerCellLabelElement,this.sortedItems,this.originItems),s.rows)for(const t of s.rows)e(t.columns)};return e(this.columns),this}renderFooterCells(){if(!this.footerVisible)return this;const e=t=>{if(null!=t)for(const s of t)if(s.footerCellRender&&s.footerCellRender(s.footerCellLabelElement,this.sortedItems,this.originItems),s.rows)for(const t of s.rows)e(t.columns)};return e(this.columns),this}renderRow(e){const t=e.item;if(null!=t){if(e.element.style.getPropertyValue("visibility")&&e.element.style.removeProperty("visibility"),e.cache._lv_selected!==t.rowSelected&&((e.cache._lv_selected=t.rowSelected)?e.element.classList.add("bh-selected"):e.element.classList.remove("bh-selected")),this.oddEven){const t=e.index%2;e.cache._lv_oddEven!==t&&e.element.setAttribute("data-oddeven",0===(e.cache._lv_oddEven=t)?"odd":"even")}this.renderRowColumns(this.renderColumns,e)}else e.element.style.visibility="hidden"}renderRowColumns(e,t){for(const s of e)if(this.renderCell(s.cells[t.id]),s.rows)for(const e of s.rows)this.renderRowColumns(e.columns,t)}renderCell(e){e.cache._lv_selected!==(e.row.item.cellSelected[e.column.name]||!1)&&((e.cache._lv_selected=!0===e.row.item.cellSelected[e.column.name])?e.element.classList.add("bh-selected"):e.element.classList.remove("bh-selected")),e.column.cellRender(e,e.column.initializeParameters)}renderWhenScrolled(){this.optimizeRenderColumns();const e=this.element.scrollTop,t=Math.min(this.maxFirstIndex,Math.floor(e/this.rowHeight));this.lastScrolledTop!==e&&(this.bodyElement.scrollTop=e-this.rowHeight*t,this.lastScrolledTop=e);for(let e=0,s=this.rows.length;e<s;e++){const s=this.rows[e];s.item=this.sortedItems[s.index=t+e],this.renderRow(s)}this.firstIndex=t}renderWhenResized(){const e=Math.max(0,Math.ceil(this.bodyElement.clientHeight/this.rowHeight||0))+1;if(this.rows.length!==e){for(let t=0;t<e;t++){let e=this.rows[t];if(null==e){e={item:null,index:-1,id:t,cache:{_lv_selected:!1,_lv_oddEven:null},cells:[],element:(0,dom_utils_1.cloneElement)(this.cloneBase.rowElem)},(0,dom_utils_1.setStyleProps)(e.element,{visibility:"hidden"}),this.hasFillColumn&&(0,dom_utils_1.setStyleProps)(e.element,{minWidth:"100%"});for(const t of this.columns)this.generateCell(e,t,e.element);this.bodyElement.appendChild(e.element),this.rows.push(e)}}this.disposeRows(e)}return this.lastScrolledLeft=-1,this.optimizeMaxFirstIndex(),this.renderWhenScrolled(),!0}generateCell(e,t,s){const l={column:t,row:e,element:(0,dom_utils_1.cloneElement)(this.cloneBase.cellElem),contentElements:[],cache:{_lv_selected:!1}};if(t.rows){l.element.classList.add(`${exports.listViewClassName}-cell-m_s`);for(const s of t.rows){const t=(0,dom_utils_1.setStyleProps)((0,dom_utils_1.cloneElement)(this.cloneBase.rowElem),{flex:s.bodyHeightFlexRate,width:"100%",minHeight:"0px"});s.bodyClassName.forEach((e=>t.classList.add(e)));for(const l of s.columns){const s=this.generateCell(e,l,t);l.fill&&s.element.classList.add("bh-fill")}s.body&&l.element.appendChild(t)}}return l.element.setAttribute("data-name",t.name),t.fill&&l.element.classList.add("bh-fill"),(0,dom_utils_1.setStyleProps)(l.element,{width:`${t.width}px`}),t.fixed&&l.element.classList.add("bh-fixed"),l.element.classList.add(classname_utils_1.default.hAlign(t.textAlign??"left")),"anchor"===t.appearance&&l.element.classList.add("bh-anchor"),s.appendChild(l.element),t.cells.push(l),e.cells.push(l),l.element.setAttribute("data-disabled",String(!0===t.disabled)),t.cellInitialize(l,t.initializeParameters,this),this.addEvent(l.element,"click",(t=>{this.cellClickedImpl(l.row.item,l.column,e.index,t.ctrlKey,t.shiftKey,t)})),l}optimizeMaxFirstIndex(){this.maxFirstIndex=Math.max(0,this.sortedItems.length-this.rows.length)}optimizeRenderColumns(){let e=this.element.scrollLeft;if(this.lastScrolledLeft!==e){this.headerElement.scrollLeft=e,this.footerElement.scrollLeft=e,this.bodyElement.scrollLeft=e;const t=this.bodyElement.clientWidth+e+10;this.lastScrolledLeft=e,e-=10,this.renderColumns=[],this.columns.forEach((s=>{s.fixed?(s.render=s.left<t)&&this.renderColumns.push(s):(s.render=e<s.left+s.width&&s.left<t)&&this.renderColumns.push(s)}))}}optimizeRowNumberColumnWidth(){const e=Math.max(40,10*String(this.sortedItems.length).length+12);if(e!==this.rowNumberColumn.width){this.rowNumberColumn.width=this.rowNumberColumn.minWidth=e;for(const e of this.rowNumberColumn.cells)e.column.headerCellElement.style.width=e.column.footerCellElement.style.width=e.element.style.width=this.rowNumberColumn.width+"px";this.optimizeDummySize()}}optimizeDummySize(){const e=this.rows[0]?.element;if(null==e)return;const t=e.getBoundingClientRect();(0,dom_utils_1.setStyleProps)(this.dummyElement,{width:t.width+this.dummyElement.offsetLeft+"px"});const s=[];for(const e of this.columns)if(e.fixed){const t=e.cells[0].element;(0,dom_utils_1.setStyleProps)(t,{position:"relative"}),t.style.removeProperty("left")}for(const e of this.columns){const l=e.cells[0].element;s.push({left:Math.round(l.getBoundingClientRect().left-t.left+this.lastScrolledLeft),column:e})}let l=0,i=s[0].left||0;s.sort(((e,t)=>e.left-t.left)).forEach((e=>{if(e.column.left=e.left-i,e.column.fixedLeft=l,e.column.fixed){(0,dom_utils_1.setStyleProps)(e.column.cells[0].element,{position:"sticky"});const t={left:l+"px"};(0,dom_utils_1.setStyleProps)(e.column.headerCellElement,t),(0,dom_utils_1.setStyleProps)(e.column.footerCellElement,t);for(const s of e.column.cells)(0,dom_utils_1.setStyleProps)(s.element,t);l+=e.column.width}}))}disposeRows(e){const t=e||0;for(let e=this.rows.length-1;e>=t;e--){const t=this.rows[e];for(const e of t.cells)this.removeEvent(e.element),e.column.cellDispose&&e.column.cellDispose(e,this),e.column.cells.pop();this.removeEvent(t.element),this.bodyElement.removeChild(t.element),this.rows.pop()}}findColumn(e){let t=null;const s=l=>{for(const i of l){if(e(i)&&(t=i),null!=t)return;if(i.rows)for(const e of i.rows)s(e.columns);if(null!=t)return}};return s(this.columns),t}findFirstColumn(){let e=null;const t=s=>{if(null!=s)for(let l=0,i=s.length;l<i;l++){const i=s[l];if(i.tabStop)return void(e=i);if(i.rows)for(const e of i.rows)t(e.columns);if(e)return}};return t(this.columns),e}findLastColumn(){let e=null;const t=s=>{if(null!=s)for(let l=s.length-1;l>=0;l--){const i=s[l];if(i.rows)for(const e of i.rows)t(e.columns);if(e)return;if(i.tabStop)return void(e=i)}};return t(this.columns),e}findPrevColumn(e){let t=null,s=!1;if(0===this.columns.length)return{column:t,nextRow:s};const l=e??this.findLastColumn()?.name;let i=!1;const o=e=>{if(null!=e)for(let s=e.length-1;s>=0;s--){const n=e[s];if(n.rows)for(let e=n.rows.length-1;e>=0;e--){const s=n.rows[e];if(o(s.columns),t)return}if(n.name!==l){if(i&&n.tabStop)return void(t=n)}else i=!0}};return o(this.columns),(s=!t)&&o(this.columns),{column:t,nextRow:s}}findNextColumn(e){let t=null,s=!1;if(0===this.columns.length)return{column:t,nextRow:s};const l=e??this.findFirstColumn()?.name;let i=!1;const o=e=>{if(null!=e)for(let s=0,n=e.length;s<n;s++){const n=e[s];if(n.name!==l){if(i&&n.tabStop)return void(t=n);if(n.rows)for(const e of n.rows)if(o(e.columns),t)return}else if(i=!0,n.rows)for(const e of n.rows)if(o(e.columns),t)return}};return o(this.columns),(s=!t)&&o(this.columns),{column:t,nextRow:s}}disposeColumns(){const e=t=>{for(let s=t.length-1;s>=0;s--){const l=t[s];if(l.rows)for(const t of l.rows)e(t.columns);if(this.removeEvent(l.headerCellElement),this.removeEvent(l.footerCellElement),this.removeEvent(l.resizeElement),l.cellDispose)for(const e of l.cells)l.cellDispose(e,this);l.dispose?.(this),t.pop()}};e(this.columns),this.headerRowElement.textContent="",this.footerRowElement.textContent=""}bindColumns(e){if(this.disposeColumns(),this.disposeRows(),null==e)return void this.buildColumns();let t=!1;for(const s of e){const e=!1===t&&!0===s.fill;e&&(t=!0),this.columns.push(this.bindColumn(s,e))}this.buildColumns()}bindColumn(e,t){let s=e.width??100;s<0&&(s=this.rowHeight);const l=e.dataType||"string";let i=null;if(e._rows){i=[];for(const t of e._rows){const e=[];let s=!1;for(let l=0,i=t.columns.length;l<i;l++){const o=t.columns[l];let n=!1===s&&!0===o.fill;n?s=!0:l!==i-1||s||(s=n=!0);const r=this.bindColumn(o,n);n&&(r.headerCellElement.style.flex="1",r.footerCellElement.style.flex="1"),!1===t.body&&(null==o.sort&&(r.sort=null),r.tabStop=!1),e.push(r)}i.push({columns:e,header:!1!==t.header,headerHeightFlexRate:t.headerHeightFlexRate??1,headerClassName:null==t.headerClassName?[]:"string"==typeof t.headerClassName?[t.headerClassName]:t.headerClassName,footer:!1!==t.footer,footerHeightFlexRate:t.footerHeightFlexRate??1,footerClassName:null==t.footerClassName?[]:"string"==typeof t.footerClassName?[t.footerClassName]:t.footerClassName,body:!1!==t.body,bodyHeightFlexRate:t.bodyHeightFlexRate??1,bodyClassName:null==t.bodyClassName?[]:"string"==typeof t.bodyClassName?[t.bodyClassName]:t.bodyClassName})}}const o={prop:e,name:e.name,label:e.label||e.name,dataType:l,width:s,minWidth:s,cells:[],headerCellElement:(0,dom_utils_1.cloneElement)(this.cloneBase.cellElem),footerCellElement:(0,dom_utils_1.cloneElement)(this.cloneBase.cellElem),initializeParameters:null==e.initialize?null:e.initialize(e,this),dispose:e.dispose,cellInitialize:null==e._rows?null==e.cellInitialize?e=>{const t=(0,dom_utils_1.cloneElement)(this.cloneBase.labelCellElem);e.contentElements.push(t),e.element.appendChild(t)}:e.cellInitialize:null==e.cellInitialize?()=>{}:e.cellInitialize,cellDispose:e.cellDispose,cellRender:null==e.cellRender?({contentElements:e,row:t,cache:s})=>{s.val!==t.item.data[o.name]&&(e[0].textContent=s.val=t.item.data[o.name])}:e.cellRender,textAlign:e.cellTextAlign||("number"===l?"right":"left"),appearance:e.appearance||"label",sort:"function"==typeof e.sort?e.sort:!1===e.sort||null!=e._rows?null:e=>{if(""===e)return()=>0;const t="asc"===e?1:-1;return(e,s)=>"number"===o.dataType?Number(e.data[o.name])>Number(s.data[o.name])?-t:t:e.data[o.name]>s.data[o.name]?t:-t},sortOrder:"",resize:!1!==e.resize&&!t&&null==e._rows,fill:t,fixed:!0===e.fixed,fixedLeft:0,left:0,tabStop:!1!==e.tabStop&&null==e._rows,notScrollFocusWhenTabStop:!0===e.notScrollFocusWhenTabStop,disabled:!0===e.disabled,render:!0,headerCellClicked:e.clickedHeaderCell,footerCellClicked:e.clickedFooterCell,cellClicked:e.clickedCell,rowClicked:e.clickedRow,preventClearSelected:!0===e._preventClearSelected,bindedItems:e.bindedItems,rows:i,beginEdit:e._beginEdit,endEdit:e._endEdit,editedRowData:e.editedRowData};if(o.rows)for(const e of o.rows)for(const t of e.columns)t.parent=o;return o}buildColumns(){if(this.rowNumber)null==this.findColumn((e=>e.name===this.rowNumberColumn.name))&&(this.columns.unshift(this.rowNumberColumn),this.optimizeRowNumberColumnWidth());else for(let e=0,t=this.columns.length;e<t;e++)if(this.columns[e].name===this.rowNumberColumn.name){this.columns.splice(e,1);break}let e=!1;for(const t of this.columns)e=e||t.fill,this.buildColumn(t,{header:this.headerRowElement,footer:this.footerRowElement});if(this.hasFillColumn=e,this.hasFillColumn){const e={minWidth:"100%"};(0,dom_utils_1.setStyleProps)(this.headerRowElement,e),(0,dom_utils_1.setStyleProps)(this.footerRowElement,e);for(const t of this.rows)(0,dom_utils_1.setStyleProps)(t.element,e)}else{this.headerRowElement.style.removeProperty("min-width"),this.footerRowElement.style.removeProperty("min-width");for(const e of this.rows)e.element.style.removeProperty("min-width")}this.renderColumns=[],this.renderWhenResized(),this.lastScrolledLeft=-1,this.optimizeRenderColumns(),this.optimizeDummySize()}buildColumn(e,t){if(e.rows){e.headerCellElement.classList.add(`${exports.listViewClassName}-cell-m_s`),e.footerCellElement.classList.add(`${exports.listViewClassName}-cell-m_s`);for(const t of e.rows){let s=0;const l=(0,dom_utils_1.cloneElement)(this.cloneBase.rowElem,{flex:t.headerHeightFlexRate});t.headerClassName.forEach((e=>l.classList.add(e)));const i=(0,dom_utils_1.cloneElement)(this.cloneBase.rowElem,{flex:t.footerHeightFlexRate});t.footerClassName.forEach((e=>i.classList.add(e)));for(const e of t.columns)e.resize=!1,this.buildColumn(e,{header:l,footer:i}),s+=e.width;t.header&&e.headerCellElement.appendChild(l),t.footer&&e.footerCellElement.appendChild(i),e.width=Math.max(0,s,e.width)}}else e.headerCellLabelElement=(0,dom_utils_1.cloneElement)(this.cloneBase.div,`${exports.listViewClassName}-lbl`),e.headerCellElement.appendChild(e.headerCellLabelElement),e.prop?.headerCellLabel&&("string"==typeof e.prop.headerCellLabel?e.headerCellLabelElement.textContent=e.prop.headerCellLabel:e.headerCellRender=e.prop.headerCellLabel),e.headerCellElement.classList.add(classname_utils_1.default.hAlign(e.prop?.headerCellTextAlign??"center")),e.footerCellLabelElement=(0,dom_utils_1.cloneElement)(this.cloneBase.div,`${exports.listViewClassName}-lbl`),e.footerCellElement.appendChild(e.footerCellLabelElement),e.prop?.footerCellLabel&&("string"==typeof e.prop.footerCellLabel?e.footerCellLabelElement.textContent=e.prop.footerCellLabel:e.footerCellRender=e.prop.footerCellLabel),e.footerCellElement.classList.add(classname_utils_1.default.hAlign(e.prop?.footerCellTextAlign??"center"));e.headerCellElement.setAttribute("data-name",e.name),(0,dom_utils_1.setStyleProps)(e.headerCellElement,{width:e.width+"px"}),e.footerCellElement.setAttribute("data-name",e.name),(0,dom_utils_1.setStyleProps)(e.footerCellElement,{width:e.width+"px"}),e.fill&&(e.headerCellElement.classList.add("bh-fill"),e.footerCellElement.classList.add("bh-fill")),e.fixed&&(e.headerCellElement.classList.add("bh-fixed"),e.footerCellElement.classList.add("bh-fixed")),t.header.appendChild(e.headerCellElement),t.footer.appendChild(e.footerCellElement),e.prop?.headerCellInitialize?.(e,e.initializeParameters),e.prop?.footerCellInitialize?.(e,e.initializeParameters),null!=e.sort&&(e.sortElement=(0,dom_utils_1.cloneElement)(this.cloneBase.div),e.sortElement.classList.add(`${exports.listViewClassName}-sort-icon`),e.headerCellElement.appendChild(e.sortElement),this.addEvent(e.headerCellElement,"click",(()=>{const t=e.sortOrder,s=e=>{for(const t of e)if(t.sortOrder="",t.sortElement?.classList.remove("bh-asc","bh-desc"),t.rows)for(const e of t.rows)s(e.columns)};switch(s(this.columns),t){case"asc":e.sortOrder="desc",e.sortElement.classList.add(`bh-${e.sortOrder}`);break;case"desc":e.sortOrder="";break;default:e.sortOrder="asc",e.sortElement.classList.add(`bh-${e.sortOrder}`)}this.sortItems(),this.renderWhenScrolled(),this.sorted&&this.sorted(e.name,e.sortOrder,e.prop)}))),!1!==e.resize&&(e.resizeElement=(0,dom_utils_1.cloneElement)(this.cloneBase.div,`${exports.listViewClassName}-resizer`),e.headerCellElement.appendChild(e.resizeElement),this.addEvent(e.resizeElement,"mousedown",(t=>{this.endEdit(!0),t.stopPropagation();const s=t.currentTarget.offsetLeft,l=t.clientX,i=t=>{e.width=t.clientX-l+s,(0,dom_utils_1.setStyleProps)(e.headerCellElement,{width:e.width+"px"})};(0,dom_utils_1.setCursor)("col-resize");const o=()=>{this.removeEvent(window,"mousemove",i),this.removeEvent(window,"mouseup",o);for(const t of e.cells)(0,dom_utils_1.setStyleProps)(t.element,{width:e.width+"px"});(0,dom_utils_1.setStyleProps)(e.footerCellElement,{width:e.width+"px"}),(0,dom_utils_1.releaseCursor)(),this.optimizeDummySize()};this.addEvent(window,"mouseup",o,{passive:!0}),this.addEvent(window,"mousemove",i,{passive:!0})})));const s=()=>{for(const t of e.cells)null!=t.row.item&&this.renderCell(t);this.renderHeaderCells(),this.renderFooterCells()};e.headerCellClicked&&this.addEvent(e.headerCellElement,"click",(()=>{e.headerCellClicked(e.name,this.sortedItems,s)})),e.footerCellClicked&&this.addEvent(e.footerCellElement,"click",(()=>{e.footerCellClicked(e.name,this.sortedItems,s)}))}setColumns(e){return this.bindColumns(e),this}columnForEach(e){const t=s=>{let l=!0;for(const i of s){if(l=!1!==e(i)&&l,!l)break;if(i.rows)for(const e of i.rows)if(l=!1!==t(e.columns)&&l,!l)break;if(!l)break}return l};t(this.columns)}bindItems(e){if(this.originItems=[],this.bindingItems=[],this.filteredItems=[],this.selectedRows={},this.lastSelectedCell=null,this.lastSelectedBaseCell=null,null==e)return;this.originItems=e;let t=0;for(const e of this.originItems)this.bindingItems.push({data:e,id:t++,rowSelected:!1,cellSelected:{}});this.executeColumnBindedItems(),this.colCallBindedRev=++this.itemsCallBindedRev,this.filterItems()}executeColumnBindedItems(){const e=t=>{for(const s of t){if(s.rows)for(const t of s.rows)e(t.columns);s.bindedItems&&s.bindedItems(this.originItems)}};e(this.columns)}filterItems(){this.clearSelectedRows(),null==this.filter?this.filteredItems=this.bindingItems.concat():this.filteredItems=this.bindingItems.filter((e=>this.filter(e.data))),this.filtered&&this.filtered(this.filteredItems),this.sortItems()}sortItems(){if(this.sortedItems=this.filteredItems.concat(),!this.externalSort){null!=this.sort&&this.sortedItems.sort(this.sort);const e=this.findColumn((e=>""!==e.sortOrder));null!=e&&this.sortedItems.sort(e.sort(e.sortOrder))}(0,dom_utils_1.setStyleProps)(this.dummyElement,{height:this.sortedItems.length*this.rowHeight+(this.headerVisible?this.headerHeight:0)+(this.footerVisible?this.footerHeight:0)+this.dummyElement.offsetTop+"px"}),this.optimizeRowNumberColumnWidth(),this.lastScrolledLeft=-1,this.optimizeRenderColumns(),this.scrollingMode="stop"}setItems(e){return this.bindItems(e),this.firstIndex=-1,this.bodyElement.scrollTop=0,this.maxFirstIndex=Math.max(0,this.sortedItems.length-this.rows.length),this.optimizeDummySize(),this.lastScrolledLeft=-1,this.render(),this}cellClickedImpl(e,t,s,l,i,o){if(null!=t.rows)return;if("cell"===this.selectMode&&!t.tabStop)return;const n=this.element.scrollTop;this.scrollToColumn(t),this.scrollToIndex(s);const r=()=>{let n=!0,r=!1;l&&this.multiSelect?"row"===this.selectMode?(e.cellSelected={},!0===e.rowSelected?(n=e.rowSelected=!1,delete this.selectedRows[e.id]):(n=e.rowSelected=e.cellSelected[t.name]=!0,this.selectedRows[e.id]=e)):!0===e.cellSelected[t.name]?(delete e.cellSelected[t.name],0===Object.keys(e.cellSelected).length&&(delete this.selectedRows[e.id],e.rowSelected=!1),n=!1):(n=e.rowSelected=e.cellSelected[t.name]=!0,this.selectedRows[e.id]=e):i&&this.multiSelect&&null!=this.lastSelectedBaseCell?(this.clearSelectedRows(),n=e.cellSelected[t.name]=!0,this.rangeSelectRow(e,t,s)):(!0===e.cellSelected[t.name]&&(r=!0),this.multiSelect&&t.preventClearSelected?null==this.selectedRows[e.id]&&this.clearSelectedRows():this.clearSelectedRows(),n=e.rowSelected=e.cellSelected[t.name]=!0,this.selectedRows[e.id]=e),this.lastSelectedCell={index:s,item:e,column:t},i&&null!=this.lastSelectedBaseCell||(this.lastSelectedBaseCell={index:s,item:e,column:t});const d={data:e.data,id:e.id,rowNumber:s+1,columnName:t?.name,columnLabel:t?.label,columnWidth:t?.width,originItems:this.originItems,selectMode:this.selectMode,selected:n,getSelectedRows:()=>this.getSelectedRows(),getSelectedCells:()=>this.getSelectedCells()};let a=!1,h=!1,c=!1,m=!1,u=!1,p=!1,f=!1,w=!1,C=!1;const x=e=>{if(null==e)return;const t=e;a=a||!0===t.rebind,h=h||!0===t.renderHeaderCell,c=c||!0===t.renderHeaderCells,m=m||!0===t.renderFooterCell,u=u||!0===t.renderFooterCells,p=p||!0===t.renderCell,f=f||!0===t.renderCells,w=w||!0===t.renderRow,C=C||!0===t.render};this.cellClicked&&x(this.cellClicked(d,o)),t?.cellClicked&&x(t.cellClicked(d,o)),this.rowClicked&&x(this.rowClicked(d,o));for(const e of this.columns)e.rowClicked&&x(e.rowClicked(d,o));if(a)this.bindItems(this.originItems);else if(C)this.render();else{if(c?this.renderHeaderCells():h&&t.headerCellRender&&t.headerCellRender(t.headerCellLabelElement,this.sortedItems,this.originItems),u?this.renderFooterCells():m&&t.footerCellRender&&t.footerCellRender(t.footerCellLabelElement,this.sortedItems,this.originItems),w&&this.renderRow(this.rows[s-this.firstIndex]),f)for(const e of t.cells)this.renderCell(e);w||f||!p||this.renderCell(t.cells[s-this.firstIndex])}this.renderWhenScrolled(),r&&!t.disabled&&this.beginEdit(e,t,s)};if(n===this.element.scrollTop)r();else{const e=()=>{this.element.scrollTop!==this.lastScrolledTop?setTimeout((()=>e()),10):r()};e()}}beginEditLastSelectedCell(e){if(null==this.lastSelectedCell.column)return;let t=e;if(null==t&&(t=this.element.scrollTop,this.scrollToColumn(this.lastSelectedCell.column),this.scrollToIndex(this.lastSelectedCell.index)),t===this.element.scrollTop)this.beginEdit(this.lastSelectedCell.item,this.lastSelectedCell.column,this.lastSelectedCell.index);else{const e=()=>{this.element.scrollTop!==this.lastScrolledTop?setTimeout((()=>e()),10):this.beginEdit(this.lastSelectedCell.item,this.lastSelectedCell.column,this.lastSelectedCell.index)};e()}}beginEdit(e,t,s){if(!t.beginEdit||!0===t.disabled)return void this.endEdit(!1);const l=this.rows[s-this.firstIndex];if(null==l)return;const i=l.cells.find((e=>e.column.name===t.name));if(null==i)return;const o=i.element.getBoundingClientRect();this.editElement.style.removeProperty("display"),(0,dom_utils_1.setStyleProps)(this.editElement,{top:`${o.top}px`,left:`${o.left}px`,height:o.height-(i.element.offsetHeight-i.element.clientHeight)+"px",width:o.width-(i.element.offsetWidth-i.element.clientWidth)+"px",visibility:"visible"}),this.editTarget={item:e,column:t,index:s};let n=!1;t.beginEdit({target:{data:e.data,columnName:t.name,index:s,id:e.id},editElement:this.editElement,endEdit:()=>n=!0,cell:i,styleCtx:this.styleCtx}),this.endEditEventListener=()=>{this.endEdit(!0)},this.addEvent(this.element,"mousedown",this.endEditEventListener),n?this.endEdit(!1):this.editElement.focus()}endEdit(e){if(this.endEditEventListener&&(this.removeEvent(this.element,"mousedown",this.endEditEventListener),this.endEditEventListener=null),null!=this.editTarget){if(this.editTarget.column?.endEdit){const t=this.editTarget.column.endEdit({data:this.editTarget.item.data,columnName:this.editTarget.column.name,index:this.editTarget.index,id:this.editTarget.item.id},e,this.editElement);if(!1!==e){null==t&&this.renderCell(this.editTarget.column.cells[this.editTarget.index-this.firstIndex]);for(const e of this.columns)e!==this.editTarget.column&&e.editedRowData&&(e.editedRowData(this.editTarget.item.data),this.renderCell(e.cells[this.editTarget.index-this.firstIndex]));this.renderHeaderCells(),this.renderFooterCells()}}this.editMaskElement.style.display="none",this.editElement.style.display="none",this.editTarget=null,this.element.focus()}}getValue(){return this.originItems}getFilteredValue(){const e=[];for(const t of this.filteredItems)e.push(t.data);return e}getSortedValue(){const e=[];for(const t of this.sortedItems)e.push(t.data);return e}getLength(){return this.originItems.length}getFilteredLength(){return this.filteredItems.length}select(e,t){if("none"===this.selectMode||null==e)return;const s=this.sortedItems[e];if(null==s)return;this.clearSelectedRows();let l=null;"row"===this.selectMode?(s.rowSelected=!0,this.selectedRows[s.id]=s):(l=this.findColumn((e=>e.name===t))??this.columns[0],s.cellSelected[l.name]=!0,this.selectedRows[s.id]=s),this.lastSelectedCell={index:e,item:s,column:l},this.lastSelectedBaseCell={index:e,item:s,column:l},this.scrollToIndex(e,!1),l&&this.scrollToColumn(l,!1),this.renderWhenScrolled()}clearSelect(){this.clearSelectedRows(!0)}getSelectedRows(){const e=[];return Object.keys(this.selectedRows).forEach((t=>{const s=this.selectedRows[t];e.push({id:s.id,data:s.data})})),e}getSelectedCells(){const e=[];return Object.keys(this.selectedRows).forEach((t=>{const s=this.selectedRows[t];Object.keys(s.cellSelected).forEach((t=>{e.push({id:s.id,data:s.data,columnName:t})}))})),e}focus(){return this.element.focus(),this}getElement(){return this.element}getBodyElement(){return this.bodyElement}getRowHeight(){return this.rowHeight}getDisplayedFirstRowIndex(){return this.firstIndex}getBodyScrollTop(){return this.bodyElement.scrollTop}clearSpaceRow(){for(const e of this.rows)e.element.style.removeProperty("margin-top"),e.element.style.removeProperty("margin-bottom"),e.element.style.removeProperty("display"),e.element.style.removeProperty("opacity");return this}startScrollContinue(e,t,s,l){this.scrollingMode!==e?(this.stopScrollContinue(),setTimeout((()=>{this.scrollingMode=e,this.scrollingInterval=t??100,this.scrollingId++,this.scrollContinue(l),s&&s(this.scrollingInterval)}),this.scrollingInterval+1)):l&&l("already")}stopScrollContinue(){this.scrollingMode="stop"}scrollContinue(e){const t=this.scrollingId;setTimeout((()=>{if(t!==this.scrollingId||"stop"===this.scrollingMode)return void(e&&e("stop"));const s=this.element.scrollTop;"up"===this.scrollingMode?this.element.scrollTop=this.element.scrollTop-this.rowHeight:this.element.scrollTop=this.element.scrollTop+this.rowHeight,s!==this.element.scrollTop?this.scrollContinue(e):e&&e("over")}),this.scrollingInterval)}dragMovingRow(e,t){t<this.bodyElement.scrollTop?this.startScrollContinue("up"):t>this.bodyElement.clientHeight-this.rowHeight+this.bodyElement.scrollTop?this.startScrollContinue("down"):this.stopScrollContinue();let s=Math.round(t/this.rowHeight);const l=s<0||t-s*this.rowHeight<0;s+=this.firstIndex;const i=this.rows[e-this.firstIndex];if(this.clearSpaceRow(),i){if(s===e)return void(0,dom_utils_1.setStyleProps)(i.element,{opacity:.5});(0,dom_utils_1.setStyleProps)(i.element,{display:"none"})}let o=s-this.firstIndex;if(o<=0){return void(this.rows[0].element.style.marginTop=this.rowHeight+"px")}if(o>=this.rows.length-1){return void(this.rows[this.rows.length-1].element.style.marginBottom=this.rowHeight+"px")}i&&s>e&&(o+=1),l||(o-=1);const n=this.rows[o];return null==n||(l?(n.element.style.removeProperty("margin-bottom"),n.element.style.marginTop=this.rowHeight+"px"):(n.element.style.removeProperty("margin-top"),n.element.style.marginBottom=this.rowHeight+"px")),this}dropMoveRow(e,t){this.clearSpaceRow(),this.stopScrollContinue();let s=Math.round(t/this.rowHeight)+this.firstIndex,l=!1;(l=e<this.firstIndex)&&(s-=1);let i=Math.min(Math.max(0,e),this.sortedItems.length-1),o=Math.min(Math.max(0,s),this.sortedItems.length-1);if(i===o)return this;const n=t%this.rowHeight<this.rowHeight/2,r=i<o;r?n&&(o+=1):n||(o-=1);const d=this.sortedItems[i].data,a=this.sortedItems[o].data,h=Math.min(Math.max(0,this.originItems.findIndex((e=>e===d))),this.originItems.length-1);let c=this.originItems.findIndex((e=>e===a));return r?n&&(c-=1):n||(c+=1),c=Math.min(Math.max(0,c),this.originItems.length-1),this.originItems.splice(h,1),this.originItems.splice(c,0,d),o===this.sortedItems.length-1?this.element.scrollTop=this.element.scrollTop+this.rowHeight:l&&(this.element.scrollTop=this.element.scrollTop-this.rowHeight),this.bindItems(this.originItems),this.renderWhenScrolled(),this}renderByOriginData(e,t){if(!0===t){if(null==e)return this;const t=s=>{for(const l of s)if(l.editedRowData&&l.editedRowData(e),l.rows)for(const e of l.rows)t(e.columns)};t(this.columns)}const s=this.rows.find((t=>t.item.data===e));return null!=s&&this.renderRow(s),this}setStyleContext(e){return this.styleCtx=e,this}}exports.$ListView=$ListView;const cnIptPrefix=input_column_1.listViewInputColumnClassName,createListViewEditColumnElement=()=>{const e=document.createElement("div");e.classList.add(`${cnIptPrefix}-wrap`);const t=document.createElement("div");return t.classList.add(`${exports.listViewClassName}-lbl`),{wrapElem:e,lblElem:t}};exports.createListViewEditColumnElement=createListViewEditColumnElement;const cloneListViewEditColumnElement=e=>({wrapElem:(0,dom_utils_1.cloneElement)(e.wrapElem),lblElem:(0,dom_utils_1.cloneElement)(e.lblElem)});exports.cloneListViewEditColumnElement=cloneListViewEditColumnElement,exports.ListViewStyle=react_1.default.createElement(style_1.default,{id:exports.listViewClassName,notDepsColor:!0,css:({design:e})=>`\n.${exports.listViewClassName}-wrap {\n  box-sizing: border-box;\n  overflow: hidden;\n}\n${style_1.CssPV.fitToOuter(`${exports.listViewClassName}-wrap`)}\n.${exports.listViewClassName} {\n  ${style_1.CssPV.flex_c}\n  ${style_1.CssPV.fill}\n  outline: none;\n}\n.${exports.listViewClassName}-row {\n  ${style_1.CssPV.flex_r}\n  flex: none;\n}\n.${exports.listViewClassName}-cell {\n  ${style_1.CssPV.flex_r_c}\n  flex: none;\n  height: 100%;\n  overflow: hidden;\n  z-index: 0;\n  background: ${style_1.CssVar.lv.b.bg.c};\n}\n.${exports.listViewClassName}-cell.bh-fixed {\n  position: sticky;\n  z-index: 1;\n}\n.${exports.listViewClassName}-cell.bh-fill {\n  flex: 1;\n}\n.${exports.listViewClassName}-lbl {\n  box-sizing: border-box;\n  position: relative;\n  display: block;\n  max-height: 100%;\n  max-width: 100%;\n  flex: 1;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  padding: 2px 5px 0px 5px;\n}\n.${exports.listViewClassName}-cell.bh-h-l .${exports.listViewClassName}-lbl {\n  text-align: left;\n}\n.${exports.listViewClassName}-cell.bh-h-c .${exports.listViewClassName}-lbl {\n  text-align: center;\n}\n.${exports.listViewClassName}-cell.bh-h-r .${exports.listViewClassName}-lbl {\n  text-align: right;\n}\n.${exports.listViewClassName}-body-dummy {\n  box-sizing: border-box;\n  position: absolute;\n  z-index: 0;\n  top: 0px;\n  left: 0px;\n  background-color: transparent;\n  visibility: hidden;\n  flex: none;\n}\n.${exports.listViewClassName}-header,\n.${exports.listViewClassName}-footer {\n  box-sizing: border-box;\n  position: sticky;\n  display: flex;\n  flex-flow: column nowrap;\n  justify-content: flex-start;\n  align-items: flex-start;\n  flex: none;\n  z-index: 2;\n  left: 0px;\n  overflow: hidden;\n  width: 100%;\n}\n.${exports.listViewClassName}-header {\n  top: 0px;\n}\n.${exports.listViewClassName}-header > .${exports.listViewClassName}-row,\n.${exports.listViewClassName}-footer > .${exports.listViewClassName}-row {\n  height: 100%;\n}\n.${exports.listViewClassName}-header .${exports.listViewClassName}-cell,\n.${exports.listViewClassName}-footer .${exports.listViewClassName}-cell {\n  user-select: none;\n}\n.${exports.listViewClassName}-body {\n  box-sizing: border-box;\n  position: sticky;\n  display: flex;\n  flex-flow: column nowrap;\n  justify-content: flex-start;\n  align-items: flex-start;\n  z-index: 1;\n  left: 0px;\n  overflow: hidden;\n  width: 100%;\n  cursor: cell;\n}\n.${exports.listViewClassName}-edit {\n  box-sizing: border-box;\n  flex: none;\n  position: fixed;\n  z-index: 999;\n  background: ${style_1.CssVar.lv.b.bg.c};\n}\n.${exports.listViewClassName}-mask {\n  box-sizing: border-box;\n  flex: none;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  height: 100%;\n  width: 100%;\n  z-index: 998;\n  background-color: transparent;\n}\n.${exports.listViewClassName}-resizer {\n  box-sizing: border-box;\n  flex: none;\n  height: 100%;\n  width: 3px;\n  position:relative;\n  right: 0px;\n  top: 0px;\n  cursor: col-resize;\n}\n.${exports.listViewClassName}-cell-m_s {\n  flex-flow: column nowrap;\n}\n.${exports.listViewClassName}-cell-m_s > .${exports.listViewClassName}-row {\n  width: 100%;\n  min-height: 0px;\n}\n.${exports.listViewClassName}-sort-icon {\n  box-sizing: border-box;\n  position: relative;\n  height: 100%;\n  width: 15px;\n}\n.${exports.listViewClassName}-sort-icon::before {\n  position: absolute;\n  content: "";\n  border-right: 5px solid transparent;\n  border-bottom: 5px solid transparent;\n  border-left: 5px solid transparent;\n  top: calc(50% + 2px);\n  left: calc(50% - 5px);\n  border-top: 4px solid ${style_1.CssVar.bdc};\n}\n.${exports.listViewClassName}-sort-icon::after {\n  position: absolute;\n  content: "";\n  border-top: 5px solid transparent;\n  border-right: 5px solid transparent;\n  border-left: 5px solid transparent;\n  top: calc(50% - 10px);\n  left: calc(50% - 5px);\n  border-bottom: 4px solid ${style_1.CssVar.bdc};\n}\n.${exports.listViewClassName}-sort-icon.bh-asc::before {\n  border-top: 5px solid transparent;\n  border-right: 5px solid transparent;\n  border-left: 5px solid transparent;\n  top: calc(50% - 9px);\n  left: calc(50% - 5px);\n  border-bottom: 8px solid ${style_1.CssVar.bdc};\n}\n.${exports.listViewClassName}-sort-icon.bh-desc::before {\n  border-right: 5px solid transparent;\n  border-bottom: 5px solid transparent;\n  border-left: 5px solid transparent;\n  top: calc(50% - 4px);\n  left: calc(50% - 5px);\n  border-top: 8px solid ${style_1.CssVar.bdc};\n}\n.${exports.listViewClassName}-sort-icon.bh-asc::after,\n.${exports.listViewClassName}-sort-icon.bh-desc::after {\n  display: none;\n}\n${"material"===e?`\n.${exports.listViewClassName} {\n  border: 1px solid ${style_1.CssVar.bdc};\n  border-radius: ${style_1.CssParam.m.r};\n}\n.${exports.listViewClassName}-header,\n.${exports.listViewClassName}-footer {\n  background: ${style_1.CssVar.lv.h_f.bg.c};\n}\n.${exports.listViewClassName}-header {\n  border-bottom: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n  box-shadow: ${style_1.CssParam.m.sdBtm};\n}\n.${exports.listViewClassName}-footer {\n  box-shadow: ${style_1.CssParam.m.sdTop};\n  border-top: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n}\n.${exports.listViewClassName}-header .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:not(:last-child),\n.${exports.listViewClassName}-footer .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:not(:last-child) {\n  border-bottom: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n}\n.${exports.listViewClassName}-header .${exports.listViewClassName}-cell,\n.${exports.listViewClassName}-footer .${exports.listViewClassName}-cell {\n  background: ${style_1.CssVar.lv.h_f.bg.c};\n  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n}\n.${exports.listViewClassName}-body .${exports.listViewClassName}-row {\n  border-bottom: 1px solid ${style_1.CssVar.lv.b.bdc};\n}\n.${exports.listViewClassName}-body .${exports.listViewClassName}-cell {\n  border-right: 1px solid ${style_1.CssVar.lv.b.bdc};\n}\n.${exports.listViewClassName}-body .${exports.listViewClassName}-row[data-oddeven="even"] .${exports.listViewClassName}-cell {\n  background: ${style_1.CssVar.lv.b.bg.c_oe};\n}\n.${exports.listViewClassName}-body > .${exports.listViewClassName}-row:last-child,\n.${exports.listViewClassName}-body .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:last-child {\n  border-bottom: none;\n}\n.${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-cell:last-child {\n  border-right: none;\n}\n.${exports.listViewClassName}-body .${exports.listViewClassName}-row:hover .${exports.listViewClassName}-cell {\n  background: ${style_1.CssVar.lv.b.bg.c_hr};\n}\n.${exports.listViewClassName}-body .${exports.listViewClassName}-cell:hover {\n  background: ${style_1.CssVar.lv.b.bg.c_hc} !important;\n}\n.${exports.listViewClassName}-body.bh-select-cell .${exports.listViewClassName}-cell.bh-selected,\n.${exports.listViewClassName}-body.bh-select-row .${exports.listViewClassName}-row.bh-selected .${exports.listViewClassName}-cell {\n  background: ${style_1.CssVar.lv.b.bg.c_s} !important;\n}\n.${exports.listViewClassName}-body.bh-select-row .${exports.listViewClassName}-row.bh-selected,\n.${exports.listViewClassName}-body.bh-select-cell .${exports.listViewClassName}-cell.bh-selected {\n  outline: 1px solid ${style_1.CssVar.lv.b.olc};\n  outline-offset: -1px;\n}\n.${exports.listViewClassName}-resizer,\n.${exports.listViewClassName}-cell:active + .${exports.listViewClassName}-cell .${exports.listViewClassName}-resizer {\n  visibility: hidden;\n}\n.${exports.listViewClassName}-cell:hover .${exports.listViewClassName}-resizer,\n.${exports.listViewClassName}-resizer:active {\n  border-left: 1px dotted ${style_1.CssVar.lv.h_f.bdc};\n  visibility: visible;\n}\n`:""}\n${"neumorphism"===e?`\n.${exports.listViewClassName}-wrap {\n  padding: ${style_1.CssParam.n.ccvSdPdd};\n}\n.${exports.listViewClassName} {\n  box-shadow: ${style_1.CssParam.n.ccvSd};\n  background: ${style_1.CssParam.n.ccvBg};\n  border-radius: ${style_1.CssParam.n.r};\n  padding: ${style_1.CssParam.n.sdPdd};\n}\n.${exports.listViewClassName}-header,\n.${exports.listViewClassName}-footer {\n  box-shadow: ${style_1.CssParam.n.cvxSd};\n  border-radius: ${style_1.CssParam.n.r};\n  background: ${style_1.CssVar.lv.h_f.bg.c};\n}\n.${exports.listViewClassName}-header .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:not(:last-child),\n.${exports.listViewClassName}-footer .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:not(:last-child) {\n  border-bottom: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n}\n.${exports.listViewClassName}-header .${exports.listViewClassName}-cell,\n.${exports.listViewClassName}-footer .${exports.listViewClassName}-cell {\n  background: ${style_1.CssVar.lv.h_f.bg.c};\n  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n}\n.${exports.listViewClassName}-body-dummy {\n  top: ${style_1.CssParam.n.sdPdd};\n  left: ${style_1.CssParam.n.sdPdd};\n}\n.${exports.listViewClassName}-body .${exports.listViewClassName}-row {\n  border-bottom: 1px solid ${style_1.CssVar.lv.b.bdc};\n}\n.${exports.listViewClassName}-body .${exports.listViewClassName}-cell {\n  border-right: 1px solid ${style_1.CssVar.lv.b.bdc};\n}\n.${exports.listViewClassName}-body .${exports.listViewClassName}-row[data-oddeven="even"] .${exports.listViewClassName}-cell {\n  background: ${style_1.CssVar.lv.b.bg.c_oe};\n}\n.${exports.listViewClassName}-body > .${exports.listViewClassName}-row:last-child,\n.${exports.listViewClassName}-body .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:last-child {\n  border-bottom: none;\n}\n.${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-cell:last-child {\n  border-right: none;\n}\n.${exports.listViewClassName}-body .${exports.listViewClassName}-row:hover .${exports.listViewClassName}-cell {\n  background: ${style_1.CssVar.lv.b.bg.c_hr};\n}\n.${exports.listViewClassName}-body .${exports.listViewClassName}-cell:hover {\n  background: ${style_1.CssVar.lv.b.bg.c_hc} !important;\n}\n.${exports.listViewClassName}-body.bh-select-cell .${exports.listViewClassName}-cell.bh-selected,\n.${exports.listViewClassName}-body.bh-select-row .${exports.listViewClassName}-row.bh-selected .${exports.listViewClassName}-cell {\n  background: ${style_1.CssVar.lv.b.bg.c_s} !important;\n}\n.${exports.listViewClassName}-body.bh-select-row .${exports.listViewClassName}-row.bh-selected,\n.${exports.listViewClassName}-body.bh-select-cell .${exports.listViewClassName}-cell.bh-selected {\n  outline: 1px solid ${style_1.CssVar.lv.b.olc};\n  outline-offset: -1px;\n}\n.${exports.listViewClassName}-resizer,\n.${exports.listViewClassName}-cell:active + .${exports.listViewClassName}-cell .${exports.listViewClassName}-resizer {\n  visibility: hidden;\n}\n.${exports.listViewClassName}-cell:hover .${exports.listViewClassName}-resizer,\n.${exports.listViewClassName}-resizer:active {\n  border-left: 1px dotted ${style_1.CssVar.lv.h_f.bdc};\n  visibility: visible;\n}\n.${exports.listViewClassName}-edit > .${input_1.InputClassNames.wrap} {\n  padding: 0px;\n}\n`:""}\n`});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ListViewStyle = exports.cloneListViewEditColumnElement = exports.createListViewEditColumnElement = exports.$ListView = exports.listViewDefaultRowHeight = exports.listViewClassName = void 0;
+const string_utils_1 = __importDefault(require("@bizhermit/basic-utils/dist/string-utils"));
+const react_1 = __importStar(require("react"));
+const controller_1 = require("../hooks/controller");
+const input_1 = require("../layouts/input");
+const input_column_1 = require("../layouts/input-column");
+const style_1 = __importStar(require("../layouts/style"));
+const classname_utils_1 = __importStar(require("../utils/classname-utils"));
+const dom_utils_1 = require("../utils/dom-utils");
+exports.listViewClassName = "bh-lv";
+const initializedDataName = "_lv_init";
+const listViewDefaultRowHeight = () => (0, style_1.cssParamsSize)() + 4;
+exports.listViewDefaultRowHeight = listViewDefaultRowHeight;
+const ListView = (props) => {
+    const ref = (0, react_1.useRef)();
+    const lv = (0, react_1.useRef)();
+    const initRef = (0, react_1.useRef)(false);
+    const layout = (0, style_1.useLayout)();
+    (0, react_1.useEffect)(() => {
+        lv.current = new $ListView(ref.current, props, layout);
+        initRef.current = true;
+        return () => {
+            lv.current?.dispose();
+        };
+    }, []);
+    (0, react_1.useEffect)(() => {
+        if (initRef.current)
+            lv.current?.setItems(props.value);
+    }, [props.value]);
+    (0, react_1.useEffect)(() => {
+        if (initRef.current)
+            lv.current?.setColumns(props.columns);
+    }, [props.columns]);
+    (0, react_1.useEffect)(() => {
+        if (initRef.current)
+            lv.current?.setOptions(props.options);
+    }, [props.options]);
+    (0, react_1.useEffect)(() => {
+        if (initRef.current)
+            lv.current.setStyleContext(layout);
+    }, [layout]);
+    (0, controller_1.initController)(props.controller, (con) => {
+        con.focus = () => {
+            ref.current?.focus();
+            return con;
+        };
+        con.getItems = () => lv.current.getValue();
+        con.setItems = (value) => {
+            lv.current.setItems(value);
+            return con;
+        };
+        con.getFilteredItems = () => lv.current.getFilteredValue();
+        con.getDisplayedItems = () => lv.current.getSortedValue();
+        con.getLength = () => lv.current.getLength();
+        con.getFilteredLength = () => lv.current.getFilteredLength();
+        con.select = (rowIndex, columnName) => {
+            lv.current.select(rowIndex, columnName);
+            return con;
+        };
+        con.clearSelect = () => {
+            lv.current.clearSelect();
+            return con;
+        };
+        con.getSelectedRows = () => lv.current.getSelectedRows();
+        con.getSelectedCells = () => lv.current.getSelectedCells();
+    });
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { className: (0, classname_utils_1.className)(`${exports.listViewClassName}-wrap`, classname_utils_1.default.fitToOuter(props.fitToOuter), props.className), style: props.style }, (0, react_1.useMemo)(() => react_1.default.createElement("div", { ref: ref }), [])),
+        exports.ListViewStyle,
+        (0, react_1.useMemo)(() => {
+            const styles = [];
+            const func = (columns) => {
+                if (columns == null)
+                    return;
+                columns.forEach(column => {
+                    if (column.jsxStyle)
+                        styles.push(react_1.default.createElement(react_1.default.Fragment, { key: column.name ?? string_utils_1.default.generateUuidV4() }, column.jsxStyle));
+                    column._rows?.forEach(colrow => func(colrow.columns));
+                });
+            };
+            func(props.columns);
+            return styles;
+        }, [props.columns])));
+};
+exports.default = ListView;
+class $ListView extends dom_utils_1.DomComponentClass {
+    element;
+    styleCtx;
+    initialized;
+    resizeObserver;
+    headerElement;
+    headerRowElement;
+    bodyElement;
+    dummyElement;
+    footerElement;
+    footerRowElement;
+    editElement;
+    editMaskElement;
+    columns;
+    renderColumns;
+    originItems;
+    bindingItems;
+    filteredItems;
+    sortedItems;
+    rows;
+    selectedRows;
+    lastSelectedCell;
+    lastSelectedBaseCell;
+    lastScrolledTop;
+    lastScrolledLeft;
+    maxFirstIndex;
+    firstIndex;
+    lastChangedX;
+    hasFillColumn;
+    editTarget;
+    scrollingMode;
+    scrollingId;
+    scrollingInterval;
+    cloneBase;
+    rowNumberColumn;
+    headerVisible;
+    headerHeight;
+    footerVisible;
+    footerHeight;
+    rowHeight;
+    selectMode;
+    multiSelect;
+    oddEven;
+    dragScroll;
+    rowNumber;
+    sort;
+    sorted;
+    externalSort;
+    filter;
+    cellClicked;
+    rowClicked;
+    filtered;
+    enterIsClick;
+    scrollTimeoutInterval;
+    endEditEventListener;
+    itemsCallBindedRev = 0;
+    colCallBindedRev = 0;
+    constructor(element, props, styleCtx) {
+        super();
+        this.element = element;
+        this.styleCtx = styleCtx;
+        this.initialized = false;
+        this.itemsCallBindedRev = 0;
+        this.colCallBindedRev = 0;
+        if (element == null) {
+            throw new Error("ListView: not found root element.");
+        }
+        this.columns = [];
+        this.renderColumns = [];
+        this.sortedItems = [];
+        this.rows = [];
+        this.selectedRows = {};
+        this.lastSelectedCell = null;
+        this.lastSelectedBaseCell = null;
+        this.editTarget = null;
+        this.lastScrolledTop = -1;
+        this.lastScrolledLeft = -1;
+        this.firstIndex = -1;
+        this.scrollingMode = "stop";
+        this.scrollingId = 0;
+        this.scrollingInterval = 0;
+        this.scrollTimeoutInterval = 5;
+        this.endEditEventListener = null;
+        this.generateElements();
+        this.rowNumberColumn = {
+            name: "_rnum",
+            label: "row number",
+            dataType: "number",
+            width: 40,
+            minWidth: 40,
+            cells: [],
+            headerCellElement: (0, dom_utils_1.cloneElement)(this.cloneBase.cellElem),
+            footerCellElement: (0, dom_utils_1.cloneElement)(this.cloneBase.cellElem),
+            initializeParameters: null,
+            dispose: null,
+            cellInitialize: (cell) => {
+                const elem = (0, dom_utils_1.cloneElement)(this.cloneBase.labelCellElem);
+                cell.contentElements.push(elem);
+                cell.element.appendChild(elem);
+            },
+            cellRender: (cell) => {
+                if (cell.cache.index !== cell.row.index) {
+                    cell.contentElements[0].textContent = String(cell.row.index + 1);
+                    cell.cache.index = cell.row.index;
+                }
+            },
+            textAlign: "center",
+            sort: null,
+            sortOrder: "",
+            fill: false,
+            fixed: true,
+            fixedLeft: 0,
+            left: 0,
+            resize: false,
+            tabStop: false,
+            notScrollFocusWhenTabStop: false,
+            preventClearSelected: false,
+            disabled: false,
+            render: true,
+            editedRowData: null,
+        };
+        this.setOptions(props.options);
+        this.initialized = true;
+        this.optimizeElementsPosition();
+        this.bindColumns(props.columns);
+        this.bindItems(props.value);
+        this.optimizeDummySize();
+        this.render();
+    }
+    dispose() {
+        this.disposeColumns();
+        this.disposeRows();
+        if (this.resizeObserver)
+            this.resizeObserver.disconnect();
+        super.dispose();
+    }
+    setOptions(options = {}) {
+        this.setHeaderVisible(options.header);
+        this.setHeaderHeight(options.headerHeight);
+        this.setFooterVisible(options.footer);
+        this.setFooterHeight(options.footerHeight);
+        this.setRowHeight(options.rowHeignt);
+        this.setRowNumber(options.rowNumber);
+        this.setSelectMode(options.selectMode);
+        this.setMultiSelect(options.multiSelect);
+        this.setOddEven(options.oddEven);
+        this.setDragScroll(options.dragScroll);
+        this.setSort(options.sort);
+        this.setSorted(options.sorted);
+        this.setExternalSort(options.externalSort);
+        this.setFilter(options.filter);
+        this.setCellClicked(options.clickedCell);
+        this.setRowClicked(options.clickedRow);
+        this.setFiltered(options.filtered);
+        this.setEnterIsClick(options.enterIsClick);
+        this.setScrollTimeoutInterval(options.scrollTimeoutInterval);
+        return this;
+    }
+    optimizeElementsPosition() {
+        if (!this.initialized)
+            return;
+        let bMargin = 0;
+        if (this.headerVisible) {
+            bMargin += this.headerHeight;
+            (0, dom_utils_1.setStyleProps)(this.bodyElement, { top: this.headerHeight + "px" });
+        }
+        else {
+            (0, dom_utils_1.setStyleProps)(this.bodyElement, { top: "0px" });
+        }
+        if (this.footerVisible)
+            bMargin += this.footerHeight;
+        (0, dom_utils_1.setStyleProps)(this.bodyElement, { height: bMargin === 0 ? "100%" : `calc(100% - ${bMargin}px)` });
+        this.renderWhenResized();
+    }
+    setHeaderVisible(visible) {
+        const init = visible !== false;
+        if (init === this.headerVisible)
+            return this;
+        this.headerVisible = init;
+        (0, dom_utils_1.setStyleProps)(this.headerElement, { display: this.headerVisible ? null : "none" });
+        this.optimizeElementsPosition();
+        return this;
+    }
+    setHeaderHeight(height) {
+        const init = height || (0, exports.listViewDefaultRowHeight)();
+        if (init === this.headerHeight)
+            return this;
+        this.headerHeight = init;
+        (0, dom_utils_1.setStyleProps)(this.headerElement, { height: this.headerHeight + "px" });
+        this.optimizeElementsPosition();
+        return this;
+    }
+    setFooterVisible(visible) {
+        const init = visible === true;
+        if (init === this.footerVisible)
+            return this;
+        this.footerVisible = init;
+        (0, dom_utils_1.setStyleProps)(this.footerElement, { display: this.footerVisible ? null : "none" });
+        this.optimizeElementsPosition();
+        return this;
+    }
+    setFooterHeight(height) {
+        const init = height || (0, exports.listViewDefaultRowHeight)();
+        if (init === this.footerHeight)
+            return this;
+        this.footerHeight = init;
+        (0, dom_utils_1.setStyleProps)(this.footerElement, { height: this.footerHeight + "px", top: `calc(100% - ${this.footerHeight}px)` });
+        this.optimizeElementsPosition();
+        return this;
+    }
+    setRowHeight(height) {
+        const init = height || (0, exports.listViewDefaultRowHeight)();
+        if (init === this.rowHeight)
+            return this;
+        this.rowHeight = init;
+        const prop = { height: `${this.rowHeight}px` };
+        (0, dom_utils_1.setStyleProps)(this.cloneBase.rowElem, prop);
+        for (const row of this.rows) {
+            (0, dom_utils_1.setStyleProps)(row.element, prop);
+        }
+        return this;
+    }
+    setRowNumber(visible) {
+        const init = visible !== false;
+        if (init === this.rowNumber)
+            return this;
+        this.rowNumber = init;
+        if (!this.initialized)
+            return this;
+        this.buildColumns();
+        return this;
+    }
+    setSelectMode(selectMode) {
+        const init = selectMode || "cell";
+        if (init === this.selectMode)
+            return this;
+        this.selectMode = init;
+        this.bodyElement.classList.remove("bh-select-row", "bh-select-cell");
+        switch (this.selectMode) {
+            case "none":
+                break;
+            case "row":
+                this.bodyElement.classList.add("bh-select-row");
+                break;
+            case "cell":
+            default:
+                this.bodyElement.classList.add("bh-select-cell");
+                break;
+        }
+        return this;
+    }
+    setMultiSelect(multiSelect) {
+        const init = multiSelect === true;
+        if (init === this.multiSelect)
+            return this;
+        this.multiSelect = init;
+        this.clearSelectedRows();
+        return this;
+    }
+    setOddEven(oddEven) {
+        const init = oddEven !== false;
+        if (init === this.oddEven)
+            return this;
+        this.oddEven = init;
+        if (this.initialized)
+            this.renderWhenScrolled();
+        return this;
+    }
+    setDragScroll(dragScroll) {
+        const init = dragScroll ?? true;
+        if (init === this.dragScroll)
+            return this;
+        this.dragScroll = init;
+        return this;
+    }
+    setSort(func) {
+        const same = this.sort === func;
+        this.sort = func;
+        if (this.initialized && !same) {
+            this.sortItems();
+            this.optimizeMaxFirstIndex();
+            this.render();
+        }
+        return this;
+    }
+    setSorted(func) {
+        this.sorted = func;
+        return this;
+    }
+    setExternalSort(external) {
+        this.externalSort = external === true;
+        return this;
+    }
+    setFilter(func) {
+        const same = this.filter === func;
+        this.filter = func;
+        if (this.initialized && !same) {
+            this.filterItems();
+            this.optimizeMaxFirstIndex();
+            this.render();
+        }
+        return this;
+    }
+    setCellClicked(func) {
+        this.cellClicked = func;
+        return this;
+    }
+    setRowClicked(func) {
+        this.rowClicked = func;
+        return this;
+    }
+    setFiltered(func) {
+        this.filtered = func;
+        return this;
+    }
+    setEnterIsClick(enterIsClick) {
+        const init = enterIsClick === true;
+        if (init === this.enterIsClick)
+            return this;
+        this.enterIsClick = enterIsClick;
+        return this;
+    }
+    setScrollTimeoutInterval(interval) {
+        this.scrollTimeoutInterval = Math.max(0, interval ?? 5);
+        return this;
+    }
+    generateElements() {
+        this.element.classList.add(exports.listViewClassName, style_1.scrollbarClassName);
+        this.element.tabIndex = -1;
+        this.element.textContent = "";
+        // clone base
+        const div = document.createElement("div");
+        this.cloneBase = {
+            div,
+            rowElem: (0, dom_utils_1.cloneElement)(div, `${exports.listViewClassName}-row`),
+            cellElem: (0, dom_utils_1.cloneElement)(div, `${exports.listViewClassName}-cell`),
+            labelCellElem: (0, dom_utils_1.cloneElement)(div, `${exports.listViewClassName}-lbl`),
+        };
+        // header
+        this.headerElement = (0, dom_utils_1.cloneElement)(div, `${exports.listViewClassName}-header`);
+        this.headerElement.appendChild(this.headerRowElement = (0, dom_utils_1.cloneElement)(this.cloneBase.rowElem));
+        // footer
+        this.footerElement = (0, dom_utils_1.cloneElement)(div, `${exports.listViewClassName}-footer`);
+        this.footerElement.appendChild(this.footerRowElement = (0, dom_utils_1.cloneElement)(this.cloneBase.rowElem));
+        this.element.appendChild(this.dummyElement = (0, dom_utils_1.cloneElement)(div, `${exports.listViewClassName}-body-dummy`));
+        this.element.appendChild(this.headerElement);
+        this.element.appendChild(this.bodyElement = (0, dom_utils_1.cloneElement)(div, `${exports.listViewClassName}-body`));
+        this.element.appendChild(this.footerElement);
+        this.element.appendChild(this.editMaskElement = (0, dom_utils_1.setStyleProps)((0, dom_utils_1.cloneElement)(div, `${exports.listViewClassName}-mask`), { display: "none" }));
+        this.element.appendChild(this.editElement = (0, dom_utils_1.setStyleProps)((0, dom_utils_1.cloneElement)(div, `${exports.listViewClassName}-edit`), { visibility: "hidden", display: "none" }));
+        let et = null;
+        this.addEvent(this.element, "scroll", () => {
+            if (et)
+                return;
+            et = setTimeout(() => {
+                this.endEdit(false);
+                this.renderWhenScrolled();
+                et = null;
+            }, this.scrollTimeoutInterval);
+        }, { passive: true });
+        this.addEvent(this.element, "keydown", (e) => {
+            switch (e.key) {
+                case "ArrowUp":
+                    this.arrowUp(e.ctrlKey ? 10 : 1, this.multiSelect && e.shiftKey);
+                    e.preventDefault();
+                    break;
+                case "ArrowDown":
+                    this.arrowDown(e.ctrlKey ? 10 : 1, this.multiSelect && e.shiftKey);
+                    e.preventDefault();
+                    break;
+                case "ArrowLeft":
+                    this.arrowLeft(e.ctrlKey, this.multiSelect && e.shiftKey);
+                    e.preventDefault();
+                    break;
+                case "ArrowRight":
+                    this.arrowRight(e.ctrlKey, this.multiSelect && e.shiftKey);
+                    e.preventDefault();
+                    break;
+                case "Enter":
+                    this.endEdit(true);
+                    if (this.enterIsClick) {
+                        if (this.lastSelectedCell && this.selectMode !== "none")
+                            this.cellClickedImpl(this.lastSelectedCell.item, this.lastSelectedCell.column, this.lastSelectedCell.index, e.ctrlKey, e.shiftKey);
+                    }
+                    else {
+                        let lst = this.element.scrollTop;
+                        if (e.shiftKey)
+                            this.arrowUp();
+                        else
+                            this.arrowDown();
+                        this.beginEditLastSelectedCell(lst);
+                    }
+                    e.preventDefault();
+                    break;
+                case "Tab":
+                    this.endEdit(true);
+                    let lst = this.element.scrollTop;
+                    if (e.shiftKey)
+                        this.arrowLeft();
+                    else
+                        this.arrowRight();
+                    this.beginEditLastSelectedCell(lst);
+                    e.preventDefault();
+                    break;
+                case " ":
+                    if (this.lastSelectedCell && this.selectMode !== "none")
+                        this.cellClickedImpl(this.lastSelectedCell.item, this.lastSelectedCell.column, this.lastSelectedCell.index, e.ctrlKey, e.shiftKey);
+                    e.preventDefault();
+                    break;
+                case "F2":
+                    e.preventDefault();
+                    this.beginEditLastSelectedCell();
+                    break;
+                case "Escape":
+                    this.endEdit(false);
+                    break;
+                default:
+                    break;
+            }
+        }, false);
+        this.addEvent(this.bodyElement, "mousedown", (e) => {
+            if (this.dragScroll == false)
+                return;
+            const lastPosX = this.bodyElement.scrollLeft, lastPosY = this.element.scrollTop, posX = e.clientX, posY = e.clientY;
+            let et = null, active = true;
+            const move = (e) => {
+                if (et)
+                    return;
+                et = setTimeout(() => {
+                    if (this.dragScroll !== "vertical") {
+                        const sl = posX - e.clientX + lastPosX;
+                        this.headerElement.scrollLeft = sl;
+                        this.footerElement.scrollLeft = sl;
+                        this.element.scrollLeft = sl;
+                    }
+                    if (this.dragScroll !== "horizontal") {
+                        this.element.scrollTop = posY - e.clientY + lastPosY;
+                    }
+                    et = null;
+                }, this.scrollTimeoutInterval);
+            };
+            document.onselectstart = () => false;
+            setTimeout(() => {
+                if (active) {
+                    // setCursor("move");
+                }
+            }, 200);
+            const end = () => {
+                this.removeEvent(window, "mousemove", move);
+                this.removeEvent(window, "mouseup", end);
+                active = false;
+                // releaseCursor();
+                this.lastScrolledLeft = this.element.scrollLeft;
+                this.lastScrolledTop = this.element.scrollTop;
+            };
+            this.addEvent(window, "mouseup", end, { passive: true });
+            this.addEvent(window, "mousemove", move, { passive: true });
+        });
+        this.resizeObserver = new ResizeObserver(() => {
+            this.renderWhenResized();
+            this.optimizeDummySize();
+        });
+        this.resizeObserver.observe(this.element);
+        this.addEvent(this.editMaskElement, "click", () => {
+            this.endEdit(true);
+        });
+        this.addEvent(this.editElement, "mousedown", (e) => {
+            e.stopPropagation();
+        });
+        this.addEvent(this.editElement, "keydown", (e) => {
+            if (e.key === "Tab")
+                return;
+            if (e.key === "Enter")
+                return;
+            if (e.key === "Escape")
+                return;
+            e.stopPropagation();
+        });
+    }
+    clearSelectedRows(render) {
+        Object.keys(this.selectedRows).forEach((key) => {
+            const item = this.selectedRows[key];
+            item.rowSelected = false;
+            item.cellSelected = {};
+            delete this.selectedRows[key];
+        });
+        for (const row of this.rows) {
+            row.cache._lv_selected = null;
+            for (const cell of row.cells) {
+                cell.cache._lv_selected = null;
+            }
+        }
+        if (render)
+            this.renderWhenScrolled();
+    }
+    rangeSelectRow(item, column, index) {
+        if (item == null || this.lastSelectedBaseCell == null)
+            return;
+        item.cellSelected[column.name] = true;
+        if (this.lastSelectedBaseCell.index === index) {
+            this.selectedRows[item.id] = item;
+        }
+        else if (this.lastSelectedBaseCell.index > index) {
+            for (let i = index; i <= this.lastSelectedBaseCell.index; i++) {
+                const rItem = this.sortedItems[i];
+                rItem.rowSelected = true;
+                this.selectedRows[rItem.id] = rItem;
+            }
+        }
+        else {
+            for (let i = this.lastSelectedBaseCell.index; i <= index; i++) {
+                const rItem = this.sortedItems[i];
+                rItem.rowSelected = true;
+                this.selectedRows[rItem.id] = rItem;
+            }
+        }
+        let endColName = null;
+        const rCols = [];
+        this.columnForEach((c) => {
+            if (endColName == null) {
+                if (c.name === this.lastSelectedBaseCell.column.name)
+                    endColName = column.name;
+                else if (c.name === column.name)
+                    endColName = this.lastSelectedBaseCell.column.name;
+            }
+            if (endColName != null) {
+                rCols.push(c.name);
+                if (endColName === c.name)
+                    return false;
+            }
+        });
+        Object.keys(this.selectedRows).forEach((id) => {
+            rCols.forEach((name) => this.selectedRows[id].cellSelected[name] = true);
+        });
+    }
+    ;
+    scrollToIndex(index, render) {
+        const bst = this.bodyElement.scrollTop;
+        if (index < this.firstIndex || (index - this.firstIndex) * this.rowHeight < bst) {
+            this.element.scrollTop = index * this.rowHeight;
+            return;
+        }
+        if (this.bodyElement.clientHeight + bst < (index - this.firstIndex + 1) * this.rowHeight) {
+            this.element.scrollTop = (index + 1) * this.rowHeight - this.bodyElement.clientHeight;
+            return;
+        }
+        if (render !== false)
+            this.renderWhenScrolled();
+    }
+    ;
+    scrollToColumn(column, render, renderAbsolute) {
+        if (column == null)
+            return false;
+        if (column.notScrollFocusWhenTabStop) {
+            if (render !== false)
+                this.renderWhenScrolled(renderAbsolute);
+            return false;
+        }
+        let colLeft = 0, colRight = 0, fixedLeft = 0;
+        const func = (col) => {
+            if (col.parent == null) {
+                colLeft = col.left;
+                fixedLeft = col.fixedLeft;
+            }
+            else {
+                func(col.parent);
+                const cell = col.cells[0];
+                if (cell == null)
+                    return;
+                colLeft += cell.element.offsetLeft;
+            }
+        };
+        func(column);
+        colRight = colLeft + column.width;
+        const cw = this.element.clientWidth;
+        let sl = this.lastScrolledLeft;
+        if (colLeft - fixedLeft < this.lastScrolledLeft)
+            sl = colLeft - fixedLeft;
+        if (colRight > this.lastScrolledLeft + cw)
+            sl = colRight - cw;
+        if (sl !== this.lastScrolledLeft) {
+            this.headerElement.scrollLeft = sl;
+            this.footerElement.scrollLeft = sl;
+            this.element.scrollLeft = sl;
+            if (this.element.scrollLeft == sl && render !== true)
+                return true;
+        }
+        if (render !== false)
+            this.renderWhenScrolled(renderAbsolute);
+        return false;
+    }
+    arrowUpDown(updown, focusIndex, rangeSelect) {
+        if (this.selectMode === "none")
+            return false;
+        const index = Math.max(0, Math.min((this.lastSelectedCell == null ? focusIndex : this.lastSelectedCell.index) + updown, this.sortedItems.length - 1));
+        const item = this.sortedItems[index];
+        if (item == null || this.lastSelectedCell?.index === index)
+            return false;
+        this.clearSelectedRows();
+        const column = this.lastSelectedCell?.column || this.findColumn((col) => col.tabStop);
+        if (this.selectMode === "row") {
+            item.rowSelected = true;
+        }
+        else {
+            if (this.columns.length === 0)
+                return false;
+            if (column == null)
+                return false;
+            item.cellSelected[column.name] = true;
+        }
+        this.selectedRows[item.id] = item;
+        this.lastSelectedCell = { index, item, column };
+        if (rangeSelect === true)
+            this.rangeSelectRow(item, column, index);
+        else
+            this.lastSelectedBaseCell = { index, item, column };
+        this.scrollToIndex(index);
+        return true;
+    }
+    arrowUp(up, rangeSelect) {
+        return this.arrowUpDown(-1 * (up ? up : 1), Math.max(0, this.firstIndex), rangeSelect);
+    }
+    arrowDown(down, rangeSelect) {
+        return this.arrowUpDown(down ? down : 1, Math.min(this.sortedItems.length, this.firstIndex) - 1, rangeSelect);
+    }
+    arrowLeftRightOptimize(index, column, rangeSelect) {
+        if (column == null)
+            return false;
+        const item = this.sortedItems[Math.max(0, Math.min(this.sortedItems.length - 1, index))];
+        if (item == null)
+            return false;
+        this.clearSelectedRows();
+        item.cellSelected[column.name] = true;
+        this.selectedRows[item.id] = item;
+        this.lastSelectedCell = { index, item, column };
+        if (rangeSelect === true)
+            this.rangeSelectRow(item, column, index);
+        else
+            this.lastSelectedBaseCell = { index, item, column };
+        this.scrollToIndex(index, false);
+        return this.scrollToColumn(column, true, true);
+    }
+    arrowLeft(ctrlKey, rangeSelect) {
+        if (this.selectMode !== "cell" || this.columns.length === 0)
+            return false;
+        let index = this.lastSelectedCell == null ? this.firstIndex : this.lastSelectedCell.index;
+        let column = this.lastSelectedCell?.column;
+        if (ctrlKey || column == null) {
+            column = this.findFirstColumn();
+        }
+        else {
+            const ret = this.findPrevColumn(column.name);
+            column = ret.column;
+            if (ret.nextRow) {
+                const movedIndex = Math.max(0, index - 1);
+                if (movedIndex === index)
+                    return false;
+                index = movedIndex;
+            }
+        }
+        return this.arrowLeftRightOptimize(index, column, rangeSelect);
+    }
+    arrowRight(ctrlKey, rangeSelect) {
+        if (this.selectMode !== "cell" || this.columns.length === 0) {
+            return false;
+        }
+        let index = this.lastSelectedCell == null ? this.firstIndex : this.lastSelectedCell.index;
+        let column = this.lastSelectedCell?.column;
+        if (ctrlKey) {
+            column = this.findLastColumn();
+        }
+        else {
+            if (column == null) {
+                column = this.findFirstColumn();
+            }
+            else {
+                const ret = this.findNextColumn(column.name);
+                column = ret.column;
+                if (ret.nextRow) {
+                    const movedIndex = Math.min(index + 1, this.sortedItems.length - 1);
+                    if (movedIndex === index)
+                        return false;
+                    index = movedIndex;
+                }
+            }
+        }
+        return this.arrowLeftRightOptimize(index, column, rangeSelect);
+    }
+    render() {
+        this.renderWhenResized();
+        this.renderHeaderCells();
+        this.renderFooterCells();
+        return this;
+    }
+    renderHeaderCells() {
+        if (!this.headerVisible)
+            return this;
+        const func = (columns) => {
+            if (columns == null)
+                return;
+            for (const column of columns) {
+                if (column.headerCellRender)
+                    column.headerCellRender(column.headerCellLabelElement, this.sortedItems, this.originItems);
+                if (column.rows) {
+                    for (const colrow of column.rows) {
+                        func(colrow.columns);
+                    }
+                }
+            }
+        };
+        func(this.columns);
+        return this;
+    }
+    renderFooterCells() {
+        if (!this.footerVisible)
+            return this;
+        const func = (columns) => {
+            if (columns == null)
+                return;
+            for (const column of columns) {
+                if (column.footerCellRender)
+                    column.footerCellRender(column.footerCellLabelElement, this.sortedItems, this.originItems);
+                if (column.rows) {
+                    for (const colrow of column.rows) {
+                        func(colrow.columns);
+                    }
+                }
+            }
+        };
+        func(this.columns);
+        return this;
+    }
+    renderRow(row, allColumn = false) {
+        const item = row.item;
+        if (item == null) {
+            row.element.style.visibility = "hidden";
+            return;
+        }
+        if (row.element.style.getPropertyValue("visibility"))
+            row.element.style.removeProperty("visibility");
+        if (!row.item.data[initializedDataName]) {
+            row.item.data[initializedDataName] = true;
+            this.columns.forEach(column => {
+                column.rowDataInitialize?.(row.item.data);
+            });
+        }
+        if (row.cache._lv_selected !== item.rowSelected) {
+            if (row.cache._lv_selected = item.rowSelected)
+                row.element.classList.add("bh-selected");
+            else
+                row.element.classList.remove("bh-selected");
+        }
+        if (this.oddEven) {
+            const oddEven = row.index % 2;
+            if (row.cache._lv_oddEven !== oddEven) {
+                row.element.setAttribute("data-oddeven", (row.cache._lv_oddEven = oddEven) === 0 ? "odd" : "even");
+            }
+        }
+        this.renderRowColumns(allColumn ? this.columns : this.renderColumns, row);
+    }
+    renderRowColumns(columns, row) {
+        columns.forEach(column => {
+            this.renderCell(column.cells[row.id]);
+            column.rows?.forEach(colrow => {
+                this.renderRowColumns(colrow.columns, row);
+            });
+        });
+    }
+    renderCell(cell) {
+        if (cell.cache._lv_selected !== (cell.row.item.cellSelected[cell.column.name] || false)) {
+            if (cell.cache._lv_selected = cell.row.item.cellSelected[cell.column.name] === true)
+                cell.element.classList.add("bh-selected");
+            else
+                cell.element.classList.remove("bh-selected");
+        }
+        cell.column.cellRender(cell, cell.column.initializeParameters);
+    }
+    renderWhenScrolled(absolute) {
+        const changedX = this.optimizeRenderColumns();
+        const st = this.element.scrollTop;
+        const index = Math.min(this.maxFirstIndex, Math.floor(st / this.rowHeight));
+        if (this.lastScrolledTop !== st) {
+            this.bodyElement.scrollTop = st - this.rowHeight * index;
+            this.lastScrolledTop = st;
+        }
+        if (absolute !== true) {
+            if (this.firstIndex === index && changedX && changedX === this.lastChangedX)
+                return;
+        }
+        for (let i = 0, il = this.rows.length; i < il; i++) {
+            const row = this.rows[i];
+            row.item = this.sortedItems[row.index = index + i];
+            this.renderRow(row, changedX);
+        }
+        this.firstIndex = index;
+        this.lastChangedX = changedX;
+    }
+    ;
+    renderWhenResized() {
+        const maxRowLen = Math.min(Math.max(0, Math.ceil(this.bodyElement.clientHeight / this.rowHeight || 0)) + 1, Math.max(1, this.sortedItems.length));
+        if (this.rows.length !== maxRowLen) {
+            for (let i = 0; i < maxRowLen; i++) {
+                let row = this.rows[i];
+                if (row == null) {
+                    row = {
+                        item: null,
+                        index: -1,
+                        id: i,
+                        cache: {
+                            _lv_selected: false,
+                            _lv_oddEven: null,
+                        },
+                        cells: [],
+                        element: (0, dom_utils_1.cloneElement)(this.cloneBase.rowElem),
+                    };
+                    (0, dom_utils_1.setStyleProps)(row.element, { visibility: "hidden" });
+                    if (this.hasFillColumn)
+                        (0, dom_utils_1.setStyleProps)(row.element, { minWidth: "100%" });
+                    for (const col of this.columns) {
+                        this.generateCell(row, col, row.element);
+                    }
+                    this.bodyElement.appendChild(row.element);
+                    this.rows.push(row);
+                }
+            }
+            ;
+            this.disposeRows(maxRowLen);
+        }
+        this.lastScrolledLeft = -1;
+        this.optimizeMaxFirstIndex();
+        this.renderWhenScrolled();
+        return true;
+    }
+    generateCell(row, col, rowElem) {
+        const cell = {
+            column: col,
+            row: row,
+            element: (0, dom_utils_1.cloneElement)(this.cloneBase.cellElem),
+            contentElements: [],
+            cache: {
+                _lv_selected: false,
+                _lv_initialized: false,
+            },
+        };
+        if (col.rows) {
+            cell.element.classList.add(`${exports.listViewClassName}-cell-m_s`);
+            for (const colrow of col.rows) {
+                const colrowElem = (0, dom_utils_1.setStyleProps)((0, dom_utils_1.cloneElement)(this.cloneBase.rowElem), {
+                    flex: colrow.bodyHeightFlexRate,
+                    width: "100%",
+                    minHeight: "0px",
+                });
+                colrow.bodyClassName.forEach((cn) => colrowElem.classList.add(cn));
+                for (const rowcol of colrow.columns) {
+                    const ccell = this.generateCell(row, rowcol, colrowElem);
+                    if (rowcol.fill)
+                        ccell.element.classList.add("bh-fill");
+                }
+                if (colrow.body)
+                    cell.element.appendChild(colrowElem);
+            }
+        }
+        cell.element.setAttribute("data-name", col.name);
+        if (col.fill)
+            cell.element.classList.add("bh-fill");
+        (0, dom_utils_1.setStyleProps)(cell.element, { width: `${col.width}px` });
+        if (col.fixed) {
+            cell.element.classList.add("bh-fixed");
+            cell.element.style.left = col.fixedLeft + "px";
+        }
+        cell.element.classList.add(classname_utils_1.default.hAlign(col.textAlign ?? "left"));
+        if (col.appearance === "anchor")
+            cell.element.classList.add("bh-anchor");
+        rowElem.appendChild(cell.element);
+        col.cells.push(cell);
+        row.cells.push(cell);
+        cell.element.setAttribute("data-disabled", String(col.disabled === true));
+        col.cellInitialize(cell, col.initializeParameters, this);
+        this.addEvent(cell.element, "click", (e) => { this.cellClickedImpl(cell.row.item, cell.column, row.index, e.ctrlKey, e.shiftKey, e); });
+        return cell;
+    }
+    optimizeMaxFirstIndex() {
+        this.maxFirstIndex = Math.max(0, this.sortedItems.length - this.rows.length);
+    }
+    optimizeRenderColumns() {
+        let sl = this.element.scrollLeft;
+        if (this.lastScrolledLeft !== sl) {
+            this.headerElement.scrollLeft = sl;
+            this.footerElement.scrollLeft = sl;
+            this.bodyElement.scrollLeft = sl;
+            const cw = this.bodyElement.clientWidth;
+            const sr = cw + sl + 10;
+            this.lastScrolledLeft = sl;
+            sl -= 10;
+            this.renderColumns = [];
+            this.columns.forEach((col) => {
+                if (col.fixed) {
+                    if (col.render = col.left < sr)
+                        this.renderColumns.push(col);
+                }
+                else {
+                    if (col.render = sl < col.left + col.width && col.left < sr)
+                        this.renderColumns.push(col);
+                }
+            });
+            return true;
+        }
+        return false;
+    }
+    optimizeRowNumberColumnWidth() {
+        const width = Math.max(40, String(this.sortedItems.length).length * 10 + 12);
+        if (width === this.rowNumberColumn.width)
+            return;
+        this.rowNumberColumn.width = this.rowNumberColumn.minWidth = width;
+        this.rowNumberColumn.cells.forEach(cell => {
+            cell.column.headerCellElement.style.width = cell.column.footerCellElement.style.width = cell.element.style.width = width + "px";
+        });
+        this.optimizeDummySize();
+    }
+    optimizeDummySize() {
+        const elem = this.rows[0]?.element;
+        if (elem == null)
+            return;
+        const rect = elem.getBoundingClientRect();
+        (0, dom_utils_1.setStyleProps)(this.dummyElement, { width: (rect.width + this.dummyElement.offsetLeft) + "px" });
+        const cols = [];
+        this.columns.forEach(column => {
+            if (column.fixed) {
+                const e = column.cells[0].element;
+                (0, dom_utils_1.setStyleProps)(e, { position: "relative" });
+                e.style.removeProperty("left");
+            }
+        });
+        this.columns.forEach(column => {
+            const cellElem = column.cells[0].element;
+            cols.push({ left: Math.round(cellElem.getBoundingClientRect().left - rect.left + this.lastScrolledLeft), column });
+        });
+        let fixedLeft = 0;
+        let minLeft = cols[0].left || 0;
+        cols.sort((item1, item2) => item1.left - item2.left).forEach((item) => {
+            item.column.left = item.left - minLeft;
+            item.column.fixedLeft = fixedLeft;
+            if (item.column.fixed) {
+                (0, dom_utils_1.setStyleProps)(item.column.cells[0].element, { position: "sticky" });
+                const prop = { left: fixedLeft + "px" };
+                (0, dom_utils_1.setStyleProps)(item.column.headerCellElement, prop);
+                (0, dom_utils_1.setStyleProps)(item.column.footerCellElement, prop);
+                for (const cell of item.column.cells) {
+                    (0, dom_utils_1.setStyleProps)(cell.element, prop);
+                }
+                fixedLeft += item.column.width;
+            }
+        });
+    }
+    disposeRows(maxRowLen) {
+        const len = maxRowLen || 0;
+        for (let i = this.rows.length - 1; i >= len; i--) {
+            const row = this.rows[i];
+            for (const cell of row.cells) {
+                this.removeEvent(cell.element);
+                if (cell.column.cellDispose) {
+                    cell.column.cellDispose(cell, this);
+                }
+                cell.column.cells.pop();
+            }
+            this.removeEvent(row.element);
+            this.bodyElement.removeChild(row.element);
+            this.rows.pop();
+        }
+    }
+    findColumn(func) {
+        let ret = null;
+        const search = (columns) => {
+            for (const column of columns) {
+                if (func(column))
+                    ret = column;
+                if (ret != null)
+                    return;
+                if (column.rows) {
+                    for (const colrow of column.rows) {
+                        search(colrow.columns);
+                    }
+                }
+                if (ret != null)
+                    return;
+            }
+        };
+        search(this.columns);
+        return ret;
+    }
+    findFirstColumn() {
+        let retColumn = null;
+        const func = (columns) => {
+            if (columns == null)
+                return;
+            for (let i = 0, il = columns.length; i < il; i++) {
+                const col = columns[i];
+                if (col.tabStop) {
+                    retColumn = col;
+                    return;
+                }
+                if (col.rows) {
+                    for (const colrow of col.rows) {
+                        func(colrow.columns);
+                    }
+                }
+                if (retColumn)
+                    return;
+            }
+        };
+        func(this.columns);
+        return retColumn;
+    }
+    findLastColumn() {
+        let retColumn = null;
+        const func = (columns) => {
+            if (columns == null)
+                return;
+            for (let i = columns.length - 1; i >= 0; i--) {
+                const col = columns[i];
+                if (col.rows) {
+                    for (const colrow of col.rows) {
+                        func(colrow.columns);
+                    }
+                }
+                if (retColumn)
+                    return;
+                if (col.tabStop) {
+                    retColumn = col;
+                    return;
+                }
+            }
+        };
+        func(this.columns);
+        return retColumn;
+    }
+    findPrevColumn(columnName) {
+        let retColumn = null, nextRow = false;
+        if (this.columns.length === 0)
+            return { column: retColumn, nextRow };
+        const colName = columnName ?? this.findLastColumn()?.name;
+        let found = false;
+        const func = (columns) => {
+            if (columns == null)
+                return;
+            for (let i = columns.length - 1; i >= 0; i--) {
+                const col = columns[i];
+                if (col.rows) {
+                    for (let j = col.rows.length - 1; j >= 0; j--) {
+                        const colrow = col.rows[j];
+                        func(colrow.columns);
+                        if (retColumn)
+                            return;
+                    }
+                }
+                if (col.name === colName) {
+                    found = true;
+                    continue;
+                }
+                if (!found || !col.tabStop)
+                    continue;
+                retColumn = col;
+                return;
+            }
+        };
+        func(this.columns);
+        if (nextRow = !retColumn)
+            func(this.columns);
+        return { column: retColumn, nextRow };
+    }
+    findNextColumn(columnName) {
+        let retColumn = null, nextRow = false;
+        if (this.columns.length === 0)
+            return { column: retColumn, nextRow };
+        const colName = columnName ?? this.findFirstColumn()?.name;
+        let found = false;
+        const func = (columns) => {
+            if (columns == null)
+                return;
+            for (let i = 0, il = columns.length; i < il; i++) {
+                const col = columns[i];
+                if (col.name === colName) {
+                    found = true;
+                    if (col.rows) {
+                        for (const colrow of col.rows) {
+                            func(colrow.columns);
+                            if (retColumn)
+                                return;
+                        }
+                    }
+                    continue;
+                }
+                if (!found || !col.tabStop) {
+                    if (col.rows) {
+                        for (const colrow of col.rows) {
+                            func(colrow.columns);
+                            if (retColumn)
+                                return;
+                        }
+                    }
+                    continue;
+                }
+                retColumn = col;
+                return;
+            }
+        };
+        func(this.columns);
+        if (nextRow = !retColumn)
+            func(this.columns);
+        return { column: retColumn, nextRow };
+    }
+    disposeColumns() {
+        const impl = (columns) => {
+            for (let i = columns.length - 1; i >= 0; i--) {
+                const column = columns[i];
+                if (column.rows) {
+                    for (const colrow of column.rows) {
+                        impl(colrow.columns);
+                    }
+                }
+                this.removeEvent(column.headerCellElement);
+                this.removeEvent(column.footerCellElement);
+                this.removeEvent(column.resizeElement);
+                if (column.cellDispose) {
+                    for (const cell of column.cells) {
+                        column.cellDispose(cell, this);
+                    }
+                }
+                column.dispose?.(this);
+                columns.pop();
+            }
+        };
+        impl(this.columns);
+        this.headerRowElement.textContent = "";
+        this.footerRowElement.textContent = "";
+    }
+    bindColumns(columns) {
+        this.disposeColumns();
+        this.disposeRows();
+        if (columns == null) {
+            this.buildColumns();
+            return;
+        }
+        let hasFill = false;
+        for (const col of columns) {
+            const fill = hasFill === false && col.fill === true;
+            if (fill)
+                hasFill = true;
+            this.columns.push(this.bindColumn(col, fill));
+        }
+        this.buildColumns();
+    }
+    bindColumn(col, fill) {
+        let width = col.width ?? 100;
+        if (width < 0)
+            width = this.rowHeight;
+        const dataType = col.dataType || "string";
+        let rows = null;
+        if (col._rows) {
+            rows = [];
+            for (const row of col._rows) {
+                const cols = [];
+                let hasFill = false;
+                for (let i = 0, il = row.columns.length; i < il; i++) {
+                    const rowcol = row.columns[i];
+                    let fill = hasFill === false && rowcol.fill === true;
+                    if (fill)
+                        hasFill = true;
+                    else if (i === il - 1 && !hasFill)
+                        hasFill = fill = true;
+                    const rowcolumn = this.bindColumn(rowcol, fill);
+                    if (fill) {
+                        rowcolumn.headerCellElement.style.flex = "1";
+                        rowcolumn.footerCellElement.style.flex = "1";
+                    }
+                    if (row.body === false) {
+                        if (rowcol.sort == null)
+                            rowcolumn.sort = null;
+                        rowcolumn.tabStop = false;
+                    }
+                    cols.push(rowcolumn);
+                }
+                rows.push({
+                    columns: cols,
+                    header: row.header !== false,
+                    headerHeightFlexRate: row.headerHeightFlexRate ?? 1,
+                    headerClassName: row.headerClassName == null ? [] : (typeof row.headerClassName === "string" ? [row.headerClassName] : row.headerClassName),
+                    footer: row.footer !== false,
+                    footerHeightFlexRate: row.footerHeightFlexRate ?? 1,
+                    footerClassName: row.footerClassName == null ? [] : (typeof row.footerClassName === "string" ? [row.footerClassName] : row.footerClassName),
+                    body: row.body !== false,
+                    bodyHeightFlexRate: row.bodyHeightFlexRate ?? 1,
+                    bodyClassName: row.bodyClassName == null ? [] : (typeof row.bodyClassName === "string" ? [row.bodyClassName] : row.bodyClassName),
+                });
+            }
+        }
+        const column = {
+            prop: col,
+            name: col.name,
+            label: col.label || col.name,
+            dataType,
+            width,
+            minWidth: width,
+            cells: [],
+            headerCellElement: (0, dom_utils_1.cloneElement)(this.cloneBase.cellElem),
+            footerCellElement: (0, dom_utils_1.cloneElement)(this.cloneBase.cellElem),
+            initializeParameters: col.initialize == null ? null : col.initialize(col, this),
+            dispose: col.dispose,
+            cellInitialize: col._rows == null ? (col.cellInitialize == null ? (cell) => {
+                const labelElem = (0, dom_utils_1.cloneElement)(this.cloneBase.labelCellElem);
+                cell.contentElements.push(labelElem);
+                cell.element.appendChild(labelElem);
+            } : col.cellInitialize) : (col.cellInitialize == null ? () => { } : col.cellInitialize),
+            cellDispose: col.cellDispose,
+            cellRender: col.cellRender == null ? ({ contentElements, row, cache }) => {
+                if (cache.val !== row.item.data[column.name]) {
+                    contentElements[0].textContent = cache.val = row.item.data[column.name];
+                }
+            } : col.cellRender,
+            textAlign: col.cellTextAlign || (dataType === "number" ? "right" : "left"),
+            appearance: col.appearance || "label",
+            sort: typeof col.sort === "function" ? col.sort : (col.sort === false || col._rows != null ? null : (order) => {
+                if (order === "") {
+                    return () => 0;
+                }
+                const num = order === "asc" ? 1 : -1;
+                return (itemData1, itemData2) => {
+                    if (column.dataType === "number") {
+                        return Number(itemData1.data[column.name]) > Number(itemData2.data[column.name]) ? -num : num;
+                    }
+                    return itemData1.data[column.name] > itemData2.data[column.name] ? num : -num;
+                };
+            }),
+            sortOrder: "",
+            resize: col.resize !== false && !fill && col._rows == null,
+            fill,
+            fixed: col.fixed === true,
+            fixedLeft: 0,
+            left: 0,
+            tabStop: col.tabStop !== false && col._rows == null,
+            notScrollFocusWhenTabStop: col.notScrollFocusWhenTabStop === true,
+            disabled: col.disabled === true,
+            render: true,
+            headerCellClicked: col.clickedHeaderCell,
+            footerCellClicked: col.clickedFooterCell,
+            cellClicked: col.clickedCell,
+            rowClicked: col.clickedRow,
+            preventClearSelected: col._preventClearSelected === true,
+            bindedItems: col.bindedItems,
+            rowDataInitialize: col.rowDataInitialize,
+            rows,
+            beginEdit: col._beginEdit,
+            endEdit: col._endEdit,
+            editedRowData: col.editedRowData,
+        };
+        column.rows?.forEach(colrow => {
+            colrow.columns?.forEach(rowcol => {
+                rowcol.parent = column;
+            });
+        });
+        return column;
+    }
+    buildColumns() {
+        if (this.rowNumber) {
+            if (this.findColumn((col) => col.name === this.rowNumberColumn.name) == null) {
+                this.columns.unshift(this.rowNumberColumn);
+                this.optimizeRowNumberColumnWidth();
+            }
+        }
+        else {
+            for (let i = 0, il = this.columns.length; i < il; i++) {
+                if (this.columns[i].name !== this.rowNumberColumn.name)
+                    continue;
+                this.columns.splice(i, 1);
+                break;
+            }
+        }
+        let hasFill = false;
+        for (const column of this.columns) {
+            hasFill = hasFill || column.fill;
+            this.buildColumn(column, { header: this.headerRowElement, footer: this.footerRowElement });
+        }
+        this.hasFillColumn = hasFill;
+        if (this.hasFillColumn) {
+            const prop = { minWidth: "100%" };
+            (0, dom_utils_1.setStyleProps)(this.headerRowElement, prop);
+            (0, dom_utils_1.setStyleProps)(this.footerRowElement, prop);
+            this.rows.forEach(row => {
+                (0, dom_utils_1.setStyleProps)(row.element, prop);
+            });
+        }
+        else {
+            this.headerRowElement.style.removeProperty("min-width");
+            this.footerRowElement.style.removeProperty("min-width");
+            this.rows.forEach(row => {
+                row.element.style.removeProperty("min-width");
+            });
+        }
+        this.renderColumns = [];
+        this.renderWhenResized();
+        this.lastScrolledLeft = -1;
+        this.optimizeRenderColumns();
+        this.optimizeDummySize();
+    }
+    buildColumn(column, element) {
+        if (column.rows) {
+            column.headerCellElement.classList.add(`${exports.listViewClassName}-cell-m_s`);
+            column.footerCellElement.classList.add(`${exports.listViewClassName}-cell-m_s`);
+            for (const row of column.rows) {
+                let width = 0;
+                const hrowElem = (0, dom_utils_1.cloneElement)(this.cloneBase.rowElem, { flex: row.headerHeightFlexRate });
+                row.headerClassName.forEach((cn) => hrowElem.classList.add(cn));
+                const frowElem = (0, dom_utils_1.cloneElement)(this.cloneBase.rowElem, { flex: row.footerHeightFlexRate });
+                row.footerClassName.forEach((cn) => frowElem.classList.add(cn));
+                for (const col of row.columns) {
+                    col.resize = false;
+                    this.buildColumn(col, { header: hrowElem, footer: frowElem });
+                    width += col.width;
+                }
+                if (row.header)
+                    column.headerCellElement.appendChild(hrowElem);
+                if (row.footer)
+                    column.footerCellElement.appendChild(frowElem);
+                column.width = Math.max(0, width, column.width);
+            }
+        }
+        else {
+            column.headerCellLabelElement = (0, dom_utils_1.cloneElement)(this.cloneBase.div, `${exports.listViewClassName}-lbl`);
+            column.headerCellElement.appendChild(column.headerCellLabelElement);
+            if (column.prop?.headerCellLabel) {
+                if (typeof column.prop.headerCellLabel === "string")
+                    column.headerCellLabelElement.textContent = column.prop.headerCellLabel;
+                else
+                    column.headerCellRender = column.prop.headerCellLabel;
+            }
+            column.headerCellElement.classList.add(classname_utils_1.default.hAlign(column.prop?.headerCellTextAlign ?? "center"));
+            column.footerCellLabelElement = (0, dom_utils_1.cloneElement)(this.cloneBase.div, `${exports.listViewClassName}-lbl`);
+            column.footerCellElement.appendChild(column.footerCellLabelElement);
+            if (column.prop?.footerCellLabel) {
+                if (typeof column.prop.footerCellLabel === "string")
+                    column.footerCellLabelElement.textContent = column.prop.footerCellLabel;
+                else
+                    column.footerCellRender = column.prop.footerCellLabel;
+            }
+            column.footerCellElement.classList.add(classname_utils_1.default.hAlign(column.prop?.footerCellTextAlign ?? "center"));
+        }
+        column.headerCellElement.setAttribute("data-name", column.name);
+        (0, dom_utils_1.setStyleProps)(column.headerCellElement, { width: column.width + "px" });
+        column.footerCellElement.setAttribute("data-name", column.name);
+        (0, dom_utils_1.setStyleProps)(column.footerCellElement, { width: column.width + "px" });
+        if (column.fill) {
+            column.headerCellElement.classList.add("bh-fill");
+            column.footerCellElement.classList.add("bh-fill");
+        }
+        if (column.fixed) {
+            column.headerCellElement.classList.add("bh-fixed");
+            column.footerCellElement.classList.add("bh-fixed");
+        }
+        element.header.appendChild(column.headerCellElement);
+        element.footer.appendChild(column.footerCellElement);
+        column.prop?.headerCellInitialize?.(column, column.initializeParameters);
+        column.prop?.footerCellInitialize?.(column, column.initializeParameters);
+        if (column.sort != null) {
+            column.sortElement = (0, dom_utils_1.cloneElement)(this.cloneBase.div);
+            column.sortElement.classList.add(`${exports.listViewClassName}-sort-icon`);
+            column.headerCellElement.appendChild(column.sortElement);
+            this.addEvent(column.headerCellElement, "click", () => {
+                const curSortOrder = column.sortOrder;
+                const removeOrder = (columns) => {
+                    for (const col of columns) {
+                        col.sortOrder = "";
+                        col.sortElement?.classList.remove("bh-asc", "bh-desc");
+                        if (col.rows) {
+                            for (const colrow of col.rows) {
+                                removeOrder(colrow.columns);
+                            }
+                        }
+                    }
+                };
+                removeOrder(this.columns);
+                switch (curSortOrder) {
+                    case "asc":
+                        column.sortOrder = "desc";
+                        column.sortElement.classList.add(`bh-${column.sortOrder}`);
+                        break;
+                    case "desc":
+                        column.sortOrder = "";
+                        break;
+                    default:
+                        column.sortOrder = "asc";
+                        column.sortElement.classList.add(`bh-${column.sortOrder}`);
+                        break;
+                }
+                this.sortItems();
+                this.renderWhenScrolled();
+                if (this.sorted)
+                    this.sorted(column.name, column.sortOrder, column.prop);
+            });
+        }
+        if (column.resize !== false) {
+            column.resizeElement = (0, dom_utils_1.cloneElement)(this.cloneBase.div, `${exports.listViewClassName}-resizer`);
+            column.headerCellElement.appendChild(column.resizeElement);
+            this.addEvent(column.resizeElement, "mousedown", (e) => {
+                this.endEdit(true);
+                e.stopPropagation();
+                const lastPos = e.currentTarget.offsetLeft, pos = e.clientX;
+                const move = (e) => {
+                    column.width = e.clientX - pos + lastPos;
+                    (0, dom_utils_1.setStyleProps)(column.headerCellElement, { width: column.width + "px" });
+                };
+                (0, dom_utils_1.setCursor)("col-resize");
+                const end = () => {
+                    this.removeEvent(window, "mousemove", move);
+                    this.removeEvent(window, "mouseup", end);
+                    for (const cell of column.cells) {
+                        (0, dom_utils_1.setStyleProps)(cell.element, { width: column.width + "px" });
+                    }
+                    (0, dom_utils_1.setStyleProps)(column.footerCellElement, { width: column.width + "px" });
+                    (0, dom_utils_1.releaseCursor)();
+                    this.optimizeDummySize();
+                };
+                this.addEvent(window, "mouseup", end, { passive: true });
+                this.addEvent(window, "mousemove", move, { passive: true });
+            });
+        }
+        const renderCells = () => {
+            for (const cell of column.cells) {
+                if (cell.row.item == null)
+                    continue;
+                this.renderCell(cell);
+            }
+            this.renderHeaderCells();
+            this.renderFooterCells();
+        };
+        if (column.headerCellClicked) {
+            this.addEvent(column.headerCellElement, "click", () => {
+                column.headerCellClicked(column.name, this.sortedItems, renderCells);
+            });
+        }
+        if (column.footerCellClicked) {
+            this.addEvent(column.footerCellElement, "click", () => {
+                column.footerCellClicked(column.name, this.sortedItems, renderCells);
+            });
+        }
+    }
+    setColumns(columns) {
+        this.bindColumns(columns);
+        return this;
+    }
+    columnForEach(func) {
+        const impl = (columns) => {
+            let ret = true;
+            for (const column of columns) {
+                ret = func(column) !== false && ret;
+                if (!ret)
+                    break;
+                if (column.rows) {
+                    for (const colrow of column.rows) {
+                        ret = impl(colrow.columns) !== false && ret;
+                        if (!ret)
+                            break;
+                    }
+                }
+                if (!ret)
+                    break;
+            }
+            return ret;
+        };
+        impl(this.columns);
+    }
+    bindItems(items) {
+        this.originItems = [];
+        this.bindingItems = [];
+        this.filteredItems = [];
+        this.selectedRows = {};
+        this.lastSelectedCell = null;
+        this.lastSelectedBaseCell = null;
+        if (items == null)
+            return;
+        this.originItems = items;
+        for (let i = 0, il = this.originItems.length; i < il; i++) {
+            this.bindingItems.push({
+                data: this.originItems[i],
+                id: i,
+                rowSelected: false,
+                cellSelected: {},
+            });
+        }
+        this.executeColumnBindedItems();
+        this.colCallBindedRev = ++this.itemsCallBindedRev;
+        this.filterItems();
+    }
+    executeColumnBindedItems() {
+        const callColumns = (columns) => {
+            columns.forEach(col => {
+                col.rows?.forEach(colrow => {
+                    callColumns(colrow.columns);
+                });
+                col.bindedItems?.(this.originItems);
+            });
+        };
+        callColumns(this.columns);
+    }
+    filterItems() {
+        this.clearSelectedRows();
+        if (this.filter == null)
+            this.filteredItems = this.bindingItems.concat();
+        else
+            this.filteredItems = this.bindingItems.filter((item) => this.filter(item.data));
+        if (this.filtered)
+            this.filtered(this.filteredItems);
+        this.sortItems();
+    }
+    sortItems() {
+        this.sortedItems = this.filteredItems.concat();
+        if (!this.externalSort) {
+            if (this.sort != null)
+                this.sortedItems.sort(this.sort);
+            const sortCol = this.findColumn((col) => col.sortOrder !== "");
+            if (sortCol != null)
+                this.sortedItems.sort(sortCol.sort(sortCol.sortOrder));
+        }
+        (0, dom_utils_1.setStyleProps)(this.dummyElement, { height: (this.sortedItems.length * this.rowHeight + (this.headerVisible ? this.headerHeight : 0) + (this.footerVisible ? this.footerHeight : 0) + this.dummyElement.offsetTop) + "px" });
+        this.optimizeRowNumberColumnWidth();
+        this.lastScrolledLeft = -1;
+        this.optimizeRenderColumns();
+        this.scrollingMode = "stop";
+    }
+    setItems(items) {
+        this.bindItems(items);
+        this.firstIndex = -1;
+        this.bodyElement.scrollTop = 0;
+        this.maxFirstIndex = Math.max(0, this.sortedItems.length - this.rows.length);
+        this.optimizeDummySize();
+        this.lastScrolledLeft = -1;
+        this.render();
+        return this;
+    }
+    cellClickedImpl(item, column, index, ctrlKey, shiftKey, e) {
+        if (column.rows != null)
+            return;
+        if (this.selectMode === "cell" && !column.tabStop)
+            return;
+        const lst = this.element.scrollTop;
+        this.scrollToColumn(column);
+        this.scrollToIndex(index);
+        const impl = () => {
+            let selected = true, edit = false;
+            if (ctrlKey && this.multiSelect) {
+                if (this.selectMode === "row") {
+                    item.cellSelected = {};
+                    if (item.rowSelected === true) {
+                        selected = item.rowSelected = false;
+                        delete this.selectedRows[item.id];
+                    }
+                    else {
+                        selected = item.rowSelected = item.cellSelected[column.name] = true;
+                        this.selectedRows[item.id] = item;
+                    }
+                }
+                else {
+                    if (item.cellSelected[column.name] === true) {
+                        delete item.cellSelected[column.name];
+                        if (Object.keys(item.cellSelected).length === 0) {
+                            delete this.selectedRows[item.id];
+                            item.rowSelected = false;
+                        }
+                        selected = false;
+                    }
+                    else {
+                        selected = item.rowSelected = item.cellSelected[column.name] = true;
+                        this.selectedRows[item.id] = item;
+                    }
+                }
+            }
+            else if (shiftKey && this.multiSelect && this.lastSelectedBaseCell != null) {
+                this.clearSelectedRows();
+                selected = item.cellSelected[column.name] = true;
+                this.rangeSelectRow(item, column, index);
+            }
+            else {
+                if (item.cellSelected[column.name] === true)
+                    edit = true;
+                if (this.multiSelect) {
+                    if (column.preventClearSelected) {
+                        if (this.selectedRows[item.id] == null) {
+                            this.clearSelectedRows();
+                        }
+                    }
+                    else {
+                        this.clearSelectedRows();
+                    }
+                }
+                else {
+                    this.clearSelectedRows();
+                }
+                selected = item.rowSelected = item.cellSelected[column.name] = true;
+                this.selectedRows[item.id] = item;
+            }
+            this.lastSelectedCell = { index, item, column };
+            if (!shiftKey || this.lastSelectedBaseCell == null)
+                this.lastSelectedBaseCell = { index, item, column };
+            const params = {
+                data: item.data,
+                id: item.id,
+                rowNumber: index + 1,
+                columnName: column?.name,
+                columnLabel: column?.label,
+                columnWidth: column?.width,
+                originItems: this.originItems,
+                selectMode: this.selectMode,
+                selected,
+                getSelectedRows: () => this.getSelectedRows(),
+                getSelectedCells: () => this.getSelectedCells(),
+            };
+            let rebind = false, rhc = false, rhcs = false, rfc = false, rfcs = false, rc = false, rcs = false, rr = false, r = false;
+            const setRet = (ret) => {
+                if (ret == null)
+                    return;
+                const retF = ret;
+                rebind = rebind || retF.rebind === true;
+                rhc = rhc || retF.renderHeaderCell === true;
+                rhcs = rhcs || retF.renderHeaderCells === true;
+                rfc = rfc || retF.renderFooterCell === true;
+                rfcs = rfcs || retF.renderFooterCells === true;
+                rc = rc || retF.renderCell === true;
+                rcs = rcs || retF.renderCells === true;
+                rr = rr || retF.renderRow === true;
+                r = r || retF.render === true;
+            };
+            if (this.cellClicked)
+                setRet(this.cellClicked(params, e));
+            if (column?.cellClicked)
+                setRet(column.cellClicked(params, e));
+            if (this.rowClicked)
+                setRet(this.rowClicked(params, e));
+            for (const col of this.columns) {
+                if (col.rowClicked)
+                    setRet(col.rowClicked(params, e));
+            }
+            if (rebind) {
+                this.bindItems(this.originItems);
+            }
+            else if (r) {
+                this.render();
+            }
+            else {
+                if (rhcs)
+                    this.renderHeaderCells();
+                else if (rhc && column.headerCellRender)
+                    column.headerCellRender(column.headerCellLabelElement, this.sortedItems, this.originItems);
+                if (rfcs)
+                    this.renderFooterCells();
+                else if (rfc && column.footerCellRender)
+                    column.footerCellRender(column.footerCellLabelElement, this.sortedItems, this.originItems);
+                if (rr)
+                    this.renderRow(this.rows[index - this.firstIndex]);
+                if (rcs) {
+                    for (const c of column.cells) {
+                        this.renderCell(c);
+                    }
+                }
+                if (!rr && !rcs && rc)
+                    this.renderCell(column.cells[index - this.firstIndex]);
+            }
+            this.renderWhenScrolled();
+            if (edit && !column.disabled)
+                this.beginEdit(item, column, index);
+        };
+        if (lst === this.element.scrollTop) {
+            impl();
+        }
+        else {
+            const listener = () => {
+                if (this.element.scrollTop === this.lastScrolledTop) {
+                    impl();
+                    return;
+                }
+                setTimeout(() => listener(), 10);
+            };
+            listener();
+        }
+    }
+    beginEditLastSelectedCell(lastScrollTop) {
+        if (this.lastSelectedCell.column == null)
+            return;
+        let lst = lastScrollTop;
+        if (lst == null) {
+            lst = this.element.scrollTop;
+            this.scrollToColumn(this.lastSelectedCell.column);
+            this.scrollToIndex(this.lastSelectedCell.index);
+        }
+        if (lst === this.element.scrollTop) {
+            this.beginEdit(this.lastSelectedCell.item, this.lastSelectedCell.column, this.lastSelectedCell.index);
+        }
+        else {
+            const listener = () => {
+                if (this.element.scrollTop === this.lastScrolledTop) {
+                    this.beginEdit(this.lastSelectedCell.item, this.lastSelectedCell.column, this.lastSelectedCell.index);
+                    return;
+                }
+                setTimeout(() => listener(), 10);
+            };
+            listener();
+        }
+    }
+    beginEdit(item, column, index) {
+        if (!column.beginEdit || column.disabled === true) {
+            this.endEdit(false);
+            return;
+        }
+        const row = this.rows[index - this.firstIndex];
+        if (row == null)
+            return;
+        const cell = row.cells.find((cell) => cell.column.name === column.name);
+        if (cell == null)
+            return;
+        const rect = cell.element.getBoundingClientRect();
+        this.editElement.style.removeProperty("display");
+        (0, dom_utils_1.setStyleProps)(this.editElement, {
+            top: `${rect.top}px`,
+            left: `${rect.left}px`,
+            height: `${rect.height - (cell.element.offsetHeight - cell.element.clientHeight)}px`,
+            width: `${rect.width - (cell.element.offsetWidth - cell.element.clientWidth)}px`,
+            visibility: "visible",
+        });
+        this.editTarget = { item, column, index };
+        let end = false;
+        const argEndEdit = (commit) => {
+            end = true;
+            setTimeout(() => {
+                this.endEdit(commit);
+            }, 0);
+        };
+        column.beginEdit({
+            target: { data: item.data, columnName: column.name, index, id: item.id },
+            editElement: this.editElement,
+            endEdit: argEndEdit,
+            cell,
+            styleCtx: this.styleCtx,
+        });
+        this.endEditEventListener = () => { this.endEdit(true); };
+        this.addEvent(this.element, "mousedown", this.endEditEventListener);
+        if (end)
+            this.endEdit(false);
+        else
+            this.editElement.focus();
+    }
+    endEdit(commit) {
+        if (this.endEditEventListener) {
+            this.removeEvent(this.element, "mousedown", this.endEditEventListener);
+            this.endEditEventListener = null;
+        }
+        if (this.editTarget == null)
+            return;
+        if (this.editTarget.column?.endEdit) {
+            const ret = this.editTarget.column.endEdit({ data: this.editTarget.item.data, columnName: this.editTarget.column.name, index: this.editTarget.index, id: this.editTarget.item.id }, commit, this.editElement);
+            if (commit !== false) {
+                if (ret == null) {
+                    this.renderCell(this.editTarget.column.cells[this.editTarget.index - this.firstIndex]);
+                }
+                for (const col of this.columns) {
+                    if (col === this.editTarget.column)
+                        continue;
+                    if (col.editedRowData) {
+                        col.editedRowData(this.editTarget.item.data);
+                        this.renderCell(col.cells[this.editTarget.index - this.firstIndex]);
+                    }
+                }
+                this.renderHeaderCells();
+                this.renderFooterCells();
+            }
+        }
+        this.editMaskElement.style.display = "none";
+        this.editElement.style.display = "none";
+        this.editTarget = null;
+        this.element.focus();
+    }
+    getValue() {
+        return this.originItems;
+    }
+    getFilteredValue() {
+        return [...this.filteredItems];
+    }
+    getSortedValue() {
+        return [...this.sortedItems];
+    }
+    getLength() {
+        return this.originItems.length;
+    }
+    getFilteredLength() {
+        return this.filteredItems.length;
+    }
+    select(rowIndex, columnName) {
+        if (this.selectMode === "none" || rowIndex == null)
+            return;
+        const item = this.sortedItems[rowIndex];
+        if (item == null)
+            return;
+        this.clearSelectedRows();
+        let column = null;
+        if (this.selectMode === "row") {
+            item.rowSelected = true;
+            this.selectedRows[item.id] = item;
+        }
+        else {
+            column = this.findColumn((col) => col.name === columnName) ?? this.columns[0];
+            item.cellSelected[column.name] = true;
+            this.selectedRows[item.id] = item;
+        }
+        this.lastSelectedCell = { index: rowIndex, item, column };
+        this.lastSelectedBaseCell = { index: rowIndex, item, column };
+        this.scrollToIndex(rowIndex, false);
+        if (column)
+            this.scrollToColumn(column, false);
+        this.renderWhenScrolled();
+    }
+    clearSelect() {
+        this.clearSelectedRows(true);
+    }
+    getSelectedRows() {
+        const rets = [];
+        Object.keys(this.selectedRows).forEach((id) => {
+            const item = this.selectedRows[id];
+            rets.push({
+                id: item.id,
+                data: item.data,
+            });
+        });
+        return rets;
+    }
+    getSelectedCells() {
+        const rets = [];
+        Object.keys(this.selectedRows).forEach((id) => {
+            const item = this.selectedRows[id];
+            Object.keys(item.cellSelected).forEach((columnName) => {
+                rets.push({
+                    id: item.id,
+                    data: item.data,
+                    columnName,
+                });
+            });
+        });
+        return rets;
+    }
+    focus() {
+        this.element.focus();
+        return this;
+    }
+    getElement() {
+        return this.element;
+    }
+    getBodyElement() {
+        return this.bodyElement;
+    }
+    getRowHeight() {
+        return this.rowHeight;
+    }
+    getDisplayedFirstRowIndex() {
+        return this.firstIndex;
+    }
+    getBodyScrollTop() {
+        return this.bodyElement.scrollTop;
+    }
+    clearSpaceRow() {
+        for (const row of this.rows) {
+            row.element.style.removeProperty("margin-top");
+            row.element.style.removeProperty("margin-bottom");
+            row.element.style.removeProperty("display");
+            row.element.style.removeProperty("opacity");
+        }
+        return this;
+    }
+    startScrollContinue(order, interval, startCallback, endCallback) {
+        if (this.scrollingMode === order) {
+            if (endCallback)
+                endCallback("already");
+            return;
+        }
+        this.stopScrollContinue();
+        setTimeout(() => {
+            this.scrollingMode = order;
+            this.scrollingInterval = interval ?? 100;
+            this.scrollingId++;
+            this.scrollContinue(endCallback);
+            if (startCallback)
+                startCallback(this.scrollingInterval);
+        }, this.scrollingInterval + 1);
+    }
+    stopScrollContinue() {
+        this.scrollingMode = "stop";
+    }
+    scrollContinue(endCallback) {
+        const triger = this.scrollingId;
+        setTimeout(() => {
+            if (triger !== this.scrollingId || this.scrollingMode === "stop") {
+                if (endCallback)
+                    endCallback("stop");
+                return;
+            }
+            const st = this.element.scrollTop;
+            if (this.scrollingMode === "up")
+                this.element.scrollTop = this.element.scrollTop - this.rowHeight;
+            else
+                this.element.scrollTop = this.element.scrollTop + this.rowHeight;
+            if (st === this.element.scrollTop) {
+                if (endCallback)
+                    endCallback("over");
+                return;
+            }
+            this.scrollContinue(endCallback);
+        }, this.scrollingInterval);
+    }
+    dragMovingRow(dragingRowIndex, top) {
+        if (top < this.bodyElement.scrollTop)
+            this.startScrollContinue("up");
+        else if (top > this.bodyElement.clientHeight - this.rowHeight + this.bodyElement.scrollTop)
+            this.startScrollContinue("down");
+        else
+            this.stopScrollContinue();
+        let rindex = Math.round(top / this.rowHeight);
+        const isUpper = rindex < 0 ? true : top - rindex * this.rowHeight < 0;
+        rindex += this.firstIndex;
+        const dragingRow = this.rows[dragingRowIndex - this.firstIndex];
+        this.clearSpaceRow();
+        if (dragingRow) {
+            if (rindex === dragingRowIndex) {
+                (0, dom_utils_1.setStyleProps)(dragingRow.element, { opacity: 0.5 });
+                return;
+            }
+            (0, dom_utils_1.setStyleProps)(dragingRow.element, { display: "none" });
+        }
+        let rid = rindex - this.firstIndex;
+        if (rid <= 0) {
+            const row = this.rows[0];
+            row.element.style.marginTop = this.rowHeight + "px";
+            return;
+        }
+        if (rid >= this.rows.length - 1) {
+            const row = this.rows[this.rows.length - 1];
+            row.element.style.marginBottom = this.rowHeight + "px";
+            return;
+        }
+        if (dragingRow && rindex > dragingRowIndex)
+            rid += 1;
+        if (!isUpper)
+            rid -= 1;
+        const row = this.rows[rid];
+        if (row == null)
+            return this;
+        if (isUpper) {
+            row.element.style.removeProperty("margin-bottom");
+            row.element.style.marginTop = this.rowHeight + "px";
+        }
+        else {
+            row.element.style.removeProperty("margin-top");
+            row.element.style.marginBottom = this.rowHeight + "px";
+        }
+        return this;
+    }
+    dropMoveRow(dragingRowIndex, top) {
+        this.clearSpaceRow();
+        this.stopScrollContinue();
+        let ridx = Math.round(top / this.rowHeight) + this.firstIndex;
+        let sup = false;
+        if (sup = dragingRowIndex < this.firstIndex)
+            ridx -= 1;
+        let srcIdx = Math.min(Math.max(0, dragingRowIndex), this.sortedItems.length - 1), dstIdx = Math.min(Math.max(0, ridx), this.sortedItems.length - 1);
+        if (srcIdx === dstIdx)
+            return this;
+        const isLower = (top % this.rowHeight) < (this.rowHeight / 2), moveToBottom = srcIdx < dstIdx;
+        if (moveToBottom) {
+            if (isLower)
+                dstIdx += 1;
+        }
+        else {
+            if (!isLower)
+                dstIdx -= 1;
+        }
+        const srcItem = this.sortedItems[srcIdx].data;
+        const dstItem = this.sortedItems[dstIdx].data;
+        const oSrcIdx = Math.min(Math.max(0, this.originItems.findIndex(item => item === srcItem)), this.originItems.length - 1);
+        let oDstIdx = this.originItems.findIndex(item => item === dstItem);
+        if (moveToBottom) {
+            if (isLower)
+                oDstIdx -= 1;
+        }
+        else {
+            if (!isLower)
+                oDstIdx += 1;
+        }
+        oDstIdx = Math.min(Math.max(0, oDstIdx), this.originItems.length - 1);
+        this.originItems.splice(oSrcIdx, 1);
+        this.originItems.splice(oDstIdx, 0, srcItem);
+        if (dstIdx === this.sortedItems.length - 1)
+            this.element.scrollTop = this.element.scrollTop + this.rowHeight;
+        else if (sup)
+            this.element.scrollTop = this.element.scrollTop - this.rowHeight;
+        this.bindItems(this.originItems);
+        this.renderWhenScrolled();
+        return this;
+    }
+    renderByOriginData(originData, callEditedRowData) {
+        if (callEditedRowData === true) {
+            if (originData == null)
+                return this;
+            const search = (columns) => {
+                for (const column of columns) {
+                    if (column.editedRowData)
+                        column.editedRowData(originData);
+                    if (column.rows) {
+                        for (const colrow of column.rows) {
+                            search(colrow.columns);
+                        }
+                    }
+                }
+            };
+            search(this.columns);
+        }
+        const row = this.rows.find((r) => r.item.data === originData);
+        if (row != null)
+            this.renderRow(row);
+        return this;
+    }
+    setStyleContext(ctx) {
+        this.styleCtx = ctx;
+        return this;
+    }
+}
+exports.$ListView = $ListView;
+;
+const cnIptPrefix = input_column_1.listViewInputColumnClassName;
+const createListViewEditColumnElement = () => {
+    const wrapElem = document.createElement("div");
+    wrapElem.classList.add(`${cnIptPrefix}-wrap`);
+    const lblElem = document.createElement("div");
+    lblElem.classList.add(`${exports.listViewClassName}-lbl`);
+    return { wrapElem, lblElem };
+};
+exports.createListViewEditColumnElement = createListViewEditColumnElement;
+const cloneListViewEditColumnElement = (elems) => {
+    return {
+        wrapElem: (0, dom_utils_1.cloneElement)(elems.wrapElem),
+        lblElem: (0, dom_utils_1.cloneElement)(elems.lblElem),
+    };
+};
+exports.cloneListViewEditColumnElement = cloneListViewEditColumnElement;
+exports.ListViewStyle = react_1.default.createElement(style_1.default, { id: exports.listViewClassName, depsDesign: true, css: ({ design }) => `
+.${exports.listViewClassName}-wrap {
+  box-sizing: border-box;
+  position: relative;
+}
+${style_1.CssPV.fitToOuter(`${exports.listViewClassName}-wrap`)}
+.${exports.listViewClassName} {
+  ${style_1.CssPV.flex_c}
+  ${style_1.CssPV.fill}
+  outline: none;
+}
+.${exports.listViewClassName}-row {
+  ${style_1.CssPV.flex_r}
+  flex: none;
+}
+.${exports.listViewClassName}-cell {
+  ${style_1.CssPV.flex_r_c}
+  flex: none;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  background: ${style_1.CssVar.lv.b.bg.c};
+}
+.${exports.listViewClassName}-cell.bh-fixed {
+  position: sticky;
+  z-index: 1;
+}
+.${exports.listViewClassName}-cell.bh-fill {
+  flex: 1;
+}
+.${exports.listViewClassName}-lbl {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  max-height: 100%;
+  max-width: 100%;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 2px 5px 0px 5px;
+}
+.${exports.listViewClassName}-cell.bh-h-l .${exports.listViewClassName}-lbl {
+  text-align: left;
+}
+.${exports.listViewClassName}-cell.bh-h-c .${exports.listViewClassName}-lbl {
+  text-align: center;
+}
+.${exports.listViewClassName}-cell.bh-h-r .${exports.listViewClassName}-lbl {
+  text-align: right;
+}
+.${exports.listViewClassName}-body-dummy {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 0;
+  top: 0px;
+  left: 0px;
+  background-color: transparent;
+  visibility: hidden;
+  flex: none;
+}
+.${exports.listViewClassName}-header,
+.${exports.listViewClassName}-footer {
+  box-sizing: border-box;
+  position: sticky;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex: none;
+  z-index: 2;
+  left: 0px;
+  overflow: hidden;
+  width: 100%;
+}
+.${exports.listViewClassName}-header {
+  top: 0px;
+}
+.${exports.listViewClassName}-header > .${exports.listViewClassName}-row,
+.${exports.listViewClassName}-footer > .${exports.listViewClassName}-row {
+  height: 100%;
+}
+.${exports.listViewClassName}-header .${exports.listViewClassName}-cell,
+.${exports.listViewClassName}-footer .${exports.listViewClassName}-cell {
+  user-select: none;
+}
+.${exports.listViewClassName}-body {
+  box-sizing: border-box;
+  position: sticky;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  z-index: 1;
+  left: 0px;
+  overflow: hidden;
+  width: 100%;
+  cursor: cell;
+}
+.${exports.listViewClassName}-edit {
+  box-sizing: border-box;
+  flex: none;
+  position: fixed;
+  z-index: 999;
+  background: ${style_1.CssVar.lv.b.bg.c};
+}
+.${exports.listViewClassName}-mask {
+  box-sizing: border-box;
+  flex: none;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  z-index: 998;
+  background-color: transparent;
+}
+.${exports.listViewClassName}-resizer {
+  box-sizing: border-box;
+  flex: none;
+  height: 100%;
+  width: 3px;
+  position:relative;
+  right: 0px;
+  top: 0px;
+  cursor: col-resize;
+}
+.${exports.listViewClassName}-cell-m_s {
+  flex-flow: column nowrap;
+}
+.${exports.listViewClassName}-cell-m_s > .${exports.listViewClassName}-row {
+  width: 100%;
+  min-height: 0px;
+}
+.${exports.listViewClassName}-sort-icon {
+  box-sizing: border-box;
+  position: relative;
+  height: 100%;
+  width: 15px;
+}
+.${exports.listViewClassName}-sort-icon::before {
+  position: absolute;
+  content: "";
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid transparent;
+  top: calc(50% + 2px);
+  left: calc(50% - 5px);
+  border-top: 4px solid ${style_1.CssVar.bdc};
+}
+.${exports.listViewClassName}-sort-icon::after {
+  position: absolute;
+  content: "";
+  border-top: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  top: calc(50% - 10px);
+  left: calc(50% - 5px);
+  border-bottom: 4px solid ${style_1.CssVar.bdc};
+}
+.${exports.listViewClassName}-sort-icon.bh-asc::before {
+  border-top: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  top: calc(50% - 9px);
+  left: calc(50% - 5px);
+  border-bottom: 8px solid ${style_1.CssVar.bdc};
+}
+.${exports.listViewClassName}-sort-icon.bh-desc::before {
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid transparent;
+  top: calc(50% - 4px);
+  left: calc(50% - 5px);
+  border-top: 8px solid ${style_1.CssVar.bdc};
+}
+.${exports.listViewClassName}-sort-icon.bh-asc::after,
+.${exports.listViewClassName}-sort-icon.bh-desc::after {
+  display: none;
+}
+${design === "material" ? `
+.${exports.listViewClassName} {
+  border: 1px solid ${style_1.CssVar.bdc};
+  border-radius: ${style_1.CssParam.m.r};
+}
+.${exports.listViewClassName}-header,
+.${exports.listViewClassName}-footer {
+  background: ${style_1.CssVar.lv.h_f.bg.c};
+}
+.${exports.listViewClassName}-header {
+  border-bottom: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+  box-shadow: ${style_1.CssParam.m.sdBtm};
+}
+.${exports.listViewClassName}-footer {
+  box-shadow: ${style_1.CssParam.m.sdTop};
+  border-top: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+}
+.${exports.listViewClassName}-header .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:not(:last-child),
+.${exports.listViewClassName}-footer .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:not(:last-child) {
+  border-bottom: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+}
+.${exports.listViewClassName}-header .${exports.listViewClassName}-cell,
+.${exports.listViewClassName}-footer .${exports.listViewClassName}-cell {
+  background: ${style_1.CssVar.lv.h_f.bg.c};
+  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-row {
+  border-bottom: 1px solid ${style_1.CssVar.lv.b.bdc};
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-cell {
+  border-right: 1px solid ${style_1.CssVar.lv.b.bdc};
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-row[data-oddeven="even"] .${exports.listViewClassName}-cell {
+  background: ${style_1.CssVar.lv.b.bg.c_oe};
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:last-child {
+  border-bottom: none;
+}
+.${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-cell:last-child {
+  border-right: none;
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-row:hover .${exports.listViewClassName}-cell {
+  background: ${style_1.CssVar.lv.b.bg.c_hr};
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-cell:hover {
+  background: ${style_1.CssVar.lv.b.bg.c_hc} !important;
+}
+.${exports.listViewClassName}-body.bh-select-cell .${exports.listViewClassName}-cell.bh-selected,
+.${exports.listViewClassName}-body.bh-select-row .${exports.listViewClassName}-row.bh-selected .${exports.listViewClassName}-cell {
+  background: ${style_1.CssVar.lv.b.bg.c_s} !important;
+}
+.${exports.listViewClassName}-body.bh-select-row .${exports.listViewClassName}-row.bh-selected,
+.${exports.listViewClassName}-body.bh-select-cell .${exports.listViewClassName}-cell.bh-selected {
+  outline: 1px solid ${style_1.CssVar.lv.b.olc};
+  outline-offset: -1px;
+}
+.${exports.listViewClassName}-resizer,
+.${exports.listViewClassName}-cell:active + .${exports.listViewClassName}-cell .${exports.listViewClassName}-resizer {
+  visibility: hidden;
+}
+.${exports.listViewClassName}-cell:hover .${exports.listViewClassName}-resizer,
+.${exports.listViewClassName}-resizer:active {
+  border-left: 1px dotted ${style_1.CssVar.lv.h_f.bdc};
+  visibility: visible;
+}
+` : ""}
+${design === "neumorphism" ? `
+.${exports.listViewClassName}-wrap {
+  padding: ${style_1.CssParam.n.ccvSdPdd};
+}
+.${exports.listViewClassName} {
+  box-shadow: ${style_1.CssParam.n.ccvSd};
+  background: ${style_1.CssParam.n.ccvBg};
+  border-radius: ${style_1.CssParam.n.r};
+  padding: ${style_1.CssParam.n.sdPdd};
+}
+.${exports.listViewClassName}-header,
+.${exports.listViewClassName}-footer {
+  box-shadow: ${style_1.CssParam.n.cvxSd};
+  border-radius: ${style_1.CssParam.n.r};
+  background: ${style_1.CssVar.lv.h_f.bg.c};
+}
+.${exports.listViewClassName}-header .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:not(:last-child),
+.${exports.listViewClassName}-footer .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:not(:last-child) {
+  border-bottom: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+}
+.${exports.listViewClassName}-header .${exports.listViewClassName}-cell,
+.${exports.listViewClassName}-footer .${exports.listViewClassName}-cell {
+  background: ${style_1.CssVar.lv.h_f.bg.c};
+  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+}
+.${exports.listViewClassName}-body-dummy {
+  top: ${style_1.CssParam.n.sdPdd};
+  left: ${style_1.CssParam.n.sdPdd};
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-row {
+  border-bottom: 1px solid ${style_1.CssVar.lv.b.bdc};
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-cell {
+  border-right: 1px solid ${style_1.CssVar.lv.b.bdc};
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-row[data-oddeven="even"] .${exports.listViewClassName}-cell {
+  background: ${style_1.CssVar.lv.b.bg.c_oe};
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-row:last-child {
+  border-bottom: none;
+}
+.${exports.listViewClassName}-cell-m_s .${exports.listViewClassName}-cell:last-child {
+  border-right: none;
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-row:hover .${exports.listViewClassName}-cell {
+  background: ${style_1.CssVar.lv.b.bg.c_hr};
+}
+.${exports.listViewClassName}-body .${exports.listViewClassName}-cell:hover {
+  background: ${style_1.CssVar.lv.b.bg.c_hc} !important;
+}
+.${exports.listViewClassName}-body.bh-select-cell .${exports.listViewClassName}-cell.bh-selected,
+.${exports.listViewClassName}-body.bh-select-row .${exports.listViewClassName}-row.bh-selected .${exports.listViewClassName}-cell {
+  background: ${style_1.CssVar.lv.b.bg.c_s} !important;
+}
+.${exports.listViewClassName}-body.bh-select-row .${exports.listViewClassName}-row.bh-selected,
+.${exports.listViewClassName}-body.bh-select-cell .${exports.listViewClassName}-cell.bh-selected {
+  outline: 1px solid ${style_1.CssVar.lv.b.olc};
+  outline-offset: -1px;
+}
+.${exports.listViewClassName}-resizer,
+.${exports.listViewClassName}-cell:active + .${exports.listViewClassName}-cell .${exports.listViewClassName}-resizer {
+  visibility: hidden;
+}
+.${exports.listViewClassName}-cell:hover .${exports.listViewClassName}-resizer,
+.${exports.listViewClassName}-resizer:active {
+  border-left: 1px dotted ${style_1.CssVar.lv.h_f.bdc};
+  visibility: visible;
+}
+.${exports.listViewClassName}-edit > .${input_1.InputClassNames.wrap} {
+  padding: 0px;
+}
+` : ""}
+` });

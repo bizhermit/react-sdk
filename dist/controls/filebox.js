@@ -1,1 +1,94 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,t,l,a){void 0===a&&(a=l),Object.defineProperty(e,a,{enumerable:!0,get:function(){return t[l]}})}:function(e,t,l,a){void 0===a&&(a=l),e[a]=t[l]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var l in e)"default"!==l&&Object.prototype.hasOwnProperty.call(e,l)&&__createBinding(t,e,l);return __setModuleDefault(t,e),t},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.FileBoxStyle=exports.fileBoxClassName=void 0;const react_1=__importStar(require("react")),controller_1=__importStar(require("../hooks/controller")),value_1=__importDefault(require("../hooks/value")),input_1=__importStar(require("../layouts/input")),style_1=__importDefault(require("../layouts/style")),classname_utils_1=require("../utils/classname-utils"),button_1=__importDefault(require("./button"));exports.fileBoxClassName="bh-flb";const FileBox=e=>{const t=(0,react_1.useRef)(),l=(0,controller_1.default)(),[a,r]=(0,react_1.useState)(""),{getValue:i,setValue:n}=(0,value_1.default)(e,{binded:e=>r(e?.name??""),changed:e=>{r(e?.name??""),t.current.value=""}}),s=(0,react_1.useMemo)((()=>e.accept?.join(",")??"."),[e.accept]);return(0,controller_1.initController)(e.controller,(e=>{e.focus=()=>(l.focus(),e),e.blur=()=>(l.blur(),e),e.getValue=()=>i(),e.setValue=t=>(n(t),e)})),react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{style:e.style,className:(0,classname_utils_1.className)(input_1.InputClassNames.wrap,exports.fileBoxClassName,e.className),"data-disabled":!0===e.disabled,"data-required":e.required,title:e.title},null==e.iconImage?react_1.default.createElement(button_1.default,{controller:l,disabled:e.disabled,click:()=>t.current.click(),title:e.title},e.children??"ファイルを選択"):react_1.default.createElement(button_1.default,{controller:l,image:e.iconImage,disabled:e.disabled,click:()=>t.current.click(),title:e.title},e.children??"ファイルを選択"),!1===e.fileName?react_1.default.createElement(react_1.default.Fragment,null):react_1.default.createElement("span",{className:input_1.InputClassNames.lbl},a),react_1.default.createElement("input",{ref:t,className:`${exports.fileBoxClassName}-ipt`,type:"file",accept:s,tabIndex:-1,onChange:t=>{!0!==e.disabled&&n(t.target.files[0])}})),input_1.default,exports.FileBoxStyle)};exports.default=FileBox,exports.FileBoxStyle=react_1.default.createElement(style_1.default,{id:exports.fileBoxClassName,notDepsColor:!0,notDepsDesign:!0,css:()=>`\n.${exports.fileBoxClassName} {\n  width: unset;\n  padding: 0px;\n}\n.${exports.fileBoxClassName}-ipt {\n  height: 0px !important;\n  width: 0px !important;\n  opacity: 0;\n  visibility: hidden;\n  user-select: none;\n}\n.${exports.fileBoxClassName} > .${input_1.InputClassNames.lbl} {\n  padding-top: 3px;\n}\n`});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FileBoxStyle = exports.fileBoxClassName = void 0;
+const react_1 = __importStar(require("react"));
+const controller_1 = __importStar(require("../hooks/controller"));
+const value_1 = __importDefault(require("../hooks/value"));
+const input_1 = __importStar(require("../layouts/input"));
+const style_1 = __importDefault(require("../layouts/style"));
+const classname_utils_1 = require("../utils/classname-utils");
+const button_1 = __importDefault(require("./button"));
+exports.fileBoxClassName = "bh-flb";
+const FileBox = (props) => {
+    const iref = (0, react_1.useRef)();
+    const bcon = (0, controller_1.default)();
+    const [text, setText] = (0, react_1.useState)("");
+    const { getValue, setValue } = (0, value_1.default)(props, {
+        binded: (v) => setText(v?.name ?? ""),
+        changed: (v) => {
+            setText(v?.name ?? "");
+            iref.current.value = "";
+        }
+    });
+    const fileAccept = (0, react_1.useMemo)(() => {
+        return props.accept?.join(",") ?? ".";
+    }, [props.accept]);
+    const changeFile = (e) => {
+        if (props.disabled === true)
+            return;
+        setValue(e.target.files[0]);
+    };
+    (0, controller_1.initController)(props.controller, (con) => {
+        con.focus = () => {
+            bcon.focus();
+            return con;
+        };
+        con.blur = () => {
+            bcon.blur();
+            return con;
+        };
+        con.getValue = () => getValue();
+        con.setValue = (v) => {
+            setValue(v);
+            return con;
+        };
+    });
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { style: props.style, className: (0, classname_utils_1.className)(input_1.InputClassNames.wrap, exports.fileBoxClassName, props.className), "data-disabled": props.disabled === true, "data-required": props.required, title: props.title },
+            props.iconImage == null ?
+                react_1.default.createElement(button_1.default, { controller: bcon, disabled: props.disabled, click: () => iref.current.click(), title: props.title }, props.children ?? "ファイルを選択")
+                : react_1.default.createElement(button_1.default, { controller: bcon, image: props.iconImage, disabled: props.disabled, click: () => iref.current.click(), title: props.title }, props.children ?? "ファイルを選択"),
+            props.fileName === false ? react_1.default.createElement(react_1.default.Fragment, null) : react_1.default.createElement("span", { className: input_1.InputClassNames.lbl }, text),
+            react_1.default.createElement("input", { ref: iref, className: `${exports.fileBoxClassName}-ipt`, type: "file", accept: fileAccept, tabIndex: -1, onChange: changeFile })),
+        input_1.default,
+        exports.FileBoxStyle));
+};
+exports.default = FileBox;
+exports.FileBoxStyle = react_1.default.createElement(style_1.default, { id: exports.fileBoxClassName, css: () => `
+.${exports.fileBoxClassName} {
+  width: unset;
+  padding: 0px;
+}
+.${exports.fileBoxClassName}-ipt {
+  height: 0px !important;
+  width: 0px !important;
+  opacity: 0;
+  visibility: hidden;
+  user-select: none;
+}
+.${exports.fileBoxClassName} > .${input_1.InputClassNames.lbl} {
+  padding-top: 3px;
+}
+` });

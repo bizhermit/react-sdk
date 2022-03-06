@@ -1,5 +1,8 @@
 import { CSSProperties } from "react";
 export declare const isClient: () => boolean;
+export declare const useDevice: () => {
+    touchable: boolean;
+};
 export declare type DomEventProps = {
     element: HTMLElement | Window;
     type: keyof HTMLElementEventMap;

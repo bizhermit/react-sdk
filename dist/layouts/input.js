@@ -1,1 +1,253 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(s,n,t,e){void 0===e&&(e=t),Object.defineProperty(s,e,{enumerable:!0,get:function(){return n[t]}})}:function(s,n,t,e){void 0===e&&(e=t),s[e]=n[t]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(s,n){Object.defineProperty(s,"default",{enumerable:!0,value:n})}:function(s,n){s.default=n}),__importStar=this&&this.__importStar||function(s){if(s&&s.__esModule)return s;var n={};if(null!=s)for(var t in s)"default"!==t&&Object.prototype.hasOwnProperty.call(s,t)&&__createBinding(n,s,t);return __setModuleDefault(n,s),n},__importDefault=this&&this.__importDefault||function(s){return s&&s.__esModule?s:{default:s}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.InputClassNames=void 0;const react_1=__importDefault(require("react")),icon_1=require("../graphics/icon"),style_1=__importStar(require("./style"));exports.InputClassNames={wrap:"bh-ipt-wrap",ipt:"bh-ipt",lbl:"bh-ipt_lbl",btn:"bh-ipt_btn",btn_l:"bh-ipt_btn_l",btn_bt:"bh-ipt_btn-bt",btn_o:"bh-ipt_btn_o",resize:"bh-ipt_resize",resize_x:"bh-ipt_resize_x",resize_y:"bh-ipt_resize_y"};const InputStyle=react_1.default.createElement(style_1.default,{id:"bh-ipt",notDepsColor:!0,css:({design:s})=>`\n.${exports.InputClassNames.wrap} {\n  box-sizing: border-box;\n  position: relative;\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: stretch;\n  align-items: center;\n  flex: none;\n  overflow: visible;\n  margin: 0px;\n  padding: 0px;\n  height: ${style_1.CssVar.size};\n  width: 150px;\n  max-height: 100%;\n  max-width: 100%;\n}\n.${exports.InputClassNames.ipt} {\n  box-sizing: border-box;\n  border: none;\n  background: transparent;\n  color: inherit;\n  padding: 2px 5px 0px 5px;\n  height: 100%;\n  max-width: 100%;\n  min-width: 0px;\n  flex: 1;\n  font-size: inherit;\n}\n.${exports.InputClassNames.lbl} {\n  box-sizing: border-box;\n  padding: 2px 5px 0px 5px;\n  display: block;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  max-height: 100%;\n  max-width: 100%;\n  flex: 1;\n}\n.${exports.InputClassNames.btn},\n.${exports.InputClassNames.btn_l},\n.${exports.InputClassNames.btn_bt},\n.${exports.InputClassNames.btn_o} {\n  box-sizing: border-box;\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: center;\n  align-items: center;\n  height: ${style_1.CssVar.size};\n  width: ${style_1.CssVar.size};\n  flex: none;\n  cursor: pointer;\n}\n.${exports.InputClassNames.btn} > .${icon_1.iconClassName},\n.${exports.InputClassNames.btn_l} > .${icon_1.iconClassName},\n.${exports.InputClassNames.btn_bt} > .${icon_1.iconClassName},\n.${exports.InputClassNames.btn_o} > .${icon_1.iconClassName} {\n  height: 100%;\n  width: 100%;\n}\n.${exports.InputClassNames.ipt}[data-align="center"],\n.${exports.InputClassNames.lbl}[data-align="center"] {\n  text-align: center;\n}\n.${exports.InputClassNames.ipt}[data-align="right"],\n.${exports.InputClassNames.lbl}[data-align="right"] {\n  text-align: right;\n}\n.${exports.InputClassNames.resize},\n.${exports.InputClassNames.resize_x},\n.${exports.InputClassNames.resize_y} {\n  box-sizing: border-box;\n  position: relative;\n  flex: none;\n  background: transparent;\n}\n.${exports.InputClassNames.resize} {\n  position: absolute;\n  height: 5px;\n  width: 5px;\n  bottom: 0px;\n  right: 0px;\n  cursor: nwse-resize;\n}\n.${exports.InputClassNames.resize_x} {\n  height: 100%;\n  width: 3px;\n  top: 0px;\n  right: 0px;\n  cursor: col-resize;\n}\n.${exports.InputClassNames.resize_y} {\n  height: 3px;\n  width: 100%;\n  bottom: 0px;\n  left: 0px;\n  cursor: row-resize;\n}\n${"material"===s?`\n.${exports.InputClassNames.wrap} {\n  padding: 1px;\n  height: calc(${style_1.CssVar.size} + 2px);\n}\n.${exports.InputClassNames.wrap} > .${exports.InputClassNames.ipt} {\n  border: 1px solid ${style_1.CssVar.bdc};\n  border-radius: ${style_1.CssParam.m.r};\n}\n.${exports.InputClassNames.btn},\n.${exports.InputClassNames.btn_l},\n.${exports.InputClassNames.btn_bt},\n.${exports.InputClassNames.btn_o} {\n  border: 1px solid ${style_1.CssVar.bdc};\n  \n  border-radius: ${style_1.CssParam.m.r};\n  background: ${style_1.CssVar.bg.c};\n  z-index: 0;\n}\n.${exports.InputClassNames.btn} {\n  border-left: none;\n  width: calc(${style_1.CssVar.size} - 1px);\n  border-top-left-radius: 0px;\n  border-bottom-left-radius: 0px;\n}\n.${exports.InputClassNames.btn_l} {\n  border-top-right-radius: 0px;\n  border-bottom-right-radius: 0px;\n}\n.${exports.InputClassNames.btn_bt} {\n  border-radius: 0px;\n  width: calc(${style_1.CssVar.size} - 1px);\n  border-left: none;\n}\n.${exports.InputClassNames.btn}:hover,\n.${exports.InputClassNames.btn_l}:hover,\n.${exports.InputClassNames.btn_bt}:hover,\n.${exports.InputClassNames.btn_o}:hover {\n  margin-top: calc(${style_1.CssParam.m.updownMargin} * -0.5);\n  margin-bottom: calc(${style_1.CssParam.m.updownMargin} * 0.5);\n  box-shadow: ${style_1.CssParam.m.sdBtm_f};\n  z-index: 1;\n}\n.${exports.InputClassNames.btn}:hover:active,\n.${exports.InputClassNames.btn_l}:hover:active,\n.${exports.InputClassNames.btn_bt}:hover:active,\n.${exports.InputClassNames.btn_o}:hover:active {\n  margin-top: 0px;\n  margin-bottom: 0px;\n  box-shadow: none;\n}\n`:""}\n${"neumorphism"===s?`\n.${exports.InputClassNames.wrap} {\n  padding: ${style_1.CssParam.n.sdPdd}; \n  height: calc(${style_1.CssVar.size} + ${style_1.CssParam.n.sdPdd} * 2);\n}\n.${exports.InputClassNames.wrap} > .${exports.InputClassNames.ipt} {\n  box-shadow: ${style_1.CssParam.n.ccvSd};\n  background: ${style_1.CssParam.n.ccvBg};\n  border-radius: ${style_1.CssParam.n.r};\n}\n.${exports.InputClassNames.wrap} > .${exports.InputClassNames.ipt}:read-only,\n.${exports.InputClassNames.wrap} > .${exports.InputClassNames.ipt}:disabled {\n  box-shadow: ${style_1.CssParam.n.border.ccvSd};\n}\n.${exports.InputClassNames.btn},\n.${exports.InputClassNames.btn_l},\n.${exports.InputClassNames.btn_bt},\n.${exports.InputClassNames.btn_o} {\n  height: ${style_1.CssVar.size};\n  width: ${style_1.CssVar.size};\n  box-shadow: ${style_1.CssParam.n.cvxSd};\n  background: ${style_1.CssParam.n.cvxBg};\n  border-radius: ${style_1.CssParam.n.r};\n  z-index: 0;\n}\n.${exports.InputClassNames.btn} {\n  border-top-left-radius: 0px;\n  border-bottom-left-radius: 0px;\n}\n.${exports.InputClassNames.btn_l} {\n  border-top-right-radius: 0px;\n  border-bottom-right-radius: 0px;\n}\n.${exports.InputClassNames.btn_bt} {\n  border-radius: 0px;\n}\n.${exports.InputClassNames.btn} > .${icon_1.iconClassName},\n.${exports.InputClassNames.btn_l} > .${icon_1.iconClassName},\n.${exports.InputClassNames.btn_bt} > .${icon_1.iconClassName},\n.${exports.InputClassNames.btn_o} > .${icon_1.iconClassName} {\n  height: calc(${style_1.CssVar.size} - ${style_1.CssParam.n.ccvSdPdd});\n  width: calc(${style_1.CssVar.size} - ${style_1.CssParam.n.ccvSdPdd});\n}\n.${exports.InputClassNames.btn}:hover,\n.${exports.InputClassNames.btn_l}:hover,\n.${exports.InputClassNames.btn_bt}:hover,\n.${exports.InputClassNames.btn_o}:hover {\n  z-index: 1;\n  box-shadow: ${style_1.CssParam.n.cvxSd_f};\n}\n.${exports.InputClassNames.btn}:hover:active,\n.${exports.InputClassNames.btn_l}:hover:active,\n.${exports.InputClassNames.btn_bt}:hover:active,\n.${exports.InputClassNames.btn_o}:hover:active {\n  z-index: 0;\n  padding-top: 1px;\n  box-shadow: ${style_1.CssParam.n.ccvSd};\n  background: ${style_1.CssParam.n.ccvBg};\n}\n`:""}\n`});exports.default=InputStyle;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InputClassNames = void 0;
+const react_1 = __importDefault(require("react"));
+const icon_1 = require("../graphics/icon");
+const style_1 = __importStar(require("./style"));
+exports.InputClassNames = {
+    wrap: "bh-ipt-wrap",
+    ipt: "bh-ipt",
+    lbl: "bh-ipt_lbl",
+    btn: "bh-ipt_btn",
+    btn_l: "bh-ipt_btn_l",
+    btn_bt: "bh-ipt_btn-bt",
+    btn_o: "bh-ipt_btn_o",
+    resize: "bh-ipt_resize",
+    resize_x: "bh-ipt_resize_x",
+    resize_y: "bh-ipt_resize_y",
+};
+const InputStyle = react_1.default.createElement(style_1.default, { id: "bh-ipt", depsDesign: true, css: ({ design }) => `
+.${exports.InputClassNames.wrap} {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: stretch;
+  align-items: center;
+  flex: none;
+  overflow: visible;
+  margin: 0px;
+  padding: 0px;
+  height: ${style_1.CssVar.size};
+  width: 150px;
+  max-height: 100%;
+  max-width: 100%;
+}
+.${exports.InputClassNames.ipt} {
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 2px 5px 0px 5px;
+  height: 100%;
+  max-width: 100%;
+  min-width: 0px;
+  flex: 1;
+  font-size: inherit;
+}
+.${exports.InputClassNames.lbl} {
+  box-sizing: border-box;
+  padding: 2px 5px 0px 5px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-height: 100%;
+  max-width: 100%;
+  flex: 1;
+}
+.${exports.InputClassNames.btn},
+.${exports.InputClassNames.btn_l},
+.${exports.InputClassNames.btn_bt},
+.${exports.InputClassNames.btn_o} {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  height: ${style_1.CssVar.size};
+  width: ${style_1.CssVar.size};
+  flex: none;
+  cursor: pointer;
+}
+.${exports.InputClassNames.btn} > .${icon_1.iconClassName},
+.${exports.InputClassNames.btn_l} > .${icon_1.iconClassName},
+.${exports.InputClassNames.btn_bt} > .${icon_1.iconClassName},
+.${exports.InputClassNames.btn_o} > .${icon_1.iconClassName} {
+  height: 100%;
+  width: 100%;
+}
+.${exports.InputClassNames.ipt}[data-align="center"],
+.${exports.InputClassNames.lbl}[data-align="center"] {
+  text-align: center;
+}
+.${exports.InputClassNames.ipt}[data-align="right"],
+.${exports.InputClassNames.lbl}[data-align="right"] {
+  text-align: right;
+}
+.${exports.InputClassNames.resize},
+.${exports.InputClassNames.resize_x},
+.${exports.InputClassNames.resize_y} {
+  box-sizing: border-box;
+  position: relative;
+  flex: none;
+  background: transparent;
+}
+.${exports.InputClassNames.resize} {
+  position: absolute;
+  height: 5px;
+  width: 5px;
+  bottom: 0px;
+  right: 0px;
+  cursor: nwse-resize;
+}
+.${exports.InputClassNames.resize_x} {
+  height: 100%;
+  width: 3px;
+  top: 0px;
+  right: 0px;
+  cursor: col-resize;
+}
+.${exports.InputClassNames.resize_y} {
+  height: 3px;
+  width: 100%;
+  bottom: 0px;
+  left: 0px;
+  cursor: row-resize;
+}
+${design === "material" ? `
+.${exports.InputClassNames.wrap} {
+  padding: 1px;
+  height: calc(${style_1.CssVar.size} + 2px);
+}
+.${exports.InputClassNames.wrap} > .${exports.InputClassNames.ipt} {
+  background: ${style_1.CssVar.bg.dc};
+  border: 1px solid ${style_1.CssVar.bdc};
+  border-radius: ${style_1.CssParam.m.r};
+}
+.${exports.InputClassNames.btn},
+.${exports.InputClassNames.btn_l},
+.${exports.InputClassNames.btn_bt},
+.${exports.InputClassNames.btn_o} {
+  border: 1px solid ${style_1.CssVar.bdc};
+  border-radius: ${style_1.CssParam.m.r};
+  background: ${style_1.CssVar.bg.c};
+  z-index: 0;
+}
+.${exports.InputClassNames.btn} {
+  border-left: none;
+  width: calc(${style_1.CssVar.size} - 1px);
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.${exports.InputClassNames.btn_l} {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.${exports.InputClassNames.btn_bt} {
+  border-radius: 0px;
+  width: calc(${style_1.CssVar.size} - 1px);
+  border-left: none;
+}
+.${exports.InputClassNames.btn}:hover,
+.${exports.InputClassNames.btn_l}:hover,
+.${exports.InputClassNames.btn_bt}:hover,
+.${exports.InputClassNames.btn_o}:hover {
+  margin-top: calc(${style_1.CssParam.m.updownMargin} * -0.5);
+  margin-bottom: calc(${style_1.CssParam.m.updownMargin} * 0.5);
+  box-shadow: ${style_1.CssParam.m.sdBtm_f};
+  z-index: 1;
+}
+.${exports.InputClassNames.btn}:hover:active,
+.${exports.InputClassNames.btn_l}:hover:active,
+.${exports.InputClassNames.btn_bt}:hover:active,
+.${exports.InputClassNames.btn_o}:hover:active {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  box-shadow: none;
+}
+` : ""}
+${design === "neumorphism" ? `
+.${exports.InputClassNames.wrap} {
+  padding: ${style_1.CssParam.n.sdPdd}; 
+  height: calc(${style_1.CssVar.size} + ${style_1.CssParam.n.sdPdd} * 2);
+}
+.${exports.InputClassNames.wrap} > .${exports.InputClassNames.ipt} {
+  box-shadow: ${style_1.CssParam.n.ccvSd};
+  background: ${style_1.CssParam.n.ccvBg};
+  border-radius: ${style_1.CssParam.n.r};
+}
+.${exports.InputClassNames.wrap} > .${exports.InputClassNames.ipt}:read-only,
+.${exports.InputClassNames.wrap} > .${exports.InputClassNames.ipt}:disabled {
+  box-shadow: ${style_1.CssParam.n.border.ccvSd};
+}
+.${exports.InputClassNames.btn},
+.${exports.InputClassNames.btn_l},
+.${exports.InputClassNames.btn_bt},
+.${exports.InputClassNames.btn_o} {
+  height: ${style_1.CssVar.size};
+  width: ${style_1.CssVar.size};
+  box-shadow: ${style_1.CssParam.n.cvxSd};
+  background: ${style_1.CssParam.n.cvxBg};
+  border-radius: ${style_1.CssParam.n.r};
+  z-index: 0;
+}
+.${exports.InputClassNames.btn} {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.${exports.InputClassNames.btn_l} {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.${exports.InputClassNames.btn_bt} {
+  border-radius: 0px;
+}
+.${exports.InputClassNames.btn} > .${icon_1.iconClassName},
+.${exports.InputClassNames.btn_l} > .${icon_1.iconClassName},
+.${exports.InputClassNames.btn_bt} > .${icon_1.iconClassName},
+.${exports.InputClassNames.btn_o} > .${icon_1.iconClassName} {
+  height: calc(${style_1.CssVar.size} - ${style_1.CssParam.n.ccvSdPdd});
+  width: calc(${style_1.CssVar.size} - ${style_1.CssParam.n.ccvSdPdd});
+}
+.${exports.InputClassNames.btn}:hover,
+.${exports.InputClassNames.btn_l}:hover,
+.${exports.InputClassNames.btn_bt}:hover,
+.${exports.InputClassNames.btn_o}:hover {
+  z-index: 1;
+  box-shadow: ${style_1.CssParam.n.cvxSd_f};
+}
+.${exports.InputClassNames.btn}:hover:active,
+.${exports.InputClassNames.btn_l}:hover:active,
+.${exports.InputClassNames.btn_bt}:hover:active,
+.${exports.InputClassNames.btn_o}:hover:active {
+  z-index: 0;
+  padding-top: 1px;
+  box-shadow: ${style_1.CssParam.n.ccvSd};
+  background: ${style_1.CssParam.n.ccvBg};
+}
+` : ""}
+` });
+exports.default = InputStyle;

@@ -1,1 +1,119 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,t,l,a){void 0===a&&(a=l),Object.defineProperty(e,a,{enumerable:!0,get:function(){return t[l]}})}:function(e,t,l,a){void 0===a&&(a=l),e[a]=t[l]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var l in e)"default"!==l&&Object.prototype.hasOwnProperty.call(e,l)&&__createBinding(t,e,l);return __setModuleDefault(t,e),t},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.ListViewSelectBoxColumnStyle=exports.listViewSelectBoxColumnClassName=void 0;const react_1=__importStar(require("react")),react_dom_1=__importDefault(require("react-dom")),controller_1=__importDefault(require("../../hooks/controller")),input_column_1=__importStar(require("../../layouts/input-column")),style_1=__importStar(require("../../layouts/style")),listview_1=require("../listview"),selectbox_1=__importDefault(require("../selectbox"));exports.listViewSelectBoxColumnClassName="bh-lv_c-slb";const ListViewSelectBoxColumn=e=>{const t=e.labelDataName??`_lbl_${e.name}`,l=e.selectBoxOptions?.valueDataName??"value",a=e.selectBoxOptions?.labelDataName??"label";let o={value:""},n=[],i=!0;return null==e.source?(n=[],i=!1):Array.isArray(e.source)?(n=e.source,i=!1):(async()=>{try{n=await e.source(),i=!1}catch{console.log("failed: load selectbox column source"),n=[]}})(),{...e,name:t,initialize:()=>(0,listview_1.createListViewEditColumnElement)(),cellInitialize:(e,t)=>{e.element.classList.add(input_column_1.listViewInputColumnClassName,"bh-listview-selectbox");const l=(0,listview_1.cloneListViewEditColumnElement)(t);l.wrapElem.appendChild(l.lblElem),e.element.appendChild(l.wrapElem),e.contentElements.push(l.lblElem)},bindedItems:o=>{const i={};o.forEach((o=>o[t]=(e=>{if(e in i)return i[e];const t=n.find((t=>t[l]===e));return i[e]=(t?t[a]:"")??""})(o[e.name])))},_beginEdit:({target:l,editElement:a,endEdit:r,styleCtx:u})=>{!0!==e.disabled&&(i?r(!1):react_dom_1.default.render(react_1.default.createElement(style_1.StyleContext.Provider,{value:u},react_1.default.createElement(SelectBoxColumn,{bind:o={value:l.data[e.name]??null},source:n,options:e.selectBoxOptions})),a,(()=>{e.beganEdit?.({value:l.data[e.name],label:l.data[t]},l)})))},_endEdit:(i,r,u)=>{const s={value:i.data[e.name],label:i.data[t]},c=o.value;let d="";if(r){i.data[e.name]=c;const o=n.find((e=>e[l]===c));i.data[t]=d=(o?o[a]:"")??""}react_dom_1.default.unmountComponentAtNode(u),e.endedEdit?.({before:s,after:r?{value:c,label:d}:s},i,r)},jsxStyle:react_1.default.createElement(react_1.default.Fragment,null,input_column_1.default,exports.ListViewSelectBoxColumnStyle)}};exports.default=ListViewSelectBoxColumn;const SelectBoxColumn=({bind:e,options:t,source:l})=>{const a=(0,controller_1.default)();return(0,react_1.useEffect)((()=>{setTimeout((()=>a.focus()),0)}),[]),react_1.default.createElement(selectbox_1.default,{controller:a,name:"value",bind:e,source:l,style:{height:"100%",width:"100%"},...t,resize:!1})};exports.ListViewSelectBoxColumnStyle=react_1.default.createElement(style_1.default,{id:exports.listViewSelectBoxColumnClassName,notDepsColor:!0,notDepsDesign:!0,css:()=>"\n"});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ListViewSelectBoxColumnStyle = exports.listViewSelectBoxColumnClassName = void 0;
+const react_1 = __importStar(require("react"));
+const react_dom_1 = __importDefault(require("react-dom"));
+const controller_1 = __importDefault(require("../../hooks/controller"));
+const input_column_1 = __importStar(require("../../layouts/input-column"));
+const style_1 = __importStar(require("../../layouts/style"));
+const listview_1 = require("../listview");
+const selectbox_1 = __importDefault(require("../selectbox"));
+exports.listViewSelectBoxColumnClassName = "bh-lv_c-slb";
+const ListViewSelectBoxColumn = (props) => {
+    const labelDataName = props.labelDataName ?? `_lbl_${props.name}`;
+    const sourceValueDataName = props.selectBoxOptions?.valueDataName ?? "value";
+    const sourceLabelDataName = props.selectBoxOptions?.labelDataName ?? "label";
+    let bind = { value: "" }, sourceItems = [], loading = true;
+    if (props.source == null) {
+        sourceItems = [];
+        loading = false;
+    }
+    else if (Array.isArray(props.source)) {
+        sourceItems = props.source;
+        loading = false;
+    }
+    else {
+        (async () => {
+            try {
+                sourceItems = await props.source();
+                loading = false;
+            }
+            catch {
+                console.log("failed: load selectbox column source");
+                sourceItems = [];
+            }
+        })();
+    }
+    const map = {};
+    const find = (val) => {
+        if (val in map)
+            return map[val];
+        const sitem = sourceItems.find((sitem) => sitem[sourceValueDataName] === val);
+        return map[val] = (sitem ? sitem[sourceLabelDataName] : "") ?? "";
+    };
+    return {
+        ...props,
+        name: labelDataName,
+        initialize: () => {
+            return (0, listview_1.createListViewEditColumnElement)();
+        },
+        cellInitialize: (cell, initParams) => {
+            cell.element.classList.add(input_column_1.listViewInputColumnClassName);
+            const elems = (0, listview_1.cloneListViewEditColumnElement)(initParams);
+            elems.wrapElem.appendChild(elems.lblElem);
+            cell.element.appendChild(elems.wrapElem);
+            cell.contentElements.push(elems.lblElem);
+        },
+        rowDataInitialize: (data) => {
+            data[labelDataName] = find(data[props.name]);
+        },
+        _beginEdit: ({ target, editElement, endEdit, styleCtx }) => {
+            if (props.disabled === true)
+                return;
+            if (loading) {
+                endEdit(false);
+                return;
+            }
+            react_dom_1.default.render(react_1.default.createElement(style_1.StyleContext.Provider, { value: styleCtx },
+                react_1.default.createElement(SelectBoxColumn, { bind: bind = { value: target.data[props.name] ?? null }, source: sourceItems, options: props.selectBoxOptions })), editElement, () => {
+                props.beganEdit?.({ value: target.data[props.name], label: target.data[labelDataName] }, target);
+            });
+        },
+        _endEdit: (target, commit, editElement) => {
+            const bvals = { value: target.data[props.name], label: target.data[labelDataName] }, aval = bind.value;
+            let albl = "";
+            if (commit) {
+                target.data[props.name] = aval;
+                const sitem = sourceItems.find((sitem) => sitem[sourceValueDataName] === aval);
+                target.data[labelDataName] = albl = (sitem ? sitem[sourceLabelDataName] : "") ?? "";
+            }
+            react_dom_1.default.unmountComponentAtNode(editElement);
+            props.endedEdit?.({ before: bvals, after: commit ? { value: aval, label: albl } : bvals }, target, commit);
+        },
+        jsxStyle: react_1.default.createElement(react_1.default.Fragment, null,
+            input_column_1.default,
+            exports.ListViewSelectBoxColumnStyle),
+    };
+};
+exports.default = ListViewSelectBoxColumn;
+const SelectBoxColumn = ({ bind, options, source }) => {
+    const con = (0, controller_1.default)();
+    (0, react_1.useEffect)(() => {
+        setTimeout(() => con.focus(), 0);
+    }, []);
+    return react_1.default.createElement(selectbox_1.default, { controller: con, name: "value", bind: bind, source: source, style: { height: "100%", width: "100%" }, ...options, resize: false });
+};
+exports.ListViewSelectBoxColumnStyle = react_1.default.createElement(style_1.default, { id: exports.listViewSelectBoxColumnClassName, css: () => `
+` });

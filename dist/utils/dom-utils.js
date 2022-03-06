@@ -1,1 +1,162 @@
-"use strict";var __importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.pressPositiveKey=exports.horizontalResizeMousedown=exports.getDomEventManager=exports.DomComponentClass=exports.releaseCursor=exports.setCursor=exports.setStyleProps=exports.cloneElement=exports.isClient=void 0;const string_utils_1=__importDefault(require("@bizhermit/basic-utils/dist/string-utils")),react_1=require("react"),isClient=()=>"undefined"!=typeof window;exports.isClient=isClient;const cloneElement=(e,t)=>{if(null==e)return null;const s=e.cloneNode(!0);return null==t||(string_utils_1.default.isString(t)?s.classList.add(t):Array.isArray(t)?t.forEach((e=>s.classList.add(e))):"function"==typeof t?t(s):(0,exports.setStyleProps)(s,t)),s};exports.cloneElement=cloneElement;const setStyleProps=(e,t)=>(null==e||null==t||Object.keys(t).forEach((s=>{const r=t[s];string_utils_1.default.isEmpty(r)?e.style.removeProperty(s):e.style[s]=String(r)})),e);exports.setStyleProps=setStyleProps;const setCursor=e=>{if(null==document?.body)return()=>{};document.onselectstart=()=>!1;let t=document.getElementById("bhCursorStyle");return null==t&&(t=document.createElement("style"),t.id="bhCursorStyle",t.type="text/css",document.head.appendChild(t)),t.textContent=`*,button,a{cursor:${e} !important;}`,()=>(0,exports.releaseCursor)()};exports.setCursor=setCursor;const releaseCursor=()=>{document.onselectstart=()=>!0;try{document.head.removeChild(document.getElementById("bhCursorStyle"))}catch{}};exports.releaseCursor=releaseCursor;class DomComponentClass{events;constructor(){this.events=[]}dispose(){this.events.forEach((e=>{try{e.element.removeEventListener(e.type,e.listener)}catch{}})),this.events=[]}addEvent(e,t,s,r){return null==e||(this.events.push({element:e,type:t,listener:s}),e.addEventListener(t,s,r)),e}removeEvent(e,t,s){if(null==e)return e;for(let r=this.events.length-1;r>=0;r--){const n=this.events[r];if(n.element===e&&!(null!=t&&n.type!==t||null!=s&&n.listener!==s))try{n.element.removeEventListener(n.type,n.listener),this.events.splice(r,1)}catch{}}return e}removeEventIterator(e){for(let t=this.events.length-1;t>=0;t--){const s=this.events[t];if(!0===e(s)){try{s.element.removeEventListener(s.type,s.listener)}catch{}this.events.splice(t,1)}}return this}}exports.DomComponentClass=DomComponentClass;const getDomEventManager=()=>new DomComponentClass;exports.getDomEventManager=getDomEventManager;const horizontalResizeMousedown=(e,t)=>(0,react_1.useCallback)((s=>{if(!1===e.resize)return;const r=s.target.parentElement;let n=r.getBoundingClientRect().width,o=s.clientX;const i=e=>{r.style.width=(e.clientX-o)*(t?-1:1)+n+"px"};(0,exports.setCursor)("col-resize");const l=()=>{window.removeEventListener("mousemove",i),window.removeEventListener("mouseup",l),(0,exports.releaseCursor)(),e.resized?.(r.getBoundingClientRect().width)};window.addEventListener("mouseup",l),window.addEventListener("mousemove",i)}),[e.resize,e.resized]);exports.horizontalResizeMousedown=horizontalResizeMousedown;const pressPositiveKey=(e,t,s)=>{" "!==e.key&&"Enter"!==e.key||(t(e),!0===s&&(e.stopPropagation(),e.preventDefault()))};exports.pressPositiveKey=pressPositiveKey;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.pressPositiveKey = exports.horizontalResizeMousedown = exports.getDomEventManager = exports.DomComponentClass = exports.releaseCursor = exports.setCursor = exports.setStyleProps = exports.cloneElement = exports.useDevice = exports.isClient = void 0;
+const string_utils_1 = __importDefault(require("@bizhermit/basic-utils/dist/string-utils"));
+const react_1 = require("react");
+const isClient = () => typeof window !== "undefined";
+exports.isClient = isClient;
+const useDevice = () => {
+    const [touchable, setTouchable] = (0, react_1.useState)(false);
+    (0, react_1.useEffect)(() => {
+        setTouchable((0, exports.isClient)() && (window?.ontouchstart !== undefined && window?.navigator.maxTouchPoints > 0));
+    }, []);
+    return { touchable };
+};
+exports.useDevice = useDevice;
+const cloneElement = (element, option) => {
+    if (element == null)
+        return undefined;
+    const elem = element.cloneNode(true);
+    if (option == null)
+        return elem;
+    if (string_utils_1.default.isString(option))
+        elem.classList.add(option);
+    else if (Array.isArray(option))
+        option.forEach(cn => elem.classList.add(cn));
+    else if (typeof option === "function")
+        option(elem);
+    else
+        (0, exports.setStyleProps)(elem, option);
+    return elem;
+};
+exports.cloneElement = cloneElement;
+const setStyleProps = (element, props) => {
+    if (element == null || props == null)
+        return element;
+    Object.keys(props).forEach((key) => {
+        const prop = props[key];
+        if (string_utils_1.default.isEmpty(prop)) {
+            element.style.removeProperty(key);
+            return;
+        }
+        element.style[key] = String(prop);
+    });
+    return element;
+};
+exports.setStyleProps = setStyleProps;
+const setCursor = (cursor) => {
+    if (document?.body == null)
+        return () => { };
+    document.onselectstart = () => false;
+    let elem = document.getElementById("bhCursorStyle");
+    if (elem == null) {
+        elem = document.createElement("style");
+        elem.id = "bhCursorStyle";
+        elem.type = "text/css";
+        document.head.appendChild(elem);
+    }
+    elem.textContent = `*,button,a{cursor:${cursor} !important;}`;
+    return () => (0, exports.releaseCursor)();
+};
+exports.setCursor = setCursor;
+const releaseCursor = () => {
+    document.onselectstart = () => true;
+    try {
+        document.head.removeChild(document.getElementById("bhCursorStyle"));
+    }
+    catch { }
+};
+exports.releaseCursor = releaseCursor;
+class DomComponentClass {
+    events;
+    constructor() {
+        this.events = [];
+    }
+    dispose() {
+        this.events.forEach((props) => {
+            try {
+                props.element.removeEventListener(props.type, props.listener);
+            }
+            catch { }
+            ;
+        });
+        this.events = [];
+    }
+    addEvent(element, type, listener, options) {
+        if (element == null)
+            return element;
+        this.events.push({ element, type, listener });
+        element.addEventListener(type, listener, options);
+        return element;
+    }
+    removeEvent(element, type, listener) {
+        if (element == null)
+            return element;
+        for (let i = this.events.length - 1; i >= 0; i--) {
+            const props = this.events[i];
+            if (props.element !== element)
+                continue;
+            if (type != null && props.type !== type)
+                continue;
+            if (listener != null && props.listener !== listener)
+                continue;
+            try {
+                props.element.removeEventListener(props.type, props.listener);
+                this.events.splice(i, 1);
+            }
+            catch { }
+        }
+        return element;
+    }
+    removeEventIterator(func) {
+        for (let i = this.events.length - 1; i >= 0; i--) {
+            const props = this.events[i];
+            if (func(props) === true) {
+                try {
+                    props.element.removeEventListener(props.type, props.listener);
+                }
+                catch { }
+                this.events.splice(i, 1);
+            }
+        }
+        return this;
+    }
+}
+exports.DomComponentClass = DomComponentClass;
+;
+const getDomEventManager = () => {
+    return new DomComponentClass();
+};
+exports.getDomEventManager = getDomEventManager;
+const horizontalResizeMousedown = (props, reverse) => {
+    return (0, react_1.useCallback)((e) => {
+        if (props.resize === false)
+            return;
+        const elem = e.target.parentElement;
+        let lWidth = elem.getBoundingClientRect().width, pos = e.clientX;
+        const move = (e) => { elem.style.width = (e.clientX - pos) * (reverse ? -1 : 1) + lWidth + "px"; };
+        (0, exports.setCursor)("col-resize");
+        const end = () => {
+            window.removeEventListener("mousemove", move);
+            window.removeEventListener("mouseup", end);
+            (0, exports.releaseCursor)();
+            props.resized?.(elem.getBoundingClientRect().width);
+        };
+        window.addEventListener("mouseup", end);
+        window.addEventListener("mousemove", move);
+    }, [props.resize, props.resized]);
+};
+exports.horizontalResizeMousedown = horizontalResizeMousedown;
+const pressPositiveKey = (e, func, stopEvent) => {
+    if (e.key === " " || e.key === "Enter") {
+        func(e);
+        if (stopEvent === true) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    }
+};
+exports.pressPositiveKey = pressPositiveKey;

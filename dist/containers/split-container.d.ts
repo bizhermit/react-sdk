@@ -29,9 +29,11 @@ declare type SplitContentController = {
 export declare type SplitContentFC<P = {}> = AccessorVFC<P & {
     scc: SplitContentController;
 }>;
-export declare type SplitContent<P = {}> = {
-    component: SplitContentFC<P>;
-    props?: P;
+export declare type SplitContent = {
+    component: SplitContentFC<any>;
+    props?: {
+        [key: string]: any;
+    };
     style?: CSSProperties;
 };
 export declare type SplitContainerProps = ContainerProps & {

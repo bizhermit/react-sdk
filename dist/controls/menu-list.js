@@ -1,1 +1,277 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,s,t,a){void 0===a&&(a=t),Object.defineProperty(e,a,{enumerable:!0,get:function(){return s[t]}})}:function(e,s,t,a){void 0===a&&(a=t),e[a]=s[t]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,s){Object.defineProperty(e,"default",{enumerable:!0,value:s})}:function(e,s){e.default=s}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var s={};if(null!=e)for(var t in e)"default"!==t&&Object.prototype.hasOwnProperty.call(e,t)&&__createBinding(s,e,t);return __setModuleDefault(s,e),s},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.MenuStyle=exports.menuClassName=void 0;const react_1=__importStar(require("react")),icon_1=__importDefault(require("../graphics/icon")),controller_1=require("../hooks/controller"),style_1=__importStar(require("../layouts/style")),classname_utils_1=require("../utils/classname-utils");exports.menuClassName="bh-menu";const MenuList=e=>{const s=(0,react_1.useRef)(),t=(s,a,n)=>{if(null==s)return null;const r=[];let l=0,o=!1;for(const m of s){if(null==m)continue;const s=t(m.childItems,a+1,n),i=(s?.nodes?.length??0)>0;let d=!0===n?.(m);o=o||d,r.push(react_1.default.createElement(MenuItem,{key:l++,props:m,addProps:{nestLevel:a,selected:d,hasChild:i,childNodes:s?.nodes,showChildren:!0===s?.hasSelected&&!1!==e.openChildren,clicked:e.clicked,width:e.width}}))}return{nodes:r,hasSelected:o}},a=(0,react_1.useMemo)((()=>t(e.items,0,e.selected).nodes),[e.items]);return(0,controller_1.initController)(e.controller,(e=>{e.focus=()=>(s.current?.querySelector("div[tabindex]")?.focus(),e)})),react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{ref:s,style:e.style,className:(0,classname_utils_1.className)(`${exports.menuClassName}-list ${style_1.scrollbarClassName}`,e.className),"data-dirc":e.direction??"vertical","data-reverse":!0===e.reverse},a),exports.MenuStyle)};exports.default=MenuList;const MenuItem=({props:e,addProps:s})=>{const[t,a]=(0,react_1.useState)(s.showChildren||null!=e.childItems&&s.selected),n=t=>{if(s.hasChild){const n=e.clicked?.(e);if(!1!==n){const e=t.nextElementSibling;if(e){"none"===e.style.display?(e?.style.removeProperty("display"),a(!0)):(e.style.display="none",a(!1))}}return void s.clicked?.(e,n)}const n=e.clicked?.(e);s.clicked?.(e,n)};return null==e.label?react_1.default.createElement("div",{className:`${exports.menuClassName}-hr`}):react_1.default.createElement("div",{className:`${exports.menuClassName}-item-wrap`,"data-nest":s.nestLevel},react_1.default.createElement("div",{className:(0,classname_utils_1.className)(`${exports.menuClassName}-item`,s.selected?" bh-selected":""),"data-opened":t,"data-click":null!=e.clicked||null!=e.childItems,onClick:e=>{n(e.currentTarget)},onKeyDown:e=>{"Enter"!==e.key&&" "!==e.key||n(e.currentTarget)},style:{width:s.width},tabIndex:0},null==e.iconImage?react_1.default.createElement(react_1.default.Fragment,null):react_1.default.createElement("div",{className:`${exports.menuClassName}-item-icon`},react_1.default.createElement(icon_1.default,{image:e.iconImage})),react_1.default.createElement("div",{className:`${exports.menuClassName}-item-label`},e.label),s.hasChild?react_1.default.createElement("div",{className:`${exports.menuClassName}-item-icon`},s.hasChild?react_1.default.createElement(icon_1.default,{image:t?"pullup":"pulldown"}):react_1.default.createElement(react_1.default.Fragment,null)):react_1.default.createElement(react_1.default.Fragment,null)),s.hasChild?react_1.default.createElement("div",{className:`${exports.menuClassName}-children ${style_1.scrollbarClassName}`,style:{display:t?null:"none"}},s.childNodes):react_1.default.createElement(react_1.default.Fragment,null))};exports.MenuStyle=react_1.default.createElement(style_1.default,{id:exports.menuClassName,notDepsColor:!0,css:({design:e})=>`\n.${exports.menuClassName}-list,\n.${exports.menuClassName}-item-wrap,\n.${exports.menuClassName}-children {\n  box-sizing: border-box;\n  display: flex;\n  flex-flow: column nowrap;\n  justify-content: flex-start;\n  align-items: stretch;\n}\n.${exports.menuClassName}-list {\n  ${style_1.CssPV.fill}\n}\n.${exports.menuClassName}-list[data-dirc="horizontal"] {\n  flex-flow: row nowrap;\n  max-height: 100%;\n  overflow: visible;\n}\n.${exports.menuClassName}-hr {\n  box-sizing: border-box;\n  padding: 0px;\n  border: none;\n  height: 1px;\n  width: 100%;\n  border-top: 1px solid ${style_1.CssVar.bdc};\n}\n.${exports.menuClassName}-list[data-dirc="horizontal"] > .${exports.menuClassName}-hr {\n  width: 1px;\n  height: 100%;\n  border-top: none;\n  border-left: 1px solid ${style_1.CssVar.bdc};\n}\n.${exports.menuClassName}-list[data-dirc="horizontal"] > .${exports.menuClassName}-item-wrap {\n  flex: 1;\n}\n.${exports.menuClassName}-list[data-dirc="horizontal"] > .${exports.menuClassName}-item-wrap > .${exports.menuClassName}-children {\n  background: ${style_1.CssVar.bg.c};\n  max-height: 500%;\n}\n.${exports.menuClassName}-list[data-reverse="true"] .bh-menu-item-wrap {\n  flex-direction: column-reverse;\n}\n.${exports.menuClassName}-item {\n  ${style_1.CssPV.flex_r}\n  flex: none;\n  height: ${style_1.CssVar.size};\n  overflow: hidden;\n  user-select: none;\n  z-index: 1;\n}\n.${exports.menuClassName}-item[data-click="true"] {\n  cursor: pointer;\n}\n.${exports.menuClassName}-item-icon {\n  height: ${style_1.CssVar.size};\n  width: ${style_1.CssVar.size};\n  flex: none;\n}\n.${exports.menuClassName}-item-label {\n  box-sizing: border-box;\n  position: relative;\n  flex: 1;\n  padding: 2px 10px 0px 10px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.${exports.menuClassName}-item-label + .${exports.menuClassName}-item-icon {\n  margin-right: 2px;\n}\n.${exports.menuClassName}-list[data-dirc="horizontal"] .${exports.menuClassName}-item-label {\n  text-align: center;\n}\n.${exports.menuClassName}-children {\n  z-index: 0;\n}\n${"material"===e?`\n.${exports.menuClassName}-item {\n  border-radius: ${style_1.CssParam.m.r};\n  margin: ${style_1.CssParam.m.sdPdd};\n  border: 1px solid transparent;\n}\n.${exports.menuClassName}-item:not([data-click="false"]):hover {\n  border-color: ${style_1.CssVar.bdc};\n  box-shadow: ${style_1.CssParam.m.sdBtm_f};\n  margin-top: calc(${style_1.CssParam.m.sdPdd} - ${style_1.CssParam.m.updownMargin});\n  margin-bottom: calc(${style_1.CssParam.m.sdPdd} + ${style_1.CssParam.m.updownMargin});\n  background: ${style_1.CssVar.bg.c};\n}\n.${exports.menuClassName}-item:not([data-click="false"]):hover:active {\n  box-shadow: none;\n  margin-top: calc(${style_1.CssParam.m.sdPdd} + ${style_1.CssParam.m.updownMargin});\n  margin-bottom: calc(${style_1.CssParam.m.sdPdd} - ${style_1.CssParam.m.updownMargin});\n}\n.${exports.menuClassName}-item.bh-selected {\n  background: ${style_1.CssVar.bg.c_a} !important;\n  margin: ${style_1.CssParam.m.sdPdd} !important;\n  border-color: transparent !important;\n  box-shadow: none !important;\n  cursor: unset !important;  \n}\n.${exports.menuClassName}-item[data-opened="true"] > .${exports.menuClassName}-item-label::before,\n.${exports.menuClassName}-item[data-click="false"] > .${exports.menuClassName}-item-label::before {\n  box-sizing: border-box;\n  position: absolute;\n  content: "";\n  height: 0px;\n  width: 100%;\n  bottom: 0px;\n  left: 0px;\n  border-top: 1px solid ${style_1.CssVar.bdc};\n}\n.${exports.menuClassName}-list[data-dirc="horizontal"] > .${exports.menuClassName}-item-wrap > .${exports.menuClassName}-children {\n  box-shadow: ${style_1.CssParam.m.sdBtm_f};\n  border-radius: 0px 0px ${style_1.CssParam.m.r} ${style_1.CssParam.m.r};\n  margin-bottom: ${style_1.CssParam.m.sdPdd};\n}\n.${exports.menuClassName}-list[data-dirc="horizontal"][data-reverse="true"] > .${exports.menuClassName}-item-wrap > .${exports.menuClassName}-children {\n  border-radius: ${style_1.CssParam.m.r} ${style_1.CssParam.m.r} 0px 0px;\n  margin-bottom: 0px;\n  margin-top: ${style_1.CssParam.m.sdPdd};\n  box-shadow: ${style_1.CssParam.m.sdTop};\n}\n`:""}\n${"neumorphism"===e?`\n.${exports.menuClassName}-item {\n  border-radius: ${style_1.CssParam.n.r};\n  margin: ${style_1.CssParam.n.sdPdd};\n}\n.${exports.menuClassName}-item:not([data-click="false"]):hover {\n  box-shadow: ${style_1.CssParam.n.cvxSd};\n  background: ${style_1.CssParam.n.cvxBg};\n}\n.${exports.menuClassName}-item:not([data-click="false"]):hover:active {\n  box-shadow: ${style_1.CssParam.n.ccvSd};\n  background: ${style_1.CssParam.n.ccvBg};\n}\n.${exports.menuClassName}-item:not([data-click="false"]):hover:active,\n.${exports.menuClassName}-item.bh-selected {\n  padding-top: 1.5px;\n}\n.${exports.menuClassName}-item.bh-selected[data-click] {\n  background: ${style_1.CssParam.n.accent.cvxBg} !important;\n  box-shadow: ${style_1.CssParam.n.ccvSd} !important;\n  cursor: unset !important;\n}\n.${exports.menuClassName}-item[data-opened="true"],\n.${exports.menuClassName}-item[data-click="false"] {\n  box-shadow: ${style_1.CssParam.n.border.cvxSd};\n  background: ${style_1.CssParam.n.cvxBg};\n}\n.${exports.menuClassName}-list[data-dirc="horizontal"] > .${exports.menuClassName}-item-wrap > .${exports.menuClassName}-children {\n  box-shadow: ${style_1.CssParam.n.cvxSd_f};\n  background: ${style_1.CssParam.n.cvxBg};\n  border-radius: 0px 0px ${style_1.CssParam.n.r} ${style_1.CssParam.n.r};\n  margin-bottom: ${style_1.CssParam.n.sdPdd};\n}\n.${exports.menuClassName}-list[data-dirc="horizontal"][data-reverse="true"] > .${exports.menuClassName}-item-wrap > .${exports.menuClassName}-children {\n  border-radius: ${style_1.CssParam.n.r} ${style_1.CssParam.n.r} 0px 0px;\n  margin-bottom: 0px;\n  margin-top: ${style_1.CssParam.n.sdPdd};\n  box-shadow: ${style_1.CssParam.n.border.cvxSd};\n}\n`:""}\n`});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MenuStyle = exports.menuClassName = void 0;
+const react_1 = __importStar(require("react"));
+const icon_1 = __importDefault(require("../graphics/icon"));
+const controller_1 = require("../hooks/controller");
+const style_1 = __importStar(require("../layouts/style"));
+const classname_utils_1 = require("../utils/classname-utils");
+exports.menuClassName = "bh-menu";
+const MenuList = (props) => {
+    const eref = (0, react_1.useRef)();
+    const generateChildMenuItem = (items, nestLevel, selected) => {
+        if (items == null)
+            return undefined;
+        const nodes = [];
+        let keyCount = 0, hasSelected = false;
+        for (const item of items) {
+            if (item == null)
+                continue;
+            const ret = generateChildMenuItem(item.childItems, nestLevel + 1, selected);
+            const hasChild = (ret?.nodes?.length ?? 0) > 0;
+            let isSelected = selected?.(item) === true;
+            hasSelected = hasSelected || isSelected;
+            nodes.push(react_1.default.createElement(MenuItem, { key: keyCount++, props: item, addProps: {
+                    nestLevel: nestLevel,
+                    selected: isSelected,
+                    hasChild,
+                    childNodes: ret?.nodes,
+                    showChildren: ret?.hasSelected === true && props.openChildren !== false,
+                    clicked: props.clicked,
+                    width: props.width
+                } }));
+        }
+        return { nodes, hasSelected };
+    };
+    const nodes = (0, react_1.useMemo)(() => {
+        return generateChildMenuItem(props.items, 0, props.selected).nodes;
+    }, [props.items]);
+    (0, controller_1.initController)(props.controller, (con) => {
+        con.focus = () => {
+            eref.current?.querySelector("div[tabindex]")?.focus();
+            return con;
+        };
+    });
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { ref: eref, style: props.style, className: (0, classname_utils_1.className)(`${exports.menuClassName}-list ${style_1.scrollbarClassName}`, props.className), "data-dirc": props.direction ?? "vertical", "data-reverse": props.reverse === true }, nodes),
+        exports.MenuStyle));
+};
+exports.default = MenuList;
+const MenuItem = ({ props, addProps }) => {
+    const [showedChild, setToggleChild] = (0, react_1.useState)(addProps.showChildren || (props.childItems != null && addProps.selected));
+    const clickImpl = (currentTarget) => {
+        if (addProps.hasChild) {
+            const ret = props.clicked?.(props);
+            if (ret !== false) {
+                const elem = currentTarget.nextElementSibling;
+                if (elem) {
+                    const disp = elem.style.display;
+                    if (disp === "none") {
+                        elem?.style.removeProperty("display");
+                        setToggleChild(true);
+                    }
+                    else {
+                        elem.style.display = "none";
+                        setToggleChild(false);
+                    }
+                }
+            }
+            addProps.clicked?.(props, ret);
+            return;
+        }
+        const ret = props.clicked?.(props);
+        addProps.clicked?.(props, ret);
+    };
+    const click = (e) => {
+        clickImpl(e.currentTarget);
+    };
+    const keydown = (e) => {
+        if (e.key === "Enter" || e.key === " ")
+            clickImpl(e.currentTarget);
+    };
+    return (props.label == null ? react_1.default.createElement("div", { className: `${exports.menuClassName}-hr` }) :
+        react_1.default.createElement("div", { className: `${exports.menuClassName}-item-wrap`, "data-nest": addProps.nestLevel },
+            react_1.default.createElement("div", { className: (0, classname_utils_1.className)(`${exports.menuClassName}-item`, addProps.selected ? " bh-selected" : ""), "data-opened": showedChild, "data-click": props.clicked != null || props.childItems != null, onClick: click, onKeyDown: keydown, style: { width: addProps.width }, tabIndex: 0 },
+                props.iconImage == null ? react_1.default.createElement(react_1.default.Fragment, null) : react_1.default.createElement("div", { className: `${exports.menuClassName}-item-icon` },
+                    react_1.default.createElement(icon_1.default, { image: props.iconImage })),
+                react_1.default.createElement("div", { className: `${exports.menuClassName}-item-label` }, props.label),
+                addProps.hasChild ? react_1.default.createElement("div", { className: `${exports.menuClassName}-item-icon` }, addProps.hasChild ? react_1.default.createElement(icon_1.default, { image: showedChild ? "pullup" : "pulldown" }) : react_1.default.createElement(react_1.default.Fragment, null)) : react_1.default.createElement(react_1.default.Fragment, null)),
+            addProps.hasChild ? react_1.default.createElement("div", { className: `${exports.menuClassName}-children ${style_1.scrollbarClassName}`, style: { display: showedChild ? null : "none" } }, addProps.childNodes) : react_1.default.createElement(react_1.default.Fragment, null)));
+};
+exports.MenuStyle = react_1.default.createElement(style_1.default, { id: exports.menuClassName, depsDesign: true, css: ({ design }) => `
+.${exports.menuClassName}-list,
+.${exports.menuClassName}-item-wrap,
+.${exports.menuClassName}-children {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+.${exports.menuClassName}-list {
+  ${style_1.CssPV.fill}
+}
+.${exports.menuClassName}-list[data-dirc="horizontal"] {
+  flex-flow: row nowrap;
+  max-height: 100%;
+  overflow: visible;
+}
+.${exports.menuClassName}-hr {
+  box-sizing: border-box;
+  padding: 0px;
+  border: none;
+  height: 1px;
+  width: 100%;
+  border-top: 1px solid ${style_1.CssVar.bdc};
+}
+.${exports.menuClassName}-list[data-dirc="horizontal"] > .${exports.menuClassName}-hr {
+  width: 1px;
+  height: 100%;
+  border-top: none;
+  border-left: 1px solid ${style_1.CssVar.bdc};
+}
+.${exports.menuClassName}-list[data-dirc="horizontal"] > .${exports.menuClassName}-item-wrap {
+  flex: 1;
+}
+.${exports.menuClassName}-list[data-dirc="horizontal"] > .${exports.menuClassName}-item-wrap > .${exports.menuClassName}-children {
+  background: ${style_1.CssVar.bg.c};
+  max-height: 500%;
+}
+.${exports.menuClassName}-list[data-reverse="true"] .bh-menu-item-wrap {
+  flex-direction: column-reverse;
+}
+.${exports.menuClassName}-item {
+  ${style_1.CssPV.flex_r}
+  flex: none;
+  height: ${style_1.CssVar.size};
+  overflow: hidden;
+  user-select: none;
+  z-index: 1;
+}
+.${exports.menuClassName}-item[data-click="true"] {
+  cursor: pointer;
+}
+.${exports.menuClassName}-item-icon {
+  height: ${style_1.CssVar.size};
+  width: ${style_1.CssVar.size};
+  flex: none;
+}
+.${exports.menuClassName}-item-label {
+  box-sizing: border-box;
+  position: relative;
+  flex: 1;
+  padding: 2px 10px 0px 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.${exports.menuClassName}-item-label + .${exports.menuClassName}-item-icon {
+  margin-right: 2px;
+}
+.${exports.menuClassName}-list[data-dirc="horizontal"] .${exports.menuClassName}-item-label {
+  text-align: center;
+}
+.${exports.menuClassName}-children {
+  z-index: 0;
+}
+${design === "material" ? `
+.${exports.menuClassName}-item {
+  border-radius: ${style_1.CssParam.m.r};
+  margin: ${style_1.CssParam.m.sdPdd};
+  border: 1px solid transparent;
+}
+.${exports.menuClassName}-item:not([data-click="false"]):hover {
+  border-color: ${style_1.CssVar.bdc};
+  box-shadow: ${style_1.CssParam.m.sdBtm_f};
+  margin-top: calc(${style_1.CssParam.m.sdPdd} - ${style_1.CssParam.m.updownMargin});
+  margin-bottom: calc(${style_1.CssParam.m.sdPdd} + ${style_1.CssParam.m.updownMargin});
+  background: ${style_1.CssVar.bg.c};
+}
+.${exports.menuClassName}-item:not([data-click="false"]):hover:active {
+  box-shadow: none;
+  margin-top: calc(${style_1.CssParam.m.sdPdd} + ${style_1.CssParam.m.updownMargin});
+  margin-bottom: calc(${style_1.CssParam.m.sdPdd} - ${style_1.CssParam.m.updownMargin});
+}
+.${exports.menuClassName}-item.bh-selected {
+  background: ${style_1.CssVar.bg.c_a} !important;
+  margin: ${style_1.CssParam.m.sdPdd} !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  cursor: unset !important;  
+}
+.${exports.menuClassName}-item[data-opened="true"] > .${exports.menuClassName}-item-label::before,
+.${exports.menuClassName}-item[data-click="false"] > .${exports.menuClassName}-item-label::before {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  height: 0px;
+  width: 100%;
+  bottom: 0px;
+  left: 0px;
+  border-top: 1px solid ${style_1.CssVar.bdc};
+}
+.${exports.menuClassName}-list[data-dirc="horizontal"] > .${exports.menuClassName}-item-wrap > .${exports.menuClassName}-children {
+  box-shadow: ${style_1.CssParam.m.sdBtm_f};
+  border-radius: 0px 0px ${style_1.CssParam.m.r} ${style_1.CssParam.m.r};
+  margin-bottom: ${style_1.CssParam.m.sdPdd};
+}
+.${exports.menuClassName}-list[data-dirc="horizontal"][data-reverse="true"] > .${exports.menuClassName}-item-wrap > .${exports.menuClassName}-children {
+  border-radius: ${style_1.CssParam.m.r} ${style_1.CssParam.m.r} 0px 0px;
+  margin-bottom: 0px;
+  margin-top: ${style_1.CssParam.m.sdPdd};
+  box-shadow: ${style_1.CssParam.m.sdTop};
+}
+` : ""}
+${design === "neumorphism" ? `
+.${exports.menuClassName}-item {
+  border-radius: ${style_1.CssParam.n.r};
+  margin: ${style_1.CssParam.n.sdPdd};
+}
+.${exports.menuClassName}-item:not([data-click="false"]):hover {
+  box-shadow: ${style_1.CssParam.n.cvxSd};
+  background: ${style_1.CssParam.n.cvxBg};
+}
+.${exports.menuClassName}-item:not([data-click="false"]):hover:active {
+  box-shadow: ${style_1.CssParam.n.ccvSd};
+  background: ${style_1.CssParam.n.ccvBg};
+}
+.${exports.menuClassName}-item:not([data-click="false"]):hover:active,
+.${exports.menuClassName}-item.bh-selected {
+  padding-top: 1.5px;
+}
+.${exports.menuClassName}-item.bh-selected[data-click] {
+  background: ${style_1.CssParam.n.accent.cvxBg} !important;
+  box-shadow: ${style_1.CssParam.n.ccvSd} !important;
+  cursor: unset !important;
+}
+.${exports.menuClassName}-item[data-opened="true"],
+.${exports.menuClassName}-item[data-click="false"] {
+  box-shadow: ${style_1.CssParam.n.border.cvxSd};
+  background: ${style_1.CssParam.n.cvxBg};
+}
+.${exports.menuClassName}-list[data-dirc="horizontal"] > .${exports.menuClassName}-item-wrap > .${exports.menuClassName}-children {
+  box-shadow: ${style_1.CssParam.n.cvxSd_f};
+  background: ${style_1.CssParam.n.cvxBg};
+  border-radius: 0px 0px ${style_1.CssParam.n.r} ${style_1.CssParam.n.r};
+  margin-bottom: ${style_1.CssParam.n.sdPdd};
+}
+.${exports.menuClassName}-list[data-dirc="horizontal"][data-reverse="true"] > .${exports.menuClassName}-item-wrap > .${exports.menuClassName}-children {
+  border-radius: ${style_1.CssParam.n.r} ${style_1.CssParam.n.r} 0px 0px;
+  margin-bottom: 0px;
+  margin-top: ${style_1.CssParam.n.sdPdd};
+  box-shadow: ${style_1.CssParam.n.border.cvxSd};
+}
+` : ""}
+` });

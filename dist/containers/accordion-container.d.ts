@@ -11,6 +11,7 @@ export declare type AccordionContainerController = {
 export declare type AccordionContainerProps = ContainerProps & {
     controller?: AccordionContainerController;
     caption: string;
+    defaultOpened?: boolean;
     opened?: boolean;
     toggled?: (opened: boolean) => void | Promise<void>;
     containerStyles?: CSSProperties;

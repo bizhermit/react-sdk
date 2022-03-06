@@ -1,1 +1,111 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,t,r,a){void 0===a&&(a=r),Object.defineProperty(e,a,{enumerable:!0,get:function(){return t[r]}})}:function(e,t,r,a){void 0===a&&(a=r),e[a]=t[r]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)"default"!==r&&Object.prototype.hasOwnProperty.call(e,r)&&__createBinding(t,e,r);return __setModuleDefault(t,e),t},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.TextAreaStyle=exports.textAreaClassName=void 0;const react_1=__importStar(require("react")),controller_1=require("../hooks/controller"),value_1=__importDefault(require("../hooks/value")),input_1=__importStar(require("../layouts/input")),style_1=__importDefault(require("../layouts/style")),classname_utils_1=require("../utils/classname-utils"),dom_utils_1=require("../utils/dom-utils");exports.textAreaClassName="bh-txa";const TextArea=e=>{const t=(0,react_1.useRef)(),r=e=>{t.current&&(t.current.value=e??"")},{getValue:a,setValue:s,getTitle:l,getStatus:n}=(0,value_1.default)(e,{binded:r}),i=(0,react_1.useCallback)((t=>{if(!1===e.resize)return;const r=t.target.parentElement,a=r.getBoundingClientRect();let s=a.height,l=a.width,n=t.clientX,i=t.clientY;const u=t=>{null!=e.resize&&!0!==e.resize&&"horizontal"!==e.resize||(r.style.width=t.clientX-n+l+"px"),null!=e.resize&&!0!==e.resize&&"vertical"!==e.resize||(r.style.height=t.clientY-i+s+"px")};(0,dom_utils_1.setCursor)(getComputedStyle(t.currentTarget).cursor);const o=()=>{if(window.removeEventListener("mousemove",u),window.removeEventListener("mouseup",o),(0,dom_utils_1.releaseCursor)(),e.resized){const t=r.getBoundingClientRect();e.resized({height:t.height,width:t.width})}};window.addEventListener("mouseup",o),window.addEventListener("mousemove",u)}),[e.resize,e.resized]);return(0,react_1.useEffect)((()=>{r(a())}),[e.disabled]),(0,controller_1.initController)(e.controller,(e=>{e.focus=()=>(t.current?.focus(),e),e.blur=()=>(t.current?.blur(),e),e.getValue=()=>a(),e.setValue=t=>(s(t),e)})),react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{className:(0,classname_utils_1.className)(input_1.InputClassNames.wrap,exports.textAreaClassName,e.className),style:e.style},react_1.default.createElement("textarea",{ref:t,className:`${input_1.InputClassNames.ipt}`,tabIndex:e.tabIndex,placeholder:e.placeholder,maxLength:e.maxLength,onFocus:()=>e.focus?.(a()),onBlur:()=>e.blur?.(a()),onChange:e=>s(e.target.value),title:l(),"data-status":n(),disabled:!0===e.disabled}),!1===e.resize?react_1.default.createElement(react_1.default.Fragment,null):react_1.default.createElement("div",{className:"horizontal"===e.resize?input_1.InputClassNames.resize_x:"vertical"===e.resize?input_1.InputClassNames.resize_y:input_1.InputClassNames.resize,onMouseDown:i})),input_1.default,exports.TextAreaStyle)};exports.default=TextArea,exports.TextAreaStyle=react_1.default.createElement(style_1.default,{id:exports.textAreaClassName,notDepsColor:!0,css:({design:e})=>`\n.${exports.textAreaClassName} {\n  align-items: stretch;\n  height: 200px;\n  width: 360px;\n}\n.${exports.textAreaClassName} > .${input_1.InputClassNames.ipt} {\n  resize: none;\n  padding: 5px;\n}\n${"material"===e?`\n.${exports.textAreaClassName} > .${input_1.InputClassNames.ipt}:disabled {\n  border-color: transparent;\n}\n`:""}\n`});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TextAreaStyle = exports.textAreaClassName = void 0;
+const react_1 = __importStar(require("react"));
+const controller_1 = require("../hooks/controller");
+const value_1 = __importDefault(require("../hooks/value"));
+const input_1 = __importStar(require("../layouts/input"));
+const style_1 = __importDefault(require("../layouts/style"));
+const classname_utils_1 = require("../utils/classname-utils");
+const dom_utils_1 = require("../utils/dom-utils");
+exports.textAreaClassName = "bh-txa";
+const TextArea = (props) => {
+    const ref = (0, react_1.useRef)();
+    const setInputValue = (val) => {
+        if (ref.current)
+            ref.current.value = val ?? "";
+    };
+    const { getValue, setValue, getTitle, getStatus } = (0, value_1.default)(props, { binded: setInputValue });
+    const mousedown = (0, react_1.useCallback)((e) => {
+        if (props.resize === false)
+            return;
+        const elem = e.target.parentElement;
+        const rect = elem.getBoundingClientRect();
+        let lHeight = rect.height, lWidth = rect.width, posX = e.clientX, posY = e.clientY;
+        const move = (e) => {
+            if (props.resize == null || props.resize === true || props.resize === "horizontal")
+                elem.style.width = (e.clientX - posX + lWidth) + "px";
+            if (props.resize == null || props.resize === true || props.resize === "vertical")
+                elem.style.height = (e.clientY - posY + lHeight) + "px";
+        };
+        (0, dom_utils_1.setCursor)(getComputedStyle(e.currentTarget).cursor);
+        const end = () => {
+            window.removeEventListener("mousemove", move);
+            window.removeEventListener("mouseup", end);
+            (0, dom_utils_1.releaseCursor)();
+            if (props.resized) {
+                const crect = elem.getBoundingClientRect();
+                props.resized({ height: crect.height, width: crect.width });
+            }
+        };
+        window.addEventListener("mouseup", end);
+        window.addEventListener("mousemove", move);
+    }, [props.resize, props.resized]);
+    (0, react_1.useEffect)(() => {
+        setInputValue(getValue());
+    }, [props.disabled]);
+    (0, controller_1.initController)(props.controller, (con) => {
+        con.focus = () => {
+            ref.current?.focus();
+            return con;
+        };
+        con.blur = () => {
+            ref.current?.blur();
+            return con;
+        };
+        con.getValue = () => getValue();
+        con.setValue = (v) => {
+            setValue(v);
+            return con;
+        };
+    });
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { className: (0, classname_utils_1.className)(input_1.InputClassNames.wrap, exports.textAreaClassName, props.className), style: props.style, "data-resize": props.resize },
+            react_1.default.createElement("textarea", { ref: ref, className: `${input_1.InputClassNames.ipt}`, tabIndex: props.tabIndex, placeholder: props.placeholder, maxLength: props.maxLength, onFocus: () => props.focus?.(getValue()), onBlur: () => props.blur?.(getValue()), onChange: e => setValue(e.target.value), title: getTitle(), "data-status": getStatus(), disabled: props.disabled === true }),
+            props.resize === false ? react_1.default.createElement(react_1.default.Fragment, null) : react_1.default.createElement("div", { className: props.resize === "horizontal" ? input_1.InputClassNames.resize_x : (props.resize === "vertical" ? input_1.InputClassNames.resize_y : input_1.InputClassNames.resize), onMouseDown: mousedown })),
+        input_1.default,
+        exports.TextAreaStyle));
+};
+exports.default = TextArea;
+exports.TextAreaStyle = react_1.default.createElement(style_1.default, { id: exports.textAreaClassName, depsDesign: true, css: ({ design }) => `
+.${exports.textAreaClassName} {
+  align-items: stretch;
+  height: 200px;
+  width: 360px;
+}
+.${exports.textAreaClassName} > .${input_1.InputClassNames.ipt} {
+  resize: none;
+  padding: 5px;
+  min-width: 100%;
+}
+.${exports.textAreaClassName}[data-resize="vertical"] {
+  flex-flow: column;
+}
+${design === "material" ? `
+.${exports.textAreaClassName} > .${input_1.InputClassNames.ipt}:disabled {
+  border-color: transparent;
+}
+` : ""}
+` });

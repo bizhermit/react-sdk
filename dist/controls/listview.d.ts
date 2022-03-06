@@ -167,6 +167,7 @@ export declare type ListViewColumnProps = {
     bindedItems?: (originItems: Array<{
         [key: string]: any;
     }>) => void;
+    rowDataInitialize?: (data: Data) => void;
     _beginEdit?: (params: ListViewEditParams) => void;
     _endEdit?: (target: ListViewEditTargetProps, commit: boolean, editElement: HTMLDivElement) => ListViewReturnOrder | void;
     editedRowData?: (data: {
@@ -315,6 +316,7 @@ export declare type $ListViewColumn = {
     bindedItems?: (originItems: Array<{
         [key: string]: any;
     }>) => void;
+    rowDataInitialize?: (data: Data) => void;
     rows?: Array<$ListViewMultiStageRowItem>;
     parent?: $ListViewColumn;
     beginEdit?: (params: ListViewEditParams) => void;
@@ -394,6 +396,7 @@ export declare class $ListView extends DomComponentClass {
     protected lastScrolledLeft: number;
     protected maxFirstIndex: number;
     protected firstIndex: number;
+    protected lastChangedX: boolean;
     protected hasFillColumn: boolean;
     protected editTarget: {
         item: $ListViewItem;
@@ -471,7 +474,7 @@ export declare class $ListView extends DomComponentClass {
     protected clearSelectedRows(render?: boolean): void;
     protected rangeSelectRow(item: $ListViewItem, column: $ListViewColumn, index: number): void;
     protected scrollToIndex(index: number, render?: boolean): void;
-    protected scrollToColumn(column: $ListViewColumn, render?: boolean): boolean;
+    protected scrollToColumn(column: $ListViewColumn, render?: boolean, renderAbsolute?: boolean): boolean;
     protected arrowUpDown(updown: number, focusIndex: number, rangeSelect?: boolean): boolean;
     protected arrowUp(up?: number, rangeSelect?: boolean): boolean;
     protected arrowDown(down?: number, rangeSelect?: boolean): boolean;
@@ -481,14 +484,14 @@ export declare class $ListView extends DomComponentClass {
     render(): this;
     protected renderHeaderCells(): this;
     protected renderFooterCells(): this;
-    protected renderRow(row: $ListViewRow): void;
+    protected renderRow(row: $ListViewRow, allColumn?: boolean): void;
     protected renderRowColumns(columns: Array<$ListViewColumn>, row: $ListViewRow): void;
     protected renderCell(cell: $ListViewCell): void;
-    protected renderWhenScrolled(): void;
+    protected renderWhenScrolled(absolute?: boolean): void;
     protected renderWhenResized(): boolean;
     protected generateCell(row: $ListViewRow, col: $ListViewColumn, rowElem: HTMLDivElement): $ListViewCell;
     protected optimizeMaxFirstIndex(): void;
-    protected optimizeRenderColumns(): void;
+    protected optimizeRenderColumns(): boolean;
     protected optimizeRowNumberColumnWidth(): void;
     protected optimizeDummySize(): void;
     protected disposeRows(maxRowLen?: number): void;

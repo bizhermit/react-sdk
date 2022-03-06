@@ -8,11 +8,13 @@ export declare type TabContentController = {};
 export declare type TabContentFC<P = {}> = AccessorVFC<P & {
     tcc: TabContentController;
 }>;
-export declare type TabContent<P = {}> = {
+export declare type TabContent = {
     code: string;
     title: string | JSX.Element;
-    component: TabContentFC<P>;
-    props?: P;
+    component: TabContentFC<any>;
+    props?: {
+        [key: string]: any;
+    };
     style?: CSSProperties;
     selected?: () => void;
 };

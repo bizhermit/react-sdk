@@ -1,1 +1,136 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,t,o,r){void 0===r&&(r=o),Object.defineProperty(e,r,{enumerable:!0,get:function(){return t[o]}})}:function(e,t,o,r){void 0===r&&(r=o),e[r]=t[o]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var o in e)"default"!==o&&Object.prototype.hasOwnProperty.call(e,o)&&__createBinding(t,e,o);return __setModuleDefault(t,e),t},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.ListViewReorderColumnStyle=exports.listViewReorderColumnClassName=void 0;const react_1=__importDefault(require("react")),style_1=__importStar(require("../../layouts/style")),dom_utils_1=require("../../utils/dom-utils");exports.listViewReorderColumnClassName="bh-lv_c-rod";const ListViewReorderColumn=e=>{let t=null,o=null,r=-1,n=0,s=0,l=0,i=e=>{},a=e=>{};const d=(0,dom_utils_1.getDomEventManager)(),u=()=>a(l),m=e=>a(e.clientY-s+n),c=e=>{i(e.clientY-s+n),o.removeChild(t),d.removeEvent(o,"scroll",u),o=null,(0,dom_utils_1.releaseCursor)(),window.removeEventListener("mouseup",c),window.removeEventListener("mousemove",m)};return{name:e.name??"_reorder",sort:!1,resize:!1,width:e.width??("row"===e.range?0:-1),cellTextAlign:"center",fixed:e.fixed,initialize:()=>{const t=document.createElement("div"),o=null==e.iconSize?"100%":e.iconSize+"px";return(0,dom_utils_1.setStyleProps)(t,{height:o,width:o}),t.classList.add(`${exports.listViewReorderColumnClassName}-icon`),{elem:t}},cellInitialize:(p,_,w)=>{if(!0!==e.disabled){const _=e=>{e.stopPropagation();const _=p.row.element;n=_.offsetTop,s=e.clientY,(0,dom_utils_1.setCursor)("move"),window.addEventListener("mouseup",c),window.addEventListener("mousemove",m),t=(0,dom_utils_1.setStyleProps)((0,dom_utils_1.cloneElement)(_,`${exports.listViewReorderColumnClassName}-pinching`),{top:_.offsetTop+"px",left:_.offsetLeft+"px"}),null==o&&(o=w.getBodyElement(),d.addEvent(o,"scroll",u));const f=w.getBodyScrollTop();o.appendChild(t),r=p.row.index,i=e=>{w.dropMoveRow(r,e-f+w.getBodyScrollTop())},a=e=>{const o=(l=e)-f+w.getBodyScrollTop();w.dragMovingRow(r,o),t.style.top=o+"px"}},f="row"===e.range?p.row.element:p.element;f.classList.add(`${exports.listViewReorderColumnClassName}-range`),d.addEvent(f,"mousedown",_)}p.element.classList.add(exports.listViewReorderColumnClassName),p.element.appendChild((0,dom_utils_1.cloneElement)(_.elem))},cellDispose:t=>{d.removeEventIterator((o=>o.element===("row"===e.range?t.row.element:t.element)))},dispose:()=>{d.dispose()},jsxStyle:exports.ListViewReorderColumnStyle}};exports.default=ListViewReorderColumn,exports.ListViewReorderColumnStyle=react_1.default.createElement(style_1.default,{id:exports.listViewReorderColumnClassName,notDepsColor:!0,notDepsDesign:!0,css:()=>`\n.${exports.listViewReorderColumnClassName}-range {\n  cursor: move;\n}\n.${exports.listViewReorderColumnClassName}-icon::before,\n.${exports.listViewReorderColumnClassName}-icon::after {\n  box-sizing: border-box;\n  position: absolute;\n  content: "";\n  height: 4px;\n  width: 50%;\n  left: 25%;\n  background: ${style_1.CssVar.fc};\n  opacity: 0.7;\n}\n.${exports.listViewReorderColumnClassName}-icon::before {\n  top: calc(50% - 6px);\n}\n.${exports.listViewReorderColumnClassName}-icon::after {\n  bottom: calc(50% - 6px);\n}\n.${exports.listViewReorderColumnClassName}[data-disabled="true"] .${exports.listViewReorderColumnClassName}-icon {\n  opacity: 0.6;\n}\n.${exports.listViewReorderColumnClassName}-pinching {\n  position: absolute;\n  z-index: 1000;\n  filter: drop-shadow(0 2px 3px ${style_1.CssVar.shadow.dc});\n}\n`});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ListViewReorderColumnStyle = exports.listViewReorderColumnClassName = void 0;
+const react_1 = __importDefault(require("react"));
+const style_1 = __importStar(require("../../layouts/style"));
+const dom_utils_1 = require("../../utils/dom-utils");
+exports.listViewReorderColumnClassName = "bh-lv_c-rod";
+const ListViewReorderColumn = (props) => {
+    let pinchingRowElem = null, conElem = null;
+    let pinchingRowIndex = -1, lastPos = 0, pos = 0, lastTop = 0;
+    let mouseup = (_m) => { }, mouseSpace = (_r) => { };
+    const event = (0, dom_utils_1.getDomEventManager)();
+    const bodyScrollEvent = () => mouseSpace(lastTop);
+    const mousemoveEvent = (e) => mouseSpace(e.clientY - pos + lastPos);
+    const mouseupEvent = (e) => {
+        mouseup(e.clientY - pos + lastPos);
+        conElem.removeChild(pinchingRowElem);
+        event.removeEvent(conElem, "scroll", bodyScrollEvent);
+        conElem = null;
+        (0, dom_utils_1.releaseCursor)();
+        window.removeEventListener("mouseup", mouseupEvent);
+        window.removeEventListener("mousemove", mousemoveEvent);
+    };
+    return {
+        name: props.name ?? "_reorder",
+        sort: false,
+        resize: false,
+        width: props.width ?? (props.range === "row" ? 0 : -1),
+        cellTextAlign: "center",
+        fixed: props.fixed,
+        initialize: () => {
+            const elem = document.createElement("div");
+            const iconSize = props.iconSize == null ? "100%" : props.iconSize + "px";
+            (0, dom_utils_1.setStyleProps)(elem, { height: iconSize, width: iconSize });
+            elem.classList.add(`${exports.listViewReorderColumnClassName}-icon`);
+            return { elem };
+        },
+        cellInitialize: (cell, initParams, lv) => {
+            if (props.disabled !== true) {
+                const listener = (e) => {
+                    e.stopPropagation();
+                    const rowElem = cell.row.element;
+                    lastPos = rowElem.offsetTop;
+                    pos = e.clientY;
+                    (0, dom_utils_1.setCursor)("move");
+                    window.addEventListener("mouseup", mouseupEvent);
+                    window.addEventListener("mousemove", mousemoveEvent);
+                    pinchingRowElem = (0, dom_utils_1.setStyleProps)((0, dom_utils_1.cloneElement)(rowElem, `${exports.listViewReorderColumnClassName}-pinching`), {
+                        top: rowElem.offsetTop + "px",
+                        left: rowElem.offsetLeft + "px",
+                    });
+                    if (conElem == null) {
+                        conElem = lv.getBodyElement();
+                        event.addEvent(conElem, "scroll", bodyScrollEvent);
+                    }
+                    const bodyScrollTop = lv.getBodyScrollTop();
+                    conElem.appendChild(pinchingRowElem);
+                    pinchingRowIndex = cell.row.index;
+                    mouseup = (top) => {
+                        lv.dropMoveRow(pinchingRowIndex, top - bodyScrollTop + lv.getBodyScrollTop());
+                    };
+                    mouseSpace = (top) => {
+                        const t = (lastTop = top) - bodyScrollTop + lv.getBodyScrollTop();
+                        lv.dragMovingRow(pinchingRowIndex, t);
+                        pinchingRowElem.style.top = t + "px";
+                    };
+                };
+                const targetElem = props.range === "row" ? cell.row.element : cell.element;
+                targetElem.classList.add(`${exports.listViewReorderColumnClassName}-range`);
+                event.addEvent(targetElem, "mousedown", listener);
+            }
+            cell.element.classList.add(exports.listViewReorderColumnClassName);
+            cell.element.appendChild((0, dom_utils_1.cloneElement)(initParams.elem));
+        },
+        cellDispose: (cell) => {
+            event.removeEventIterator(de => de.element === (props.range === "row" ? cell.row.element : cell.element));
+        },
+        dispose: () => {
+            event.dispose();
+        },
+        jsxStyle: exports.ListViewReorderColumnStyle,
+    };
+};
+exports.default = ListViewReorderColumn;
+exports.ListViewReorderColumnStyle = react_1.default.createElement(style_1.default, { id: exports.listViewReorderColumnClassName, depsDesign: true, css: () => `
+.${exports.listViewReorderColumnClassName}-range {
+  cursor: move;
+}
+.${exports.listViewReorderColumnClassName}-icon::before,
+.${exports.listViewReorderColumnClassName}-icon::after {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  height: 4px;
+  width: 50%;
+  left: 25%;
+  background: ${style_1.CssVar.fc};
+  opacity: 0.7;
+}
+.${exports.listViewReorderColumnClassName}-icon::before {
+  top: calc(50% - 6px);
+}
+.${exports.listViewReorderColumnClassName}-icon::after {
+  bottom: calc(50% - 6px);
+}
+.${exports.listViewReorderColumnClassName}[data-disabled="true"] .${exports.listViewReorderColumnClassName}-icon {
+  opacity: 0.6;
+}
+.${exports.listViewReorderColumnClassName}-pinching {
+  position: absolute;
+  z-index: 1000;
+  filter: drop-shadow(0 2px 3px ${style_1.CssVar.shadow.dc});
+}
+` });

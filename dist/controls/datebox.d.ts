@@ -13,10 +13,10 @@ export declare type DateBoxController = {
 export declare type DateBoxOptions = {
     mode?: "ymd" | "ym" | "y";
     dataType?: "string" | "number" | "date";
-    dataFormat?: string;
     labelFormat?: string | ((date: Date) => string);
     pulldownButton?: boolean;
     clearButton?: boolean;
+    disabledInputs?: boolean;
 };
 export declare type DateBoxEventListener = {
     changed?: (after: DateBoxValue, before: DateBoxValue) => void;

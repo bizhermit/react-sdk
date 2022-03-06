@@ -15,10 +15,12 @@ export declare type GradualContentControlelr = {
 export declare type GradualContentFC<P = {}> = AccessorVFC<P & {
     gcc: GradualContentControlelr;
 }>;
-export declare type GradualContent<P = {}> = {
+export declare type GradualContent = {
     key: string;
-    component: GradualContentFC<P>;
-    props?: P;
+    component: GradualContentFC<any>;
+    props?: {
+        [key: string]: any;
+    };
     flexRate?: number;
     minSize?: number;
 };

@@ -7,6 +7,7 @@ export declare type CaptionProps = ContainerProps & {
     labelWidth?: number;
     labelAlign?: "left" | "center" | "right";
     direction?: Direction;
+    title?: string;
 };
 declare const Caption: FC<CaptionProps>;
 export default Caption;

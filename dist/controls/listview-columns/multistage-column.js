@@ -1,1 +1,15 @@
-"use strict";var __importDefault=this&&this.__importDefault||function(t){return t&&t.__esModule?t:{default:t}};Object.defineProperty(exports,"__esModule",{value:!0});const string_utils_1=__importDefault(require("@bizhermit/basic-utils/dist/string-utils")),ListViewMultiStageColumn=t=>({name:t.name??string_utils_1.default.generateUuidV4(),fixed:t.fixed,fill:t.fill,_rows:t.rows});exports.default=ListViewMultiStageColumn;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const string_utils_1 = __importDefault(require("@bizhermit/basic-utils/dist/string-utils"));
+const ListViewMultiStageColumn = (props) => {
+    return {
+        name: props.name ?? string_utils_1.default.generateUuidV4(),
+        fixed: props.fixed,
+        fill: props.fill,
+        _rows: props.rows,
+    };
+};
+exports.default = ListViewMultiStageColumn;

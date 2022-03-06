@@ -1,1 +1,936 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(t,e,a,l){void 0===l&&(l=a),Object.defineProperty(t,l,{enumerable:!0,get:function(){return e[a]}})}:function(t,e,a,l){void 0===l&&(l=a),t[l]=e[a]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(t,e){Object.defineProperty(t,"default",{enumerable:!0,value:e})}:function(t,e){t.default=e}),__importStar=this&&this.__importStar||function(t){if(t&&t.__esModule)return t;var e={};if(null!=t)for(var a in t)"default"!==a&&Object.prototype.hasOwnProperty.call(t,a)&&__createBinding(e,t,a);return __setModuleDefault(e,t),e},__importDefault=this&&this.__importDefault||function(t){return t&&t.__esModule?t:{default:t}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.ListViewGanttChartColumnStyle=exports.listViewGanttChartColumnClassName=void 0;const react_1=__importDefault(require("react")),datetime_utils_1=__importDefault(require("@bizhermit/basic-utils/dist/datetime-utils")),string_utils_1=__importDefault(require("@bizhermit/basic-utils/dist/string-utils")),style_1=__importStar(require("../../layouts/style")),listview_1=require("../listview"),dom_utils_1=require("../../utils/dom-utils");exports.listViewGanttChartColumnClassName="bh-lv_c-gtc";const ListViewGanttChartColumn=t=>{const e=t.dateCellWidth??30,a=t.unit??"day",l=!1!==t.progressLine,s=datetime_utils_1.default.removeTime(datetime_utils_1.default.copy(t.term.from)),n=datetime_utils_1.default.removeTime(datetime_utils_1.default.copy(t.term.to));let r=t.barTitleFormat,i=!0===t.disabled;switch(a){case"month":i=!0,s.setDate(1),null==r&&(r=t=>`${datetime_utils_1.default.format(t.from,"yyyy/MM/dd")} <-> ${datetime_utils_1.default.format(t.to,"yyyy/MM/dd")}`);break;case"week":i=!0,null==r&&(r=t=>`${datetime_utils_1.default.format(t.from,"yyyy/MM/dd")} <-> ${datetime_utils_1.default.format(t.to,"yyyy/MM/dd")}`);break;default:null==r&&(r=t=>`${datetime_utils_1.default.format(t.from,"yyyy/MM/dd")} <-> ${datetime_utils_1.default.format(t.to,"yyyy/MM/dd")} (${t.length})`)}const o=[],d=datetime_utils_1.default.copy(s),m=n.getTime(),u=datetime_utils_1.default.getDate(),C=calcBarLeft(s,u,a)+1;let c=u.getTime()<d.getTime();for(;d.getTime()<=m;){let t=!1;switch(a){case"month":t=!c&&!0;break;case"week":t=!c&&(c=d.getTime()>=u.getTime());break;default:t=!c&&(c=d.getDate()===u.getDate()&&d.getMonth()===u.getMonth()&&d.getFullYear()===u.getFullYear())}switch(o.push({y:d.getFullYear(),m:d.getMonth(),d:d.getDate(),w:d.getDay(),today:t}),a){case"month":d.setDate(1),d.setMonth(d.getMonth()+1);break;case"week":d.setDate(d.getDate()+7);break;default:d.setDate(d.getDate()+1)}}const p=(t,e,n)=>{const i=t[e.fromDataName],o=t[e.toDataName],d=datetime_utils_1.default.convert(i),m=datetime_utils_1.default.convert(o);datetime_utils_1.default.removeTime(d),datetime_utils_1.default.removeTime(m);const C=calcBarLength(d,m,a,s);let c=null;if(l&&null!=e.rateDataName&&null!=m){const l=t[e.rateDataName],s="number"==typeof l?Math.min(100,Math.max(0,l)):0;if(d.getTime()<=u.getTime())if(100===s&&m.getTime()<=u.getTime())c=null;else{const t=new Date(d);t.setDate(t.getDate()+Math.floor(C*s/100)),c=calcBarLeft(u,t,a)-1}else if(0===s)c=null;else{const t=new Date(d),e=Math.floor(C*s/100);t.setDate(t.getDate()+e),c=calcBarLeft(u,t,a)-1}}let p="";return d&&(p=r({from:d,to:m,length:C})),{id:n??string_utils_1.default.generateUuidV4(),from:d,to:m,length:C,left:calcBarLeft(s,d,a),barLabel:null==e.barLabelDataName?"":t[e.barLabelDataName]??"",diff:c,title:p}},h=e=>{if(null==e)return null;switch(t.dataType){case"number":return Number(datetime_utils_1.default.format(e,"yyyyMMdd"));case"date":return e;default:return datetime_utils_1.default.format(e,t.dateFormat)}},b=(0,dom_utils_1.getDomEventManager)();let _={};const f=()=>{_={}};let w="",g=0,x=!1,y=null;const $=t=>{const a=Math.round((t.clientX-g)/e);0!==a&&(x=!0),"r"!==w?"l"!==w?"m"!==w||Object.keys(_).forEach((t=>{const l=_[t];null!=l.barElem&&(0,dom_utils_1.setStyleProps)(l.barElem,{left:(l.data.left+a)*e+"px"})})):Object.keys(_).forEach((t=>{const l=_[t];if(null==l.barElem)return;const s=l.data.left+a;(0,dom_utils_1.setStyleProps)(l.barElem,{left:s*e+"px",width:Math.max(1,l.data.length-(s-l.data.left))*e+"px"})})):Object.keys(_).forEach((t=>{const l=_[t];null!=l.barElem&&(0,dom_utils_1.setStyleProps)(l.barElem,{width:Math.max(1,l.data.length+a)*e+"px"})}))},V=t=>{N(Math.round((t.clientX-g)/e))},N=t=>{0!==t&&(Object.keys(_).forEach((e=>{const a=_[e];switch(w){case"r":a.data.length=Math.max(1,a.data.length+t);break;case"l":const e=a.data.left+t;a.data.length=Math.max(1,a.data.length-(e-a.data.left)),a.data.left=e;break;case"m":a.data.left+=t}const l=new Date(s);l.setDate(l.getDate()+a.data.left);const n=new Date(l);n.setDate(n.getDate()+a.data.length-1),a.originData[a.dataName.fromDataName]=h(l),a.originData[a.dataName.toDataName]=h(n)})),Object.keys(_).forEach((t=>{y?.renderByOriginData(_[t].originData,!0)}))),(0,dom_utils_1.releaseCursor)(),window.removeEventListener("mouseup",V),window.removeEventListener("mousemove",$),w=""};return{name:t.name??"_lvcol_gc",disabled:i,resize:!1,sort:!1,width:o.length*e,notScrollFocusWhenTabStop:!0,initialize:(t,l)=>{y=l;const s=document.createElement("div"),n=(0,dom_utils_1.cloneElement)(s,`${exports.listViewGanttChartColumnClassName}-month-wrap`),r=(0,dom_utils_1.cloneElement)(s,`${exports.listViewGanttChartColumnClassName}-month`),i=(0,dom_utils_1.cloneElement)(s,`${exports.listViewGanttChartColumnClassName}-date-wrap`),d=(0,dom_utils_1.cloneElement)(s,(t=>{(0,dom_utils_1.setStyleProps)(t,{width:`${e}px`}),t.classList.add(`${exports.listViewGanttChartColumnClassName}-date`),t.setAttribute("data-name","datecell")})),m=(0,dom_utils_1.cloneElement)(s,`${exports.listViewGanttChartColumnClassName}-row`),u=(0,dom_utils_1.cloneElement)(m);let C=-1,c=-1,p=null,h=null,b=null,_=0;for(const t of o){if(C!==t.y||c!==t.m){b&&(b.style.width=_*e+"px");const l=(0,dom_utils_1.cloneElement)(n);l.appendChild((0,dom_utils_1.cloneElement)(r,(e=>{(b=e).textContent="month"===a?`${t.y}`:`${t.y}/${t.m+1}`}))),h=(0,dom_utils_1.cloneElement)(i),l.appendChild(h),u.appendChild(l),p=(0,dom_utils_1.cloneElement)(i,(t=>{t.style.height="100%"})),m.appendChild(p),C=t.y,c=t.m,_=0}(0,dom_utils_1.cloneElement)(d,(e=>{_++,e.setAttribute("data-y",String(t.y)),e.setAttribute("data-m",String(t.m)),e.setAttribute("data-d",String(t.d)),"day"===a&&e.setAttribute("data-w",String(t.w)),e.setAttribute("data-today",String(t.today)),p.appendChild(e),h.appendChild((0,dom_utils_1.cloneElement)(e,(e=>{e.textContent="month"===a?`${t.m+1}月`:String(t.d),h.appendChild(e)})))}))}return b.style.width=_*e+"px",{headerRowElem:u,rowElem:m,barElement:(0,dom_utils_1.cloneElement)(s,(t=>{(0,dom_utils_1.setStyleProps)(t,{display:"none",visibility:"hidden"}),t.classList.add(`${exports.listViewGanttChartColumnClassName}-bar-wrap`),t.setAttribute("data-name","bar"),t.appendChild((0,dom_utils_1.cloneElement)(s,`${exports.listViewGanttChartColumnClassName}-bar`))})),barLabelElement:(0,dom_utils_1.cloneElement)(s,`${exports.listViewGanttChartColumnClassName}-bar-label`),barDragElement:(0,dom_utils_1.cloneElement)(s,`${exports.listViewGanttChartColumnClassName}-bar-drag`),differenceElement:(0,dom_utils_1.cloneElement)(s,`${exports.listViewGanttChartColumnClassName}-diff`)}},cellDispose:t=>{b.removeEventIterator((e=>e.element===t.element||null!=t.contentElements.find((t=>t===e.element))))},bindedItems:e=>{f();for(const a of e)for(const e of t.dataNames)a[e.dataName]={...p(a,e)}},headerCellInitialize:(t,e)=>{t.headerCellElement.classList.add(`${exports.listViewGanttChartColumnClassName}-header`),t.headerCellElement.setAttribute("data-progressline",String(l)),t.headerCellLabelElement.classList.remove(`${listview_1.listViewClassName}-lbl`),t.headerCellLabelElement.classList.add(`${exports.listViewGanttChartColumnClassName}-wrap`),t.headerCellLabelElement.appendChild(e.headerRowElem)},cellInitialize:(e,a)=>{const s=e.element;s.classList.add(exports.listViewGanttChartColumnClassName),s.setAttribute("data-progressline",String(l));b.addEvent(s,"dblclick",(a=>{const l=a.target;if("datecell"!==l.getAttribute("data-name"))return;const s=l.getAttribute("data-key"),n=t.dataNames[Number(s)],r=e.row.item?.data;if(null==r)return;if(null==r[n.dataName].from){const t=datetime_utils_1.default.convert(`${l.getAttribute("data-y")}-${Number(l.getAttribute("data-m"))+1}-${l.getAttribute("data-d")}`);r[n.fromDataName]=h(t),r[n.toDataName]=h(new Date(t)),y.renderByOriginData(r,!0)}}));for(let n=0,r=t.dataNames.length;n<r;n++){const r=t.dataNames[n],o=String(n),d=(0,dom_utils_1.cloneElement)(a.rowElem,(e=>{e.querySelectorAll("div[data-name='datecell']").forEach((t=>{t.setAttribute("data-key",o)})),e.setAttribute("data-disabled",String(!0===t.disabled||!0===r.disabled))})),m=(0,dom_utils_1.cloneElement)(a.barElement,(t=>{if(e.contentElements.push(t),t.setAttribute("data-key",o),r.barClassName&&t.classList.add(r.barClassName),i||!0===r.disabled)e.contentElements.push(null),e.contentElements.push(null);else{t.tabIndex=0;const l=t=>{t.stopPropagation(),window.addEventListener("mouseup",V),window.addEventListener("mousemove",$),Object.keys(_).forEach((t=>{const a=_[t];for(const l of e.column.cells)if(null!=l.row.item&&l.row.item.data[a.dataName.dataName].id===t){a.barElem=l.contentElements[5*a.index];break}})),g=t.clientX},s=t=>{null!=_[e.row.item.data[r.dataName].id]&&(l(t),(0,dom_utils_1.setCursor)("move"),w="m")};b.addEvent(t,"mousedown",s),t.appendChild((0,dom_utils_1.cloneElement)(a.barDragElement,(t=>{t.classList.add(`${exports.listViewGanttChartColumnClassName}-bar-drag-left`);b.addEvent(t,"mousedown",(t=>{l(t),(0,dom_utils_1.setCursor)("col-resize"),w="l"})),e.contentElements.push(t)}))),t.appendChild((0,dom_utils_1.cloneElement)(a.barDragElement,(t=>{t.classList.add(`${exports.listViewGanttChartColumnClassName}-bar-drag-right`);b.addEvent(t,"mousedown",(t=>{l(t),(0,dom_utils_1.setCursor)("col-resize"),w="r"})),e.contentElements.push(t)})));const n=t=>{if(!i&&!0!==r.disabled)switch(t.key){case"Escape":y?.focus(),t.stopPropagation(),t.preventDefault();break;case"ArrowLeft":w=t.ctrlKey?"r":"m",N(-1),t.stopPropagation(),t.preventDefault();break;case"ArrowRight":w=t.ctrlKey?"r":"m",N(1),t.stopPropagation(),t.preventDefault();break;case"Delete":Object.keys(_).forEach((t=>{const e=_[t];e.originData[e.dataName.fromDataName]=null,e.originData[e.dataName.toDataName]=null})),Object.keys(_).forEach((t=>{y?.renderByOriginData(_[t].originData,!0)})),t.stopPropagation(),t.preventDefault();break;case"Tab":f(),y?.focus()}};b.addEvent(t,"keydown",n)}})),u=(0,dom_utils_1.cloneElement)(a.barLabelElement,(t=>{e.contentElements.push(t)}));l?(0,dom_utils_1.cloneElement)(a.differenceElement,(t=>{(0,dom_utils_1.setStyleProps)(t,{display:"none",visibility:"hidden"}),d.appendChild(t),e.contentElements.push(t)})):e.contentElements.push(null),m.appendChild(u),d.appendChild(m),s.appendChild(d)}},cellRender:a=>{const s=a.row.item.data;for(let n=0,r=t.dataNames.length;n<r;n++){const r=t.dataNames[n].dataName,i=s[r],o=a.contentElements[5*n],d=null!=i.left,m=null!=_[i.id];null==a.cache[r]&&(a.cache[r]={}),a.cache[r].visible!==d&&((a.cache[r].visible=d)?(o.style.removeProperty("display"),o.style.removeProperty("visibility")):(o.style.display="none",o.style.visibility="hidden"));let u=!1;if(a.cache[r].left!==i.left&&(o.style.left=(a.cache[r].left=i.left)*e+"px",u=!0),a.cache[r].length!==i.length&&(o.style.width=(a.cache[r].length=i.length)*e+"px",u=!0),u&&(o.title=i.title),a.cache[r].active!==m&&o.setAttribute("data-active",String(a.cache[r].active=m)),a.cache[r].label!==i.barLabel&&(a.contentElements[5*n+3].textContent=a.cache[r].label=i.barLabel),l){const t=a.contentElements[5*n+4];if(a.cache[r].diff!==i.diff){t.setAttribute("data-latedate",String(a.cache[r].diff=i.diff)),null==i.diff?(t.style.display="none",t.style.visibility="hidden"):(t.style.removeProperty("display"),t.style.removeProperty("visibility"),t.style.width=Math.abs(i.diff)*e+"px",t.style.left=i.diff>0?C*e+"px":(C+i.diff)*e+"px");const l=i.diff<0;a.cache[r].late!==l&&t.setAttribute("data-late",String(a.cache[r].late=l))}}}},clickedCell:(e,a)=>{const l=a.target,s=l.getAttribute("data-name");if(string_utils_1.default.isEmpty(s))return;const n=l.getAttribute("data-key"),r=t.dataNames[Number(n)],o=e.data[r.dataName];if("datecell"===s)x=!1,f();else if("bar"===s){let t=_[o.id];if(x?(x=!1,a.ctrlKey||null!=t||f()):a.ctrlKey||f(),i||!0===r.disabled)return void f();if(a.ctrlKey&&null!=t)return void delete _[o.id];if(null==t)return _[o.id]={index:Number(n),data:o,barElem:null,originData:e.data,dataName:r},void setTimeout((()=>l.focus()),0)}},clickedRow:e=>{e.columnName!==t.name&&f()},editedRowData:e=>{for(const a of t.dataNames){const t=e[a.dataName],l=p(e,a,t.id);t.from=l.from,t.to=l.to,t.left=l.left,t.length=l.length,t.barLabel=l.barLabel,t.diff=l.diff,t.title=l.title}},_beginEdit:({endEdit:t,cell:e})=>{t(!1);e.contentElements.find((t=>"bar"===t.getAttribute("data-name")))},dispose:()=>{b.dispose()},jsxStyle:exports.ListViewGanttChartColumnStyle}};exports.default=ListViewGanttChartColumn;const calcBarLength=(t,e,a,l)=>{if(null==t)return null;if(null==e)return 1;switch(a){case"month":return 12*e.getFullYear()+e.getMonth()-(12*t.getFullYear()+t.getMonth())+1;case"week":return e.getTime()-t.getTime()<0?null:Math.floor((e.getTime()-l.getTime())/6048e5)-Math.floor((t.getTime()-l.getTime())/6048e5)+1;default:const a=e.getTime()-t.getTime();return a<0?null:a/864e5+1}},calcBarLeft=(t,e,a)=>{if(null==t||null==e)return null;switch(a){case"month":return 12*e.getFullYear()+e.getMonth()-(12*t.getFullYear()+t.getMonth());case"week":return Math.floor((e.getTime()-t.getTime())/6048e5);default:return(e.getTime()-t.getTime())/864e5}};exports.ListViewGanttChartColumnStyle=react_1.default.createElement(style_1.default,{id:exports.listViewGanttChartColumnClassName,notDepsColor:!0,css:({design:t})=>`\n.${exports.listViewGanttChartColumnClassName} {\n  flex-direction: column !important;\n}\n.${exports.listViewGanttChartColumnClassName}-wrap {\n  ${style_1.CssPV.flex_c}\n  flex: none;\n  height: 100%;\n}\n.${exports.listViewGanttChartColumnClassName}-row {\n  ${style_1.CssPV.flex_r}\n  flex: 1;\n  min-height: 0px;\n  overflow: hidden;\n  z-index: 0;\n}\n.${exports.listViewGanttChartColumnClassName}-month-wrap {\n  ${style_1.CssPV.flex_c}\n  flex: none;\n  height: 100%;\n  overflow: hidden;\n}\n.${exports.listViewGanttChartColumnClassName}-month {\n  ${style_1.CssPV.flex_r}\n  flex: 1;\n  min-height: 0px;\n  overflow: hidden;\n  padding: 2px 5px 0px 5px;\n}\n.${exports.listViewGanttChartColumnClassName}-date-wrap {\n  ${style_1.CssPV.flex_r}\n  flex: 1;\n}\n.${exports.listViewGanttChartColumnClassName}-date {\n  ${style_1.CssPV.flex_r_c}\n  flex: none;\n  height: 100%;\n  padding-top: 2px;\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap {\n  box-sizing: border-box;\n  position: absolute;\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: flex-start;\n  align-items: center;\n  z-index: 1;\n  top: 0px;\n  min-height: 100%;\n  height: 100%;\n  overflow: visible;\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] {\n  cursor: move;\n}\n.${exports.listViewGanttChartColumnClassName}-bar {\n  box-sizing: border-box;\n  position: absolute;\n  z-index: 1;\n  height: ${style_1.CssVar.size};\n  max-height: 100%;\n  width: 100%;\n  user-select: none;\n  pointer-events: none;\n  background: ${style_1.CssVar.lv_gc.bg.bar_c};\n}\n.${exports.listViewGanttChartColumnClassName}-bar-label {\n  box-sizing: border-box;\n  position: relative;\n  pointer-events: none;\n  user-select: none;\n  z-index: 2;\n  display: block;\n  overflow: visible;\n  white-space: nowrap;\n  padding: 2px 5px 0px 5px;\n}\n.${exports.listViewGanttChartColumnClassName}-bar-drag {\n  box-sizing: border-box;\n  position: absolute;\n  height: ${style_1.CssVar.size};\n  max-height: 100%;\n  min-width: 5px;\n  z-index: 3;\n  width: 9px;\n  background: transparent;\n  display: block;\n  cursor: col-resize;\n}\n.${exports.listViewGanttChartColumnClassName}-bar-drag-left {\n  left: 0px;\n}\n.${exports.listViewGanttChartColumnClassName}-bar-drag-right {\n  right: 0px;\n}\n.${exports.listViewGanttChartColumnClassName}-diff {\n  box-sizing: border-box;\n  position: absolute;\n  min-height: 1px;\n  bottom: 0px;\n  height: 6px;\n  z-index: 3;\n}\n${"material"===t?`\n.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.${exports.listViewGanttChartColumnClassName} {\n  border-right: none;\n}\n.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.${exports.listViewGanttChartColumnClassName}:hover {\n  background: ${style_1.CssVar.lv.b.bg.c_hr} !important;\n}\n.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.bh-selected {\n  outline: none !important;\n}\n.${exports.listViewGanttChartColumnClassName}-month {\n  border-bottom: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n}\n.${listview_1.listViewClassName}-header .${exports.listViewGanttChartColumnClassName}-date {\n  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n}\n.${listview_1.listViewClassName}-body .${exports.listViewGanttChartColumnClassName}-date {\n  border-right: 1px solid ${style_1.CssVar.lv.b.bdc};\n}\n.${listview_1.listViewClassName}-body .${exports.listViewGanttChartColumnClassName}-date:hover {\n  background: ${style_1.CssVar.lv.b.bg.c_s};\n}\n.${exports.listViewGanttChartColumnClassName}-date[data-w="0"] {\n  background: ${style_1.CssVar.w_sun.bg};\n}\n.${exports.listViewGanttChartColumnClassName}-date[data-w="6"] {\n  background: ${style_1.CssVar.w_sat.bg};\n}\n.${exports.listViewGanttChartColumnClassName}-date[data-today="true"] {\n  background: ${style_1.CssVar.lv_gc.bg.today};\n}\n.${exports.listViewGanttChartColumnClassName}-bar {\n  height: 80%;\n  margin: 0px 6px;\n  width: calc(100% - 13px);\n  opacity: 0.8;\n}\n.${exports.listViewGanttChartColumnClassName}-row[data-disabled="false"] .${exports.listViewGanttChartColumnClassName}-bar {\n  box-shadow: ${style_1.CssParam.m.sdBtm};\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap:hover .${exports.listViewGanttChartColumnClassName}-bar,\n.${exports.listViewGanttChartColumnClassName}-bar-wrap:active .${exports.listViewGanttChartColumnClassName}-bar {\n  opacity: unset;\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"]:active .${exports.listViewGanttChartColumnClassName}-bar {\n  margin-top: -${style_1.CssParam.m.updownMargin};\n  box-shadow: ${style_1.CssParam.m.sdBtm_f};\n}\n.${exports.listViewGanttChartColumnClassName}-bar-label {\n  margin-left: 6px;\n}\n.${exports.listViewGanttChartColumnClassName}-bar::before,\n.${exports.listViewGanttChartColumnClassName}-bar::after {\n  box-sizing: border-box;\n  position: absolute;\n  content: "";\n  height: 100%;\n  width: 7px;\n  top: 0px;\n  user-select: none;\n  background: ${style_1.CssVar.lv_gc.bg.bar_c};\n}\n.${exports.listViewGanttChartColumnClassName}-bar::before {\n  left: -6px;\n  clip-path: polygon(0% 50%, 80% 0%, 100% 0%, 100% 100%, 80% 100%);\n}\n.${exports.listViewGanttChartColumnClassName}-bar::after {\n  right: -6px;\n  clip-path: polygon(0% 0%, 20% 0%, 100% 50%, 20% 100%, 0% 100%);\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar {\n  border-top: 1px solid ${style_1.CssVar.lv_gc.bg.bar_c_a};\n  border-bottom: 1px solid ${style_1.CssVar.lv_gc.bg.bar_c_a};\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar::before,\n.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar::after {\n  background: ${style_1.CssVar.lv_gc.bg.bar_c_a};\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar-label {\n  left: 100%;\n  margin-left: 0px;\n}\n.${exports.listViewGanttChartColumnClassName}-header[data-progressline="true"] .${exports.listViewGanttChartColumnClassName}-date[data-today="true"]::before,\n.${exports.listViewGanttChartColumnClassName}[data-progressline="true"] .${exports.listViewGanttChartColumnClassName}-date[data-today="true"]::before {\n  box-sizing: border-box;\n  position: absolute;\n  content: "";\n  top: 0px;\n  right: 0px;\n  height: 100%;\n  width: 2px;\n  background: ${style_1.CssVar.lv_gc.pl.c};\n}\n.${exports.listViewGanttChartColumnClassName}-diff[data-late="true"] {\n  border-top: 4px solid transparent;\n  border-left: 3px solid ${style_1.CssVar.lv_gc.pl.c_late};\n  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c_late};\n}\n.${exports.listViewGanttChartColumnClassName}-diff[data-late="true"][data-latedate="-1"] {\n  border-left: 3px solid ${style_1.CssVar.lv_gc.pl.c};\n  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c};\n}\n.${exports.listViewGanttChartColumnClassName}-diff[data-late="false"] {\n  border-top: 4px solid transparent;\n  border-right: 3px solid ${style_1.CssVar.lv_gc.pl.c_prec};\n  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c_prec};\n}\n`:""}\n${"neumorphism"===t?`\n.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.${exports.listViewGanttChartColumnClassName} {\n  border-right: none;\n}\n.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.${exports.listViewGanttChartColumnClassName}:hover {\n  background: ${style_1.CssVar.lv.b.bg.c_hr} !important;\n}\n.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.bh-selected {\n  outline: none !important;\n}\n.${exports.listViewGanttChartColumnClassName}-month {\n  border-bottom: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n}\n.${listview_1.listViewClassName}-header .${exports.listViewGanttChartColumnClassName}-date {\n  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};\n}\n.${listview_1.listViewClassName}-body .${exports.listViewGanttChartColumnClassName}-date {\n  border-right: 1px solid ${style_1.CssVar.lv.b.bdc};\n}\n.${listview_1.listViewClassName}-body .${exports.listViewGanttChartColumnClassName}-date:hover {\n  background: ${style_1.CssVar.lv.b.bg.c_s};\n}\n.${exports.listViewGanttChartColumnClassName}-date[data-w="0"] {\n  background: ${style_1.CssVar.w_sun.bg};\n}\n.${exports.listViewGanttChartColumnClassName}-date[data-w="6"] {\n  background: ${style_1.CssVar.w_sat.bg};\n}\n.${exports.listViewGanttChartColumnClassName}-date[data-today="true"] {\n  background: ${style_1.CssVar.lv_gc.bg.today};\n}\n.${exports.listViewGanttChartColumnClassName}-bar {\n  height: 80%;\n  opacity: 0.8;\n  width: calc(100% - 1px);\n  background: linear-gradient(to bottom right, ${style_1.CssVar.lv_gc.bg.bar_dc}, ${style_1.CssVar.lv_gc.bg.bar_bc});\n  border-radius: ${style_1.CssParam.n.r};\n}\n.${exports.listViewGanttChartColumnClassName}-row[data-disabled="false"] .${exports.listViewGanttChartColumnClassName}-bar {\n  box-shadow: ${style_1.CssParam.n.border.cvxSd};\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap:hover .${exports.listViewGanttChartColumnClassName}-bar,\n.${exports.listViewGanttChartColumnClassName}-bar-wrap:active .${exports.listViewGanttChartColumnClassName}-bar {\n  opacity: unset;\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar {\n  box-shadow: ${style_1.CssParam.n.cvxSd};\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"]:active .${exports.listViewGanttChartColumnClassName}-bar {\n  box-shadow: ${style_1.CssParam.n.cvxSd_f};\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar-label {\n  left: 100%;\n}\n.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar-drag {\n  box-shadow: ${style_1.CssParam.n.border.cvxSd};\n  background: ${style_1.CssVar.lv_gc.bg.bar_c_a};\n  border-radius: ${style_1.CssParam.n.r};\n}\n.${exports.listViewGanttChartColumnClassName}-header[data-progressline="true"] .${exports.listViewGanttChartColumnClassName}-date[data-today="true"]::before,\n.${exports.listViewGanttChartColumnClassName}[data-progressline="true"] .${exports.listViewGanttChartColumnClassName}-date[data-today="true"]::before {\n  box-sizing: border-box;\n  position: absolute;\n  content: "";\n  top: 0px;\n  right: 0px;\n  height: 100%;\n  width: 2px;\n  background: ${style_1.CssVar.lv_gc.pl.c};\n}\n.${exports.listViewGanttChartColumnClassName}-diff[data-late="true"] {\n  border-top: 4px solid transparent;\n  border-left: 3px solid ${style_1.CssVar.lv_gc.pl.c_late};\n  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c_late};\n}\n.${exports.listViewGanttChartColumnClassName}-diff[data-late="true"][data-latedate="-1"] {\n  border-left: 3px solid ${style_1.CssVar.lv_gc.pl.c};\n  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c};\n}\n.${exports.listViewGanttChartColumnClassName}-diff[data-late="false"] {\n  border-top: 4px solid transparent;\n  border-right: 3px solid ${style_1.CssVar.lv_gc.pl.c_prec};\n  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c_prec};\n}\n`:""}\n`});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ListViewGanttChartColumnStyle = exports.listViewGanttChartColumnClassName = void 0;
+const react_1 = __importDefault(require("react"));
+const datetime_utils_1 = __importDefault(require("@bizhermit/basic-utils/dist/datetime-utils"));
+const string_utils_1 = __importDefault(require("@bizhermit/basic-utils/dist/string-utils"));
+const style_1 = __importStar(require("../../layouts/style"));
+const listview_1 = require("../listview");
+const dom_utils_1 = require("../../utils/dom-utils");
+exports.listViewGanttChartColumnClassName = "bh-lv_c-gtc";
+const ListViewGanttChartColumn = (props) => {
+    const dcWidth = props.dateCellWidth ?? 30;
+    const unit = props.unit ?? "day";
+    const showProgressLine = props.progressLine !== false;
+    const termFrom = datetime_utils_1.default.removeTime(datetime_utils_1.default.copy(props.term.from)), termTo = datetime_utils_1.default.removeTime(datetime_utils_1.default.copy(props.term.to));
+    let barTitleFormat = props.barTitleFormat, disabled = props.disabled === true;
+    switch (unit) {
+        case "month":
+            disabled = true;
+            termFrom.setDate(1);
+            if (barTitleFormat == null)
+                barTitleFormat = (p) => `${datetime_utils_1.default.format(p.from, "yyyy/MM/dd")} <-> ${datetime_utils_1.default.format(p.to, "yyyy/MM/dd")}`;
+            break;
+        case "week":
+            disabled = true;
+            if (barTitleFormat == null)
+                barTitleFormat = (p) => `${datetime_utils_1.default.format(p.from, "yyyy/MM/dd")} <-> ${datetime_utils_1.default.format(p.to, "yyyy/MM/dd")}`;
+            break;
+        default:
+            if (barTitleFormat == null)
+                barTitleFormat = (p) => `${datetime_utils_1.default.format(p.from, "yyyy/MM/dd")} <-> ${datetime_utils_1.default.format(p.to, "yyyy/MM/dd")} (${p.length})`;
+            break;
+    }
+    const cellArr = [];
+    const date = datetime_utils_1.default.copy(termFrom), toNum = termTo.getTime();
+    const today = datetime_utils_1.default.getDate();
+    const todayLeft = calcBarLeft(termFrom, today, unit) + 1;
+    let hasToday = today.getTime() < date.getTime();
+    while (date.getTime() <= toNum) {
+        let isToday = false;
+        switch (unit) {
+            case "month":
+                isToday = !hasToday && true;
+                break;
+            case "week":
+                isToday = !hasToday && (hasToday = date.getTime() >= today.getTime());
+                break;
+            default:
+                isToday = !hasToday && (hasToday = date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear());
+                break;
+        }
+        cellArr.push({
+            y: date.getFullYear(),
+            m: date.getMonth(),
+            d: date.getDate(),
+            w: date.getDay(),
+            today: isToday,
+        });
+        switch (unit) {
+            case "month":
+                date.setDate(1);
+                date.setMonth(date.getMonth() + 1);
+                break;
+            case "week":
+                date.setDate(date.getDate() + 7);
+                break;
+            default:
+                date.setDate(date.getDate() + 1);
+                break;
+        }
+    }
+    const convertValueToData = (data, dn, id) => {
+        const fval = data[dn.fromDataName], tval = data[dn.toDataName];
+        const fdate = datetime_utils_1.default.convert(fval);
+        const tdate = datetime_utils_1.default.convert(tval);
+        datetime_utils_1.default.removeTime(fdate);
+        datetime_utils_1.default.removeTime(tdate);
+        const length = calcBarLength(fdate, tdate, unit, termFrom);
+        let diff = null;
+        if (showProgressLine && dn.rateDataName != null && tdate != null) {
+            const rval = data[dn.rateDataName];
+            const rate = typeof rval === "number" ? Math.min(100, Math.max(0, rval)) : 0;
+            if (fdate.getTime() <= today.getTime()) {
+                if (rate === 100 && tdate.getTime() <= today.getTime()) {
+                    diff = null;
+                }
+                else {
+                    const cdate = new Date(fdate);
+                    cdate.setDate(cdate.getDate() + Math.floor(length * rate / 100));
+                    diff = calcBarLeft(today, cdate, unit) - 1;
+                }
+            }
+            else {
+                if (rate === 0) {
+                    diff = null;
+                }
+                else {
+                    const cdate = new Date(fdate);
+                    const hoge = Math.floor(length * rate / 100);
+                    cdate.setDate(cdate.getDate() + hoge);
+                    diff = calcBarLeft(today, cdate, unit) - 1;
+                }
+            }
+        }
+        let title = "";
+        if (fdate)
+            title = barTitleFormat({ from: fdate, to: tdate, length });
+        return {
+            id: id ?? string_utils_1.default.generateUuidV4(),
+            from: fdate,
+            to: tdate,
+            length,
+            left: calcBarLeft(termFrom, fdate, unit),
+            barLabel: dn.barLabelDataName == null ? "" : (data[dn.barLabelDataName] ?? ""),
+            diff,
+            title,
+        };
+    };
+    const convertDateToData = (date) => {
+        if (date == null)
+            return undefined;
+        switch (props.dataType) {
+            case "number":
+                return Number(datetime_utils_1.default.format(date, "yyyyMMdd"));
+            case "date":
+                return date;
+            default:
+                return datetime_utils_1.default.format(date, props.dateFormat);
+        }
+    };
+    const event = (0, dom_utils_1.getDomEventManager)();
+    let activeBars = {};
+    const clearActiveBars = () => { activeBars = {}; };
+    let dragMode = "", lastPos = 0, draged = false, listview = null;
+    const mousemoveEvent = (e) => {
+        const num = Math.round((e.clientX - lastPos) / dcWidth);
+        if (num !== 0)
+            draged = true;
+        if (dragMode === "r") {
+            Object.keys(activeBars).forEach((id) => {
+                const ab = activeBars[id];
+                if (ab.barElem == null)
+                    return;
+                (0, dom_utils_1.setStyleProps)(ab.barElem, { width: `${Math.max(1, ab.data.length + num) * dcWidth}px` });
+            });
+            return;
+        }
+        if (dragMode === "l") {
+            Object.keys(activeBars).forEach((id) => {
+                const ab = activeBars[id];
+                if (ab.barElem == null)
+                    return;
+                const left = ab.data.left + num;
+                (0, dom_utils_1.setStyleProps)(ab.barElem, { left: `${left * dcWidth}px`, width: `${Math.max(1, ab.data.length - (left - ab.data.left)) * dcWidth}px` });
+            });
+            return;
+        }
+        if (dragMode === "m") {
+            Object.keys(activeBars).forEach((id) => {
+                const ab = activeBars[id];
+                if (ab.barElem == null)
+                    return;
+                (0, dom_utils_1.setStyleProps)(ab.barElem, { left: `${(ab.data.left + num) * dcWidth}px` });
+            });
+            return;
+        }
+    };
+    const mouseupEvent = (e) => {
+        changeCommit(Math.round((e.clientX - lastPos) / dcWidth));
+    };
+    const changeCommit = (num) => {
+        if (num !== 0) {
+            Object.keys(activeBars).forEach((id) => {
+                const ab = activeBars[id];
+                switch (dragMode) {
+                    case "r":
+                        ab.data.length = Math.max(1, ab.data.length + num);
+                        break;
+                    case "l":
+                        const left = ab.data.left + num;
+                        ab.data.length = Math.max(1, ab.data.length - (left - ab.data.left));
+                        ab.data.left = left;
+                        break;
+                    case "m":
+                        ab.data.left += num;
+                        break;
+                    default:
+                        break;
+                }
+                const f = new Date(termFrom);
+                f.setDate(f.getDate() + ab.data.left);
+                const t = new Date(f);
+                t.setDate(t.getDate() + ab.data.length - 1);
+                ab.originData[ab.dataName.fromDataName] = convertDateToData(f);
+                ab.originData[ab.dataName.toDataName] = convertDateToData(t);
+            });
+            Object.keys(activeBars).forEach((id) => {
+                listview?.renderByOriginData(activeBars[id].originData, true);
+            });
+        }
+        (0, dom_utils_1.releaseCursor)();
+        window.removeEventListener("mouseup", mouseupEvent);
+        window.removeEventListener("mousemove", mousemoveEvent);
+        dragMode = "";
+    };
+    const deleteBar = () => {
+        Object.keys(activeBars).forEach((id) => {
+            const ab = activeBars[id];
+            ab.originData[ab.dataName.fromDataName] = null;
+            ab.originData[ab.dataName.toDataName] = null;
+        });
+        Object.keys(activeBars).forEach((id) => {
+            listview?.renderByOriginData(activeBars[id].originData, true);
+        });
+    };
+    return {
+        name: props.name ?? "_lvcol_gc",
+        disabled,
+        resize: false,
+        sort: false,
+        width: cellArr.length * dcWidth,
+        notScrollFocusWhenTabStop: true,
+        initialize: (_col, lv) => {
+            listview = lv;
+            const div = document.createElement("div");
+            const mcElem = (0, dom_utils_1.cloneElement)(div, `${exports.listViewGanttChartColumnClassName}-month-wrap`);
+            const mElem = (0, dom_utils_1.cloneElement)(div, `${exports.listViewGanttChartColumnClassName}-month`);
+            const dcElem = (0, dom_utils_1.cloneElement)(div, `${exports.listViewGanttChartColumnClassName}-date-wrap`);
+            const dElem = (0, dom_utils_1.cloneElement)(div, (elem) => {
+                (0, dom_utils_1.setStyleProps)(elem, { width: `${dcWidth}px` });
+                elem.classList.add(`${exports.listViewGanttChartColumnClassName}-date`);
+                elem.setAttribute("data-name", "datecell");
+            });
+            const rElem = (0, dom_utils_1.cloneElement)(div, `${exports.listViewGanttChartColumnClassName}-row`);
+            const hrElem = (0, dom_utils_1.cloneElement)(rElem);
+            let ly = -1, lm = -1;
+            let dcelem = null, hdcelem = null, melem = null, cellCount = 0;
+            for (const date of cellArr) {
+                if (ly !== date.y || lm !== date.m) {
+                    if (melem)
+                        melem.style.width = `${cellCount * dcWidth}px`;
+                    const mcelem = (0, dom_utils_1.cloneElement)(mcElem);
+                    mcelem.appendChild((0, dom_utils_1.cloneElement)(mElem, (elem) => {
+                        (melem = elem).textContent = unit === "month" ? `${date.y}` : `${date.y}/${date.m + 1}`;
+                    }));
+                    hdcelem = (0, dom_utils_1.cloneElement)(dcElem);
+                    mcelem.appendChild(hdcelem);
+                    hrElem.appendChild(mcelem);
+                    dcelem = (0, dom_utils_1.cloneElement)(dcElem, (elem) => {
+                        elem.style.height = "100%";
+                    });
+                    rElem.appendChild(dcelem);
+                    ly = date.y;
+                    lm = date.m;
+                    cellCount = 0;
+                }
+                (0, dom_utils_1.cloneElement)(dElem, (elem) => {
+                    cellCount++;
+                    elem.setAttribute("data-y", String(date.y));
+                    elem.setAttribute("data-m", String(date.m));
+                    elem.setAttribute("data-d", String(date.d));
+                    if (unit === "day")
+                        elem.setAttribute("data-w", String(date.w));
+                    elem.setAttribute("data-today", String(date.today));
+                    dcelem.appendChild(elem);
+                    hdcelem.appendChild((0, dom_utils_1.cloneElement)(elem, (elem) => {
+                        elem.textContent = unit === "month" ? `${date.m + 1}月` : String(date.d);
+                        hdcelem.appendChild(elem);
+                    }));
+                });
+            }
+            melem.style.width = `${cellCount * dcWidth}px`;
+            return {
+                headerRowElem: hrElem,
+                rowElem: rElem,
+                barElement: (0, dom_utils_1.cloneElement)(div, (elem) => {
+                    (0, dom_utils_1.setStyleProps)(elem, { display: "none", visibility: "hidden" });
+                    elem.classList.add(`${exports.listViewGanttChartColumnClassName}-bar-wrap`);
+                    elem.setAttribute("data-name", "bar");
+                    elem.appendChild((0, dom_utils_1.cloneElement)(div, `${exports.listViewGanttChartColumnClassName}-bar`));
+                }),
+                barLabelElement: (0, dom_utils_1.cloneElement)(div, `${exports.listViewGanttChartColumnClassName}-bar-label`),
+                barDragElement: (0, dom_utils_1.cloneElement)(div, `${exports.listViewGanttChartColumnClassName}-bar-drag`),
+                differenceElement: (0, dom_utils_1.cloneElement)(div, `${exports.listViewGanttChartColumnClassName}-diff`),
+            };
+        },
+        cellDispose: (cell) => {
+            event.removeEventIterator((de) => de.element === cell.element || cell.contentElements.find(elem => elem === de.element) != null);
+        },
+        bindedItems: (items) => {
+            clearActiveBars();
+            for (const item of items) {
+                for (const dn of props.dataNames) {
+                    item[dn.dataName] = {
+                        ...convertValueToData(item, dn),
+                    };
+                }
+            }
+        },
+        headerCellInitialize: (column, initParams) => {
+            column.headerCellElement.classList.add(`${exports.listViewGanttChartColumnClassName}-header`);
+            column.headerCellElement.setAttribute("data-progressline", String(showProgressLine));
+            column.headerCellLabelElement.classList.remove(`${listview_1.listViewClassName}-lbl`);
+            column.headerCellLabelElement.classList.add(`${exports.listViewGanttChartColumnClassName}-wrap`);
+            column.headerCellLabelElement.appendChild(initParams.headerRowElem);
+        },
+        cellInitialize: (cell, initParams) => {
+            const elem = cell.element;
+            elem.classList.add(exports.listViewGanttChartColumnClassName);
+            elem.setAttribute("data-progressline", String(showProgressLine));
+            const dblclick = (e) => {
+                const dcelem = e.target;
+                const name = dcelem.getAttribute("data-name");
+                if (name !== "datecell")
+                    return;
+                const key = dcelem.getAttribute("data-key");
+                const dn = props.dataNames[Number(key)];
+                const data = cell.row.item?.data;
+                if (data == null)
+                    return;
+                const d = data[dn.dataName];
+                if (d.from == null) {
+                    const f = datetime_utils_1.default.convert(`${dcelem.getAttribute("data-y")}-${Number(dcelem.getAttribute("data-m")) + 1}-${dcelem.getAttribute("data-d")}`);
+                    data[dn.fromDataName] = convertDateToData(f);
+                    data[dn.toDataName] = convertDateToData(new Date(f));
+                    listview.renderByOriginData(data, true);
+                }
+            };
+            event.addEvent(elem, "dblclick", dblclick);
+            for (let i = 0, il = props.dataNames.length; i < il; i++) {
+                const dn = props.dataNames[i], key = String(i);
+                const relem = (0, dom_utils_1.cloneElement)(initParams.rowElem, (elem) => {
+                    elem.querySelectorAll("div[data-name='datecell']").forEach((e) => {
+                        e.setAttribute("data-key", key);
+                    });
+                    elem.setAttribute("data-disabled", String(props.disabled === true || dn.disabled === true));
+                });
+                const belem = (0, dom_utils_1.cloneElement)(initParams.barElement, (elem) => {
+                    cell.contentElements.push(elem);
+                    elem.setAttribute("data-key", key);
+                    if (dn.barClassName)
+                        elem.classList.add(dn.barClassName);
+                    if (!disabled && dn.disabled !== true) {
+                        elem.tabIndex = 0;
+                        const commonListener = (e) => {
+                            e.stopPropagation();
+                            window.addEventListener("mouseup", mouseupEvent);
+                            window.addEventListener("mousemove", mousemoveEvent);
+                            Object.keys(activeBars).forEach((key) => {
+                                const ab = activeBars[key];
+                                for (const c of cell.column.cells) {
+                                    if (c.row.item == null)
+                                        continue;
+                                    if (c.row.item.data[ab.dataName.dataName].id !== key)
+                                        continue;
+                                    ab.barElem = c.contentElements[ab.index * 5];
+                                    break;
+                                }
+                            });
+                            lastPos = e.clientX;
+                        };
+                        const moveListener = (e) => {
+                            if (activeBars[cell.row.item.data[dn.dataName].id] == null)
+                                return;
+                            commonListener(e);
+                            (0, dom_utils_1.setCursor)("move");
+                            dragMode = "m";
+                        };
+                        event.addEvent(elem, "mousedown", moveListener);
+                        elem.appendChild((0, dom_utils_1.cloneElement)(initParams.barDragElement, (celem) => {
+                            celem.classList.add(`${exports.listViewGanttChartColumnClassName}-bar-drag-left`);
+                            const listener = (e) => {
+                                commonListener(e);
+                                (0, dom_utils_1.setCursor)("col-resize");
+                                dragMode = "l";
+                            };
+                            event.addEvent(celem, "mousedown", listener);
+                            cell.contentElements.push(celem);
+                        }));
+                        elem.appendChild((0, dom_utils_1.cloneElement)(initParams.barDragElement, (celem) => {
+                            celem.classList.add(`${exports.listViewGanttChartColumnClassName}-bar-drag-right`);
+                            const listener = (e) => {
+                                commonListener(e);
+                                (0, dom_utils_1.setCursor)("col-resize");
+                                dragMode = "r";
+                            };
+                            event.addEvent(celem, "mousedown", listener);
+                            cell.contentElements.push(celem);
+                        }));
+                        const keydown = (e) => {
+                            if (disabled || dn.disabled === true)
+                                return;
+                            switch (e.key) {
+                                case "Escape":
+                                    listview?.focus();
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    break;
+                                case "ArrowLeft":
+                                    if (e.ctrlKey)
+                                        dragMode = "r";
+                                    else
+                                        dragMode = "m";
+                                    changeCommit(-1);
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    break;
+                                case "ArrowRight":
+                                    if (e.ctrlKey)
+                                        dragMode = "r";
+                                    else
+                                        dragMode = "m";
+                                    changeCommit(1);
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    break;
+                                case "Delete":
+                                    deleteBar();
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    break;
+                                case "Tab":
+                                    clearActiveBars();
+                                    listview?.focus();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        };
+                        event.addEvent(elem, "keydown", keydown);
+                    }
+                    else {
+                        cell.contentElements.push(null);
+                        cell.contentElements.push(null);
+                    }
+                });
+                const blelem = (0, dom_utils_1.cloneElement)(initParams.barLabelElement, (elem) => {
+                    cell.contentElements.push(elem);
+                });
+                if (showProgressLine) {
+                    (0, dom_utils_1.cloneElement)(initParams.differenceElement, (elem) => {
+                        (0, dom_utils_1.setStyleProps)(elem, { display: "none", visibility: "hidden" });
+                        relem.appendChild(elem);
+                        cell.contentElements.push(elem);
+                    });
+                }
+                else {
+                    cell.contentElements.push(null);
+                }
+                belem.appendChild(blelem);
+                relem.appendChild(belem);
+                elem.appendChild(relem);
+            }
+        },
+        cellRender: (cell) => {
+            const data = cell.row.item.data;
+            for (let i = 0, il = props.dataNames.length; i < il; i++) {
+                const dn = props.dataNames[i].dataName;
+                const d = data[dn];
+                const belem = cell.contentElements[i * 5];
+                const v = d.left != null, a = activeBars[d.id] != null;
+                if (cell.cache[dn] == null)
+                    cell.cache[dn] = {};
+                if (cell.cache[dn].visible !== v) {
+                    if (cell.cache[dn].visible = v) {
+                        belem.style.removeProperty("display");
+                        belem.style.removeProperty("visibility");
+                    }
+                    else {
+                        belem.style.display = "none";
+                        belem.style.visibility = "hidden";
+                    }
+                }
+                let notSameTitle = false;
+                if (cell.cache[dn].left !== d.left) {
+                    belem.style.left = `${(cell.cache[dn].left = d.left) * dcWidth}px`;
+                    notSameTitle = true;
+                }
+                if (cell.cache[dn].length !== d.length) {
+                    belem.style.width = `${(cell.cache[dn].length = d.length) * dcWidth}px`;
+                    notSameTitle = true;
+                }
+                if (notSameTitle)
+                    belem.title = d.title;
+                if (cell.cache[dn].active !== a)
+                    belem.setAttribute("data-active", String(cell.cache[dn].active = a));
+                if (cell.cache[dn].label !== d.barLabel)
+                    cell.contentElements[i * 5 + 3].textContent = cell.cache[dn].label = d.barLabel;
+                if (showProgressLine) {
+                    const plelem = cell.contentElements[i * 5 + 4];
+                    if (cell.cache[dn].diff !== d.diff) {
+                        plelem.setAttribute("data-latedate", String(cell.cache[dn].diff = d.diff));
+                        if (d.diff == null) {
+                            plelem.style.display = "none";
+                            plelem.style.visibility = "hidden";
+                        }
+                        else {
+                            plelem.style.removeProperty("display");
+                            plelem.style.removeProperty("visibility");
+                            plelem.style.width = `${Math.abs(d.diff) * dcWidth}px`;
+                            plelem.style.left = d.diff > 0 ? `${todayLeft * dcWidth}px` : `${(todayLeft + d.diff) * dcWidth}px`;
+                        }
+                        const l = d.diff < 0;
+                        if (cell.cache[dn].late !== l)
+                            plelem.setAttribute("data-late", String(cell.cache[dn].late = l));
+                    }
+                }
+            }
+        },
+        clickedCell: (params, e) => {
+            const elem = e.target;
+            const name = elem.getAttribute("data-name");
+            if (string_utils_1.default.isEmpty(name))
+                return;
+            const key = elem.getAttribute("data-key");
+            const dn = props.dataNames[Number(key)];
+            const data = params.data[dn.dataName];
+            if (name === "datecell") {
+                draged = false;
+                clearActiveBars();
+            }
+            else if (name === "bar") {
+                let item = activeBars[data.id];
+                if (draged) {
+                    draged = false;
+                    if (!e.ctrlKey && item == null)
+                        clearActiveBars();
+                }
+                else {
+                    if (!e.ctrlKey)
+                        clearActiveBars();
+                }
+                if (disabled || dn.disabled === true) {
+                    clearActiveBars();
+                    return;
+                }
+                if (e.ctrlKey && item != null) {
+                    delete activeBars[data.id];
+                    return;
+                }
+                if (item == null) {
+                    activeBars[data.id] = {
+                        index: Number(key),
+                        data,
+                        barElem: null,
+                        originData: params.data,
+                        dataName: dn,
+                    };
+                    setTimeout(() => elem.focus(), 0);
+                    return;
+                }
+            }
+        },
+        clickedRow: (params) => {
+            if (params.columnName === props.name)
+                return;
+            clearActiveBars();
+        },
+        editedRowData: (data) => {
+            for (const dn of props.dataNames) {
+                const d = data[dn.dataName];
+                const ret = convertValueToData(data, dn, d.id);
+                d.from = ret.from;
+                d.to = ret.to;
+                d.left = ret.left;
+                d.length = ret.length;
+                d.barLabel = ret.barLabel;
+                d.diff = ret.diff;
+                d.title = ret.title;
+            }
+        },
+        _beginEdit: ({ endEdit, cell }) => {
+            endEdit(false);
+            const elem = cell.contentElements.find(elem => elem.getAttribute("data-name") === "bar");
+            if (elem == null)
+                return;
+        },
+        dispose: () => {
+            event.dispose();
+        },
+        jsxStyle: exports.ListViewGanttChartColumnStyle,
+    };
+};
+exports.default = ListViewGanttChartColumn;
+const calcBarLength = (from, to, unit, termFrom) => {
+    if (from == null)
+        return undefined;
+    if (to == null)
+        return 1;
+    switch (unit) {
+        case "month":
+            return (to.getFullYear() * 12 + to.getMonth()) - (from.getFullYear() * 12 + from.getMonth()) + 1;
+        case "week":
+            if (to.getTime() - from.getTime() < 0)
+                return undefined;
+            return Math.floor((to.getTime() - termFrom.getTime()) / (86400000 * 7)) - Math.floor((from.getTime() - termFrom.getTime()) / (86400000 * 7)) + 1;
+        default:
+            const dm = to.getTime() - from.getTime();
+            if (dm < 0)
+                return undefined;
+            return dm / 86400000 + 1;
+    }
+};
+const calcBarLeft = (termFrom, barFrom, unit) => {
+    if (termFrom == null || barFrom == null)
+        return undefined;
+    switch (unit) {
+        case "month":
+            return (barFrom.getFullYear() * 12 + barFrom.getMonth()) - (termFrom.getFullYear() * 12 + termFrom.getMonth());
+        case "week":
+            return Math.floor((barFrom.getTime() - termFrom.getTime()) / 604800000);
+        default:
+            return (barFrom.getTime() - termFrom.getTime()) / 86400000;
+    }
+};
+exports.ListViewGanttChartColumnStyle = react_1.default.createElement(style_1.default, { id: exports.listViewGanttChartColumnClassName, depsDesign: true, css: ({ design }) => `
+.${exports.listViewGanttChartColumnClassName} {
+  flex-direction: column !important;
+}
+.${exports.listViewGanttChartColumnClassName}-wrap {
+  ${style_1.CssPV.flex_c}
+  flex: none;
+  height: 100%;
+}
+.${exports.listViewGanttChartColumnClassName}-row {
+  ${style_1.CssPV.flex_r}
+  flex: 1;
+  min-height: 0px;
+  overflow: hidden;
+  z-index: 0;
+}
+.${exports.listViewGanttChartColumnClassName}-month-wrap {
+  ${style_1.CssPV.flex_c}
+  flex: none;
+  height: 100%;
+  overflow: hidden;
+}
+.${exports.listViewGanttChartColumnClassName}-month {
+  ${style_1.CssPV.flex_r}
+  flex: 1;
+  min-height: 0px;
+  overflow: hidden;
+  padding: 2px 5px 0px 5px;
+}
+.${exports.listViewGanttChartColumnClassName}-date-wrap {
+  ${style_1.CssPV.flex_r}
+  flex: 1;
+}
+.${exports.listViewGanttChartColumnClassName}-date {
+  ${style_1.CssPV.flex_r_c}
+  flex: none;
+  height: 100%;
+  padding-top: 2px;
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap {
+  box-sizing: border-box;
+  position: absolute;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 1;
+  top: 0px;
+  min-height: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] {
+  cursor: move;
+}
+.${exports.listViewGanttChartColumnClassName}-bar {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 1;
+  height: ${style_1.CssVar.size};
+  max-height: 100%;
+  width: 100%;
+  user-select: none;
+  pointer-events: none;
+  background: ${style_1.CssVar.lv_gc.bg.bar_c};
+}
+.${exports.listViewGanttChartColumnClassName}-bar-label {
+  box-sizing: border-box;
+  position: relative;
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+  display: block;
+  overflow: visible;
+  white-space: nowrap;
+  padding: 2px 5px 0px 5px;
+}
+.${exports.listViewGanttChartColumnClassName}-bar-drag {
+  box-sizing: border-box;
+  position: absolute;
+  height: ${style_1.CssVar.size};
+  max-height: 100%;
+  min-width: 5px;
+  z-index: 3;
+  width: 9px;
+  background: transparent;
+  display: block;
+  cursor: col-resize;
+}
+.${exports.listViewGanttChartColumnClassName}-bar-drag-left {
+  left: 0px;
+}
+.${exports.listViewGanttChartColumnClassName}-bar-drag-right {
+  right: 0px;
+}
+.${exports.listViewGanttChartColumnClassName}-diff {
+  box-sizing: border-box;
+  position: absolute;
+  min-height: 1px;
+  bottom: 0px;
+  height: 6px;
+  z-index: 3;
+}
+${design === "material" ? `
+.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.${exports.listViewGanttChartColumnClassName} {
+  border-right: none;
+}
+.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.${exports.listViewGanttChartColumnClassName}:hover {
+  background: ${style_1.CssVar.lv.b.bg.c_hr} !important;
+}
+.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.bh-selected {
+  outline: none !important;
+}
+.${exports.listViewGanttChartColumnClassName}-month {
+  border-bottom: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+}
+.${listview_1.listViewClassName}-header .${exports.listViewGanttChartColumnClassName}-date {
+  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+}
+.${listview_1.listViewClassName}-body .${exports.listViewGanttChartColumnClassName}-date {
+  border-right: 1px solid ${style_1.CssVar.lv.b.bdc};
+}
+.${listview_1.listViewClassName}-body .${exports.listViewGanttChartColumnClassName}-date:hover {
+  background: ${style_1.CssVar.lv.b.bg.c_s};
+}
+.${exports.listViewGanttChartColumnClassName}-date[data-w="0"] {
+  background: ${style_1.CssVar.w_sun.bg};
+}
+.${exports.listViewGanttChartColumnClassName}-date[data-w="6"] {
+  background: ${style_1.CssVar.w_sat.bg};
+}
+.${exports.listViewGanttChartColumnClassName}-date[data-today="true"] {
+  background: ${style_1.CssVar.lv_gc.bg.today};
+}
+.${exports.listViewGanttChartColumnClassName}-bar {
+  height: 80%;
+  margin: 0px 6px;
+  width: calc(100% - 13px);
+  opacity: 0.8;
+}
+.${exports.listViewGanttChartColumnClassName}-row[data-disabled="false"] .${exports.listViewGanttChartColumnClassName}-bar {
+  box-shadow: ${style_1.CssParam.m.sdBtm};
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap:hover .${exports.listViewGanttChartColumnClassName}-bar,
+.${exports.listViewGanttChartColumnClassName}-bar-wrap:active .${exports.listViewGanttChartColumnClassName}-bar {
+  opacity: unset;
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"]:active .${exports.listViewGanttChartColumnClassName}-bar {
+  margin-top: -${style_1.CssParam.m.updownMargin};
+  box-shadow: ${style_1.CssParam.m.sdBtm_f};
+}
+.${exports.listViewGanttChartColumnClassName}-bar-label {
+  margin-left: 6px;
+}
+.${exports.listViewGanttChartColumnClassName}-bar::before,
+.${exports.listViewGanttChartColumnClassName}-bar::after {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  height: 100%;
+  width: 7px;
+  top: 0px;
+  user-select: none;
+  background: ${style_1.CssVar.lv_gc.bg.bar_c};
+}
+.${exports.listViewGanttChartColumnClassName}-bar::before {
+  left: -6px;
+  clip-path: polygon(0% 50%, 80% 0%, 100% 0%, 100% 100%, 80% 100%);
+}
+.${exports.listViewGanttChartColumnClassName}-bar::after {
+  right: -6px;
+  clip-path: polygon(0% 0%, 20% 0%, 100% 50%, 20% 100%, 0% 100%);
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar {
+  border-top: 1px solid ${style_1.CssVar.lv_gc.bg.bar_c_a};
+  border-bottom: 1px solid ${style_1.CssVar.lv_gc.bg.bar_c_a};
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar::before,
+.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar::after {
+  background: ${style_1.CssVar.lv_gc.bg.bar_c_a};
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar-label {
+  left: 100%;
+  margin-left: 0px;
+}
+.${exports.listViewGanttChartColumnClassName}-header[data-progressline="true"] .${exports.listViewGanttChartColumnClassName}-date[data-today="true"]::before,
+.${exports.listViewGanttChartColumnClassName}[data-progressline="true"] .${exports.listViewGanttChartColumnClassName}-date[data-today="true"]::before {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  top: 0px;
+  right: 0px;
+  height: 100%;
+  width: 2px;
+  background: ${style_1.CssVar.lv_gc.pl.c};
+}
+.${exports.listViewGanttChartColumnClassName}-diff[data-late="true"] {
+  border-top: 4px solid transparent;
+  border-left: 3px solid ${style_1.CssVar.lv_gc.pl.c_late};
+  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c_late};
+}
+.${exports.listViewGanttChartColumnClassName}-diff[data-late="true"][data-latedate="-1"] {
+  border-left: 3px solid ${style_1.CssVar.lv_gc.pl.c};
+  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c};
+}
+.${exports.listViewGanttChartColumnClassName}-diff[data-late="false"] {
+  border-top: 4px solid transparent;
+  border-right: 3px solid ${style_1.CssVar.lv_gc.pl.c_prec};
+  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c_prec};
+}
+` : ""}
+${design === "neumorphism" ? `
+.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.${exports.listViewGanttChartColumnClassName} {
+  border-right: none;
+}
+.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.${exports.listViewGanttChartColumnClassName}:hover {
+  background: ${style_1.CssVar.lv.b.bg.c_hr} !important;
+}
+.${listview_1.listViewClassName}-body .${listview_1.listViewClassName}-cell.bh-selected {
+  outline: none !important;
+}
+.${exports.listViewGanttChartColumnClassName}-month {
+  border-bottom: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+}
+.${listview_1.listViewClassName}-header .${exports.listViewGanttChartColumnClassName}-date {
+  border-right: 1px solid ${style_1.CssVar.lv.h_f.bdc};
+}
+.${listview_1.listViewClassName}-body .${exports.listViewGanttChartColumnClassName}-date {
+  border-right: 1px solid ${style_1.CssVar.lv.b.bdc};
+}
+.${listview_1.listViewClassName}-body .${exports.listViewGanttChartColumnClassName}-date:hover {
+  background: ${style_1.CssVar.lv.b.bg.c_s};
+}
+.${exports.listViewGanttChartColumnClassName}-date[data-w="0"] {
+  background: ${style_1.CssVar.w_sun.bg};
+}
+.${exports.listViewGanttChartColumnClassName}-date[data-w="6"] {
+  background: ${style_1.CssVar.w_sat.bg};
+}
+.${exports.listViewGanttChartColumnClassName}-date[data-today="true"] {
+  background: ${style_1.CssVar.lv_gc.bg.today};
+}
+.${exports.listViewGanttChartColumnClassName}-bar {
+  height: 80%;
+  opacity: 0.8;
+  width: calc(100% - 1px);
+  background: linear-gradient(to bottom right, ${style_1.CssVar.lv_gc.bg.bar_dc}, ${style_1.CssVar.lv_gc.bg.bar_bc});
+  border-radius: ${style_1.CssParam.n.r};
+}
+.${exports.listViewGanttChartColumnClassName}-row[data-disabled="false"] .${exports.listViewGanttChartColumnClassName}-bar {
+  box-shadow: ${style_1.CssParam.n.border.cvxSd};
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap:hover .${exports.listViewGanttChartColumnClassName}-bar,
+.${exports.listViewGanttChartColumnClassName}-bar-wrap:active .${exports.listViewGanttChartColumnClassName}-bar {
+  opacity: unset;
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar {
+  box-shadow: ${style_1.CssParam.n.cvxSd};
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"]:active .${exports.listViewGanttChartColumnClassName}-bar {
+  box-shadow: ${style_1.CssParam.n.cvxSd_f};
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar-label {
+  left: 100%;
+}
+.${exports.listViewGanttChartColumnClassName}-bar-wrap[data-active="true"] .${exports.listViewGanttChartColumnClassName}-bar-drag {
+  box-shadow: ${style_1.CssParam.n.border.cvxSd};
+  background: ${style_1.CssVar.lv_gc.bg.bar_c_a};
+  border-radius: ${style_1.CssParam.n.r};
+}
+.${exports.listViewGanttChartColumnClassName}-header[data-progressline="true"] .${exports.listViewGanttChartColumnClassName}-date[data-today="true"]::before,
+.${exports.listViewGanttChartColumnClassName}[data-progressline="true"] .${exports.listViewGanttChartColumnClassName}-date[data-today="true"]::before {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  top: 0px;
+  right: 0px;
+  height: 100%;
+  width: 2px;
+  background: ${style_1.CssVar.lv_gc.pl.c};
+}
+.${exports.listViewGanttChartColumnClassName}-diff[data-late="true"] {
+  border-top: 4px solid transparent;
+  border-left: 3px solid ${style_1.CssVar.lv_gc.pl.c_late};
+  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c_late};
+}
+.${exports.listViewGanttChartColumnClassName}-diff[data-late="true"][data-latedate="-1"] {
+  border-left: 3px solid ${style_1.CssVar.lv_gc.pl.c};
+  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c};
+}
+.${exports.listViewGanttChartColumnClassName}-diff[data-late="false"] {
+  border-top: 4px solid transparent;
+  border-right: 3px solid ${style_1.CssVar.lv_gc.pl.c_prec};
+  border-bottom: 3px solid ${style_1.CssVar.lv_gc.pl.c_prec};
+}
+` : ""}
+` });

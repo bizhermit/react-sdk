@@ -6,6 +6,7 @@ export declare type RowProps = ContainerProps & {
     right?: boolean;
     center?: boolean;
     fill?: boolean;
+    nowrap?: boolean;
 };
 declare const Row: FC<RowProps>;
 export default Row;

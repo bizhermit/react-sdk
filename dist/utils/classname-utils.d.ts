@@ -1,7 +1,8 @@
 export declare type HorizontalAlign = "left" | "center" | "right";
 export declare type VerticalAlign = "top" | "middle" | "bottom";
 export declare type Direction = "horizontal" | "vertical";
-export declare type FitToOuter = "fill" | "ffx" | "ffy";
+export declare type FitToOuter = "fill" | "ffx" | "ffy" | "fx" | "fy";
+export declare const className: (...names: Array<string>) => string;
 declare const ClassNameUtils: {
     join: (...names: Array<string>) => string;
     hAlign: (val?: HorizontalAlign) => "bh-h-c" | "bh-h-r" | "bh-h-l";
@@ -10,7 +11,6 @@ declare const ClassNameUtils: {
     fill: (fill?: boolean) => "" | "bh-fill";
     reverse: (reverse?: boolean) => "" | "bh-reverse";
     wrap: (wrap?: boolean) => "bh-wrap" | "bh-nowrap";
-    fitToOuter: (val?: FitToOuter) => "" | "bh-fto-fill" | "bh-fto-fx" | "bh-fto-fy";
+    fitToOuter: (val?: FitToOuter) => "" | "bh-fto-f" | "bh-fto-fx" | "bh-fto-fy" | "bh-fto-ffx" | "bh-fto-ffy";
 };
 export default ClassNameUtils;
-export declare const className: (...names: Array<string>) => string;

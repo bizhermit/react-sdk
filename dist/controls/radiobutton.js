@@ -1,1 +1,234 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,t,a,r){void 0===r&&(r=a),Object.defineProperty(e,r,{enumerable:!0,get:function(){return t[a]}})}:function(e,t,a,r){void 0===r&&(r=a),e[r]=t[a]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var a in e)"default"!==a&&Object.prototype.hasOwnProperty.call(e,a)&&__createBinding(t,e,a);return __setModuleDefault(t,e),t},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.RadioButtonStyle=exports.radioButtonClassName=void 0;const react_1=__importStar(require("react")),controller_1=require("../hooks/controller"),prop_1=__importDefault(require("../hooks/prop")),value_1=__importDefault(require("../hooks/value")),input_1=__importStar(require("../layouts/input")),style_1=__importStar(require("../layouts/style")),classname_utils_1=require("../utils/classname-utils"),dom_utils_1=require("../utils/dom-utils");exports.radioButtonClassName="bh-rbt";const RadioButton=e=>{const t=(0,react_1.useRef)(),a=(0,prop_1.default)(e.labelDataName??"label"),r=(0,prop_1.default)(e.valueDataName??"value"),n=(0,prop_1.default)(e.titleDataName??"title"),o=(0,react_1.useRef)([]),[s,l]=(0,react_1.useState)(!0),{value:i,getValue:u,setValue:d}=(0,value_1.default)(e,{nullValue:o.current[0]?.[r.current],convertChangedArgData:e=>({value:e,data:o.current.find((t=>t[r.current]===e))})}),c=t=>{!0===e.disabled||s||d(t)},p=(0,react_1.useMemo)((()=>{const t=[];if(s)return t;for(const s of o.current){const o=s[r.current];t.push(react_1.default.createElement("div",{key:o,className:`${exports.radioButtonClassName}-item`,"data-selected":o===i,onClick:()=>c(o),onKeyDown:e=>{(0,dom_utils_1.pressPositiveKey)(e,(()=>c(o)),!0)},tabIndex:!0===e.disabled?null:0,title:s[n.current]},react_1.default.createElement("div",{className:`${exports.radioButtonClassName}-mark`,"data-selected":o===i}),react_1.default.createElement("div",{className:input_1.InputClassNames.lbl},s[a.current])))}return t}),[o.current,i,e.disabled,s]);return(0,controller_1.initController)(e.controller,(e=>{e.focus=()=>(t.current.querySelector("div")?.focus(),e),e.blur=()=>(t.current.querySelector("div")?.blur(),e),e.getValue=()=>u(),e.setValue=t=>(c(t),e)})),(0,react_1.useEffect)((()=>{l(!0);const t=e=>{o.current=e;const t=u();let a=!0;for(const e of o.current){if(e[r.current]===t){d(t),a=!1;break}}a&&o.current.length>0&&d(o.current[0][r.current]),l(!1)};if(null==e.source)t([]);else if(Array.isArray(e.source))t(e.source);else{(async()=>{try{t(await e.source())}catch{console.log("failed: load radiobutton source"),t([])}})()}}),[e.source]),react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{ref:t,style:e.style,className:(0,classname_utils_1.className)(exports.radioButtonClassName,e.className),"data-disabled":!0===e.disabled,"data-required":e.required,"data-dirc":e.direction??"horizontal","data-wrap":!0===e.wrap,title:e.title,onFocus:a=>{a.relatedTarget?.parentElement!==t.current&&e.focus?.(u())},onBlur:a=>{a.relatedTarget?.parentElement!==t.current&&e.blur?.(u())}},p),input_1.default,exports.RadioButtonStyle)};exports.default=RadioButton,exports.RadioButtonStyle=react_1.default.createElement(style_1.default,{id:exports.radioButtonClassName,notDepsColor:!0,css:({design:e})=>`\n.${exports.radioButtonClassName} {\n  box-sizing: border-box;\n  position: relative;\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n}\n.${exports.radioButtonClassName}[data-dirc="horizontal"] {\n  flex-direction: row;\n}\n.${exports.radioButtonClassName}[data-dirc="vertical"] {\n  flex-direction: column;\n}\n.${exports.radioButtonClassName}[data-wrap="true"] {\n  flex-wrap: wrap;\n}\n.${exports.radioButtonClassName}[data-wrap="false"] {\n  flex-wrap: nowrap;\n}\n.${exports.radioButtonClassName}-item {\n  box-sizing: border-box;\n  position: relative;\n  display: flex;\n  flex-flow: row nowrap;\n  justify-content: flex-start;\n  align-items: center;\n  flex: none;\n  padding: 2px;\n  height: ${style_1.CssVar.size};\n}\n.${exports.radioButtonClassName}[data-disabled="false"] .${exports.radioButtonClassName}-item {\n  cursor: pointer;\n  user-select: none;\n}\n.${exports.radioButtonClassName}[data-dirc="horizontal"] .${exports.radioButtonClassName}-item:not(:last-child) {\n  margin-right: 0px;\n}\n.${exports.radioButtonClassName}-mark {\n  box-sizing: border-box;\n  position: relative;\n  height: ${style_1.CssVar.size};\n  width: ${style_1.CssVar.size};\n}\n.${exports.radioButtonClassName}-mark::before,\n.${exports.radioButtonClassName}-mark::after {\n  box-sizing: border-box;\n  position: absolute;\n  content: "";\n  border-radius: 50%;\n}\n.${exports.radioButtonClassName}-mark::before {\n  height: 60%;\n  width: 60%;\n  top: 20%;\n  left: 20%;\n}\n.${exports.radioButtonClassName}-mark::after {\n  height: 36%;\n  width: 36%;\n  top: 32%;\n  left: 32%;\n}\n.${exports.radioButtonClassName}[data-disabled="true"] .${exports.radioButtonClassName}-mark::before {\n  opacity: 0.6;\n}\n.${exports.radioButtonClassName} .${input_1.InputClassNames.lbl} {\n  padding-left: 1px;\n}\n${"material"===e?`\n.${exports.radioButtonClassName}-mark::before {\n  border: 1px solid ${style_1.CssVar.bdc};\n}\n.${exports.radioButtonClassName}-mark[data-selected="true"]::after {\n  background: ${style_1.CssVar.bg.c_r};\n}\n.${exports.radioButtonClassName}[data-disabled="true"] .${exports.radioButtonClassName}-mark::before {\n  opacity: 0.3;\n}\n`:""}\n${"neumorphism"===e?`\n.${exports.radioButtonClassName}-mark::before {\n  box-shadow: ${style_1.CssParam.n.ccvSd};\n  background: ${style_1.CssParam.n.ccvBg};\n}\n.${exports.radioButtonClassName}-mark[data-selected="true"]::after {\n  box-shadow: ${style_1.CssParam.n.border.cvxSd_r};\n  background: ${style_1.CssParam.n.cvxBg_r};\n}\n.${exports.radioButtonClassName}[data-disabled="true"] .${exports.radioButtonClassName}-mark::before {\n  box-shadow: ${style_1.CssParam.n.border.ccvSd};\n}\n`:""}\n`});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.RadioButtonStyle = exports.radioButtonClassName = void 0;
+const react_1 = __importStar(require("react"));
+const controller_1 = require("../hooks/controller");
+const prop_1 = __importDefault(require("../hooks/prop"));
+const value_1 = __importDefault(require("../hooks/value"));
+const input_1 = __importStar(require("../layouts/input"));
+const style_1 = __importStar(require("../layouts/style"));
+const classname_utils_1 = require("../utils/classname-utils");
+const dom_utils_1 = require("../utils/dom-utils");
+exports.radioButtonClassName = "bh-rbt";
+;
+const RadioButton = (props) => {
+    const eref = (0, react_1.useRef)();
+    const labelDataName = (0, prop_1.default)(props.labelDataName ?? "label");
+    const valueDataName = (0, prop_1.default)(props.valueDataName ?? "value");
+    const titleDataName = (0, prop_1.default)(props.titleDataName ?? "title");
+    const source = (0, react_1.useRef)([]);
+    const [loading, setLoading] = (0, react_1.useState)(true);
+    const { value, getValue, setValue } = (0, value_1.default)(props, {
+        nullValue: source.current[0]?.[valueDataName.current],
+        convertChangedArgData: (v) => {
+            return {
+                value: v,
+                data: source.current.find(item => item[valueDataName.current] === v),
+            };
+        },
+    });
+    const select = (value) => {
+        if (props.disabled === true || loading)
+            return;
+        setValue(value);
+    };
+    const itemNodes = (0, react_1.useMemo)(() => {
+        const nodes = [];
+        if (loading)
+            return nodes;
+        for (const item of source.current) {
+            const itemValue = item[valueDataName.current];
+            nodes.push(react_1.default.createElement("div", { key: itemValue, className: `${exports.radioButtonClassName}-item`, "data-selected": itemValue === value, onClick: () => select(itemValue), onKeyDown: (e) => { (0, dom_utils_1.pressPositiveKey)(e, () => select(itemValue), true); }, tabIndex: props.disabled === true ? null : 0, title: item[titleDataName.current] },
+                react_1.default.createElement("div", { className: `${exports.radioButtonClassName}-mark`, "data-selected": itemValue === value }),
+                react_1.default.createElement("div", { className: input_1.InputClassNames.lbl }, item[labelDataName.current])));
+        }
+        return nodes;
+    }, [source.current, value, props.disabled, loading]);
+    const focus = (e) => {
+        if (e.relatedTarget?.parentElement === eref.current)
+            return;
+        props.focus?.(getValue());
+    };
+    const blur = (e) => {
+        if (e.relatedTarget?.parentElement === eref.current)
+            return;
+        props.blur?.(getValue());
+    };
+    (0, controller_1.initController)(props.controller, (con) => {
+        con.focus = () => {
+            eref.current.querySelector("div")?.focus();
+            return con;
+        };
+        con.blur = () => {
+            eref.current.querySelector("div")?.blur();
+            return con;
+        };
+        con.getValue = () => getValue();
+        con.setValue = (v) => {
+            select(v);
+            return con;
+        };
+    });
+    (0, react_1.useEffect)(() => {
+        setLoading(true);
+        const init = (s) => {
+            source.current = s;
+            const v = getValue();
+            let useDef = true;
+            for (const item of source.current) {
+                const value = item[valueDataName.current];
+                if (value === v) {
+                    setValue(v);
+                    useDef = false;
+                    break;
+                }
+            }
+            if (useDef && source.current.length > 0)
+                setValue(source.current[0][valueDataName.current]);
+            setLoading(false);
+        };
+        if (props.source == null) {
+            init([]);
+        }
+        else if (Array.isArray(props.source)) {
+            init(props.source);
+        }
+        else {
+            const loadSource = async () => {
+                try {
+                    init(await props.source());
+                }
+                catch {
+                    console.log("failed: load radiobutton source");
+                    init([]);
+                }
+            };
+            loadSource();
+        }
+    }, [props.source]);
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { ref: eref, style: props.style, className: (0, classname_utils_1.className)(exports.radioButtonClassName, props.className), "data-disabled": props.disabled === true, "data-required": props.required, "data-dirc": props.direction ?? "horizontal", "data-wrap": props.wrap === true, title: props.title, onFocus: focus, onBlur: blur }, itemNodes),
+        input_1.default,
+        exports.RadioButtonStyle));
+};
+exports.default = RadioButton;
+exports.RadioButtonStyle = react_1.default.createElement(style_1.default, { id: exports.radioButtonClassName, depsDesign: true, css: ({ design }) => `
+.${exports.radioButtonClassName} {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+}
+.${exports.radioButtonClassName}[data-dirc="horizontal"] {
+  flex-direction: row;
+  align-items: center;
+}
+.${exports.radioButtonClassName}[data-dirc="vertical"] {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.${exports.radioButtonClassName}[data-wrap="true"] {
+  flex-wrap: wrap;
+}
+.${exports.radioButtonClassName}[data-wrap="false"] {
+  flex-wrap: nowrap;
+}
+.${exports.radioButtonClassName}-item {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  flex: none;
+  padding: 2px;
+  height: ${style_1.CssVar.size};
+}
+.${exports.radioButtonClassName}[data-disabled="false"] .${exports.radioButtonClassName}-item {
+  cursor: pointer;
+  user-select: none;
+}
+.${exports.radioButtonClassName}[data-dirc="horizontal"] .${exports.radioButtonClassName}-item:not(:last-child) {
+  margin-right: 0px;
+}
+.${exports.radioButtonClassName}-mark {
+  box-sizing: border-box;
+  position: relative;
+  height: ${style_1.CssVar.size};
+  width: ${style_1.CssVar.size};
+}
+.${exports.radioButtonClassName}-mark::before,
+.${exports.radioButtonClassName}-mark::after {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  border-radius: 50%;
+}
+.${exports.radioButtonClassName}-mark::before {
+  height: 60%;
+  width: 60%;
+  top: 20%;
+  left: 20%;
+}
+.${exports.radioButtonClassName}-mark::after {
+  height: 36%;
+  width: 36%;
+  top: 32%;
+  left: 32%;
+}
+.${exports.radioButtonClassName}[data-disabled="true"] .${exports.radioButtonClassName}-mark::before {
+  opacity: 0.6;
+}
+.${exports.radioButtonClassName} .${input_1.InputClassNames.lbl} {
+  padding-left: 1px;
+}
+${design === "material" ? `
+.${exports.radioButtonClassName}-mark::before {
+  border: 1px solid ${style_1.CssVar.bdc};
+}
+.${exports.radioButtonClassName}-mark[data-selected="true"]::after {
+  background: ${style_1.CssVar.bg.c_r};
+}
+.${exports.radioButtonClassName}[data-disabled="false"] .${exports.radioButtonClassName}-mark::before {
+  background: ${style_1.CssVar.bg.dc};
+}
+.${exports.radioButtonClassName}[data-disabled="true"] .${exports.radioButtonClassName}-mark::before {
+  opacity: 0.3;
+}
+` : ""}
+${design === "neumorphism" ? `
+.${exports.radioButtonClassName}-mark::before {
+  box-shadow: ${style_1.CssParam.n.ccvSd};
+  background: ${style_1.CssParam.n.ccvBg};
+}
+.${exports.radioButtonClassName}-mark[data-selected="true"]::after {
+  box-shadow: ${style_1.CssParam.n.border.cvxSd_r};
+  background: ${style_1.CssParam.n.cvxBg_r};
+}
+.${exports.radioButtonClassName}[data-disabled="true"] .${exports.radioButtonClassName}-mark::before {
+  box-shadow: ${style_1.CssParam.n.border.ccvSd};
+}
+` : ""}
+` });

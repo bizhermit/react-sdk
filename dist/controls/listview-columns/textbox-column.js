@@ -1,1 +1,77 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,t,l,o){void 0===o&&(o=l),Object.defineProperty(e,o,{enumerable:!0,get:function(){return t[l]}})}:function(e,t,l,o){void 0===o&&(o=l),e[o]=t[l]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var l in e)"default"!==l&&Object.prototype.hasOwnProperty.call(e,l)&&__createBinding(t,e,l);return __setModuleDefault(t,e),t},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.ListViewTextBoxColumnStyle=exports.listViewTextBoxColumnClassName=void 0;const react_1=__importStar(require("react")),react_dom_1=__importDefault(require("react-dom")),controller_1=__importDefault(require("../../hooks/controller")),input_column_1=__importStar(require("../../layouts/input-column")),style_1=__importStar(require("../../layouts/style")),listview_1=require("../listview"),textbox_1=__importDefault(require("../textbox"));exports.listViewTextBoxColumnClassName="bh-lv_c-txb";const ListViewTextBoxColumn=e=>{let t={value:""};return{...e,initialize:()=>(0,listview_1.createListViewEditColumnElement)(),cellInitialize:(e,t)=>{e.element.classList.add(input_column_1.listViewInputColumnClassName,exports.listViewTextBoxColumnClassName);const l=(0,listview_1.cloneListViewEditColumnElement)(t);l.wrapElem.appendChild(l.lblElem),e.element.appendChild(l.wrapElem),e.contentElements.push(l.lblElem)},_beginEdit:({target:l,editElement:o,styleCtx:i})=>{!0!==e.disabled&&react_dom_1.default.render(react_1.default.createElement(style_1.StyleContext.Provider,{value:i},react_1.default.createElement(TextBoxColumn,{bind:t={value:l.data[l.columnName]??""},options:e.textBoxOptions})),o,(()=>{e.beganEdit?.(l.data[l.columnName],l)}))},_endEdit:(l,o,i)=>{const n=l.data[l.columnName],r=t.value;o&&(l.data[l.columnName]=r),react_dom_1.default.unmountComponentAtNode(i),e.endedEdit?.({before:n,after:o?r:n},l,o)},jsxStyle:react_1.default.createElement(react_1.default.Fragment,null,input_column_1.default,exports.ListViewTextBoxColumnStyle)}};exports.default=ListViewTextBoxColumn;const TextBoxColumn=({bind:e,options:t})=>{const l=(0,controller_1.default)();return(0,react_1.useEffect)((()=>{l.focus()}),[]),react_1.default.createElement(textbox_1.default,{controller:l,name:"value",bind:e,style:{height:"100%",width:"100%"},...t,resize:!1})};exports.ListViewTextBoxColumnStyle=react_1.default.createElement(style_1.default,{id:exports.listViewTextBoxColumnClassName,notDepsColor:!0,notDepsDesign:!0,css:()=>"\n"});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ListViewTextBoxColumnStyle = exports.listViewTextBoxColumnClassName = void 0;
+const react_1 = __importStar(require("react"));
+const react_dom_1 = __importDefault(require("react-dom"));
+const controller_1 = __importDefault(require("../../hooks/controller"));
+const input_column_1 = __importStar(require("../../layouts/input-column"));
+const style_1 = __importStar(require("../../layouts/style"));
+const listview_1 = require("../listview");
+const textbox_1 = __importDefault(require("../textbox"));
+exports.listViewTextBoxColumnClassName = "bh-lv_c-txb";
+const ListViewTextBoxColumn = (props) => {
+    let bind = { value: "" };
+    return {
+        ...props,
+        initialize: () => {
+            return (0, listview_1.createListViewEditColumnElement)();
+        },
+        cellInitialize: (cell, initParams) => {
+            cell.element.classList.add(input_column_1.listViewInputColumnClassName, exports.listViewTextBoxColumnClassName);
+            const elems = (0, listview_1.cloneListViewEditColumnElement)(initParams);
+            elems.wrapElem.appendChild(elems.lblElem);
+            cell.element.appendChild(elems.wrapElem);
+            cell.contentElements.push(elems.lblElem);
+        },
+        _beginEdit: ({ target, editElement, styleCtx }) => {
+            if (props.disabled === true)
+                return;
+            react_dom_1.default.render(react_1.default.createElement(style_1.StyleContext.Provider, { value: styleCtx },
+                react_1.default.createElement(TextBoxColumn, { bind: bind = { value: target.data[target.columnName] ?? "" }, options: props.textBoxOptions })), editElement, () => {
+                props.beganEdit?.(target.data[target.columnName], target);
+            });
+        },
+        _endEdit: (target, commit, editElement) => {
+            const bval = target.data[target.columnName], aval = bind.value;
+            if (commit)
+                target.data[target.columnName] = aval;
+            react_dom_1.default.unmountComponentAtNode(editElement);
+            props.endedEdit?.({ before: bval, after: commit ? aval : bval }, target, commit);
+        },
+        jsxStyle: react_1.default.createElement(react_1.default.Fragment, null,
+            input_column_1.default,
+            exports.ListViewTextBoxColumnStyle),
+    };
+};
+exports.default = ListViewTextBoxColumn;
+const TextBoxColumn = ({ bind, options }) => {
+    const con = (0, controller_1.default)();
+    (0, react_1.useEffect)(() => {
+        con.focus();
+    }, []);
+    return react_1.default.createElement(textbox_1.default, { controller: con, name: "value", bind: bind, style: { height: "100%", width: "100%" }, ...options, resize: false });
+};
+exports.ListViewTextBoxColumnStyle = react_1.default.createElement(style_1.default, { id: exports.listViewTextBoxColumnClassName, css: () => `
+` });

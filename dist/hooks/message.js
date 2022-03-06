@@ -1,1 +1,622 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,s,t,a){void 0===a&&(a=t),Object.defineProperty(e,a,{enumerable:!0,get:function(){return s[t]}})}:function(e,s,t,a){void 0===a&&(a=t),e[a]=s[t]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,s){Object.defineProperty(e,"default",{enumerable:!0,value:s})}:function(e,s){e.default=s}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var s={};if(null!=e)for(var t in e)"default"!==t&&Object.prototype.hasOwnProperty.call(e,t)&&__createBinding(s,e,t);return __setModuleDefault(s,e),s},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.PopupMessageStyle=exports.MessageHistory=exports.PopupMessage=exports.messageHistoryClassName=exports.popupMessageClassName=void 0;const string_utils_1=__importDefault(require("@bizhermit/basic-utils/dist/string-utils")),react_1=__importStar(require("react")),react_dom_1=__importDefault(require("react-dom")),icon_1=__importStar(require("../graphics/icon")),style_1=__importStar(require("../layouts/style")),classname_utils_1=require("../utils/classname-utils"),message_utils_1=require("../utils/message-utils"),popup_1=require("./popup");exports.popupMessageClassName="bh-ppu_msg",exports.messageHistoryClassName="bh-msg_his";const PopupMessage=()=>{const e=(0,react_1.useRef)(),s=(0,react_1.useRef)(0),t=(0,react_1.useContext)(message_utils_1.MessagesContext),[a,r]=(0,react_1.useState)([]),n=(0,react_1.useCallback)((()=>{e.current.style.display="none"}),[]);return(0,react_1.useEffect)((()=>{if(a.length>0){e.current?.style.removeProperty("display");let t=100;e.current?.style.removeProperty("width");const a=e.current?.getBoundingClientRect().width||0,r=++s.current,n=()=>{r===s.current&&(t-=1,t<0||(e.current&&(e.current.style.width=Math.floor(a*(t/100))+"px"),setTimeout((()=>n()),5)))};setTimeout((()=>n()),5e3)}}),[a]),(0,react_1.useEffect)((()=>{t.popup=e=>r(e??[])}),[]),react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{ref:e,className:`${exports.popupMessageClassName}`,onClick:n},(()=>{const e=[];for(let s=a.length-1;s>=0;s--){const t=a[s],r=[];let n="";switch(t.type){case"err":n="bh-err";break;case"warn":n="bh-warn";break;default:n="bh-info"}let l=0;if(string_utils_1.default.isEmpty(t.title))for(const e of t.messages)r.push(react_1.default.createElement("div",{key:l++,className:`${exports.popupMessageClassName}-item`},e.message));else r.push(react_1.default.createElement("div",{key:l++,className:`${exports.popupMessageClassName}-item`},t.title));e.push(react_1.default.createElement("div",{key:s,className:(0,classname_utils_1.className)(`${exports.popupMessageClassName}-group`,n)},react_1.default.createElement("div",{className:`${exports.popupMessageClassName}-item-icon`},react_1.default.createElement(icon_1.default,{image:t.type??"info"})),react_1.default.createElement("div",{className:`${exports.popupMessageClassName}-body`},r)))}return e})()),exports.PopupMessageStyle,popup_1.PopupStyle)};exports.PopupMessage=PopupMessage;const MessageHistory=()=>{const e=(0,react_1.useContext)(message_utils_1.MessagesContext),[s,t]=(0,react_1.useState)(0),[a,r]=(0,react_1.useState)(!1),n=(0,react_1.useRef)([]),l=(0,react_1.useCallback)((()=>({total:n.current.length,info:n.current.filter((e=>"info"===e.type)).length,warn:n.current.filter((e=>"warn"===e.type)).length,err:n.current.filter((e=>"err"===e.type)).length,verified:n.current.filter((e=>!0!==e.verified)).length})),[]),o=(0,react_1.useCallback)((()=>{const s=l();e.callbacks.forEach((e=>e(s)))}),[]),m=(0,react_1.useCallback)((()=>{n.current.splice(0,n.current.length),t((e=>e+1)),o()}),[]),i=(0,react_1.useCallback)((e=>{for(let s=0,t=n.current.length;s<t;s++){if(n.current[s]===e){n.current.splice(s,1);break}}t((e=>e+1)),o()}),[]),c=(0,react_1.useCallback)((()=>{r(!1)}),[]),{hnodes:d,bnodes:p}=(0,react_1.useMemo)((()=>{const s=[];if(!a)return{hnodes:react_1.default.createElement(react_1.default.Fragment,null),bnodes:s};let t=0,r=0,l=0;for(let a=n.current.length-1;a>=0;a--){const o=n.current[a],m=[];let c="";switch(o.type){case"err":l++,c="bh-err";break;case"warn":r++,c="bh-warn";break;default:t++,c="bh-info"}let d=0;for(const e of o.messages)m.push(react_1.default.createElement("div",{key:d++,className:`${exports.messageHistoryClassName}-item-message`},e.message));s.push(react_1.default.createElement("div",{key:a,className:(0,classname_utils_1.className)(`${exports.messageHistoryClassName}-item`,c,!0===o.verified?"bh-verified":"")},react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-item-header`},react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-item-icon`},react_1.default.createElement(icon_1.default,{image:o.type??"info"})),react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-item-title`},o.title),react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-item-timestamp`},e.getTimeText(o.timestamp)),react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-item-button`,onClick:()=>{i(o)}},react_1.default.createElement(icon_1.default,{image:"delete"}))),react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-item-body`},m)))}return{hnodes:react_1.default.createElement(react_1.default.Fragment,null,0===t?react_1.default.createElement(react_1.default.Fragment,null):react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-header-icon`},react_1.default.createElement(icon_1.default,{image:"info"})),react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-header-count`},t)),0===r?react_1.default.createElement(react_1.default.Fragment,null):react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-header-icon`},react_1.default.createElement(icon_1.default,{image:"warn"})),react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-header-count`},r)),0===l?react_1.default.createElement(react_1.default.Fragment,null):react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-header-icon`},react_1.default.createElement(icon_1.default,{image:"err"})),react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-header-count`},l))),bnodes:s}}),[s,a]);return(0,react_1.useEffect)((()=>{a&&(n.current.forEach((e=>e.verified=!0)),o())}),[s,a]),(0,react_1.useEffect)((()=>{if(a)return window.addEventListener("click",c),()=>{window.removeEventListener("click",c)}}),[a]),(0,react_1.useEffect)((()=>{e.showHistory=()=>r(!0),e.closeHistory=()=>c(),e.append=e=>{for(const s of e)n.current.push(s);t((e=>e+1)),o()},e.clear=()=>m(),e.getCounts=()=>l()}),[]),a?react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}`,onClick:e=>e.stopPropagation()},react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-header`},react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-header-button`,onClick:()=>t((e=>e+1))},react_1.default.createElement(icon_1.default,{image:"reload"})),react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-header-content`},d),react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-header-button`,onClick:m},react_1.default.createElement(icon_1.default,{image:"delete"})),react_1.default.createElement("div",{className:`${exports.messageHistoryClassName}-header-button`,onClick:c},react_1.default.createElement(icon_1.default,{image:"close"}))),react_1.default.createElement("div",{className:`${style_1.scrollbarClassName} ${exports.messageHistoryClassName}-body`},p)),MessageHistoryStyle):react_1.default.createElement(react_1.default.Fragment,null)};exports.MessageHistory=MessageHistory,exports.PopupMessageStyle=react_1.default.createElement(style_1.default,{id:exports.popupMessageClassName,notDepsColor:!0,css:({design:e})=>`\n.${exports.popupMessageClassName} {\n  z-index: 2100000001;\n  box-sizing: border-box;\n  position: fixed;\n  display: flex;\n  flex-flow: column nowrap;\n  justify-content: flex-start;\n  align-items: flex-start;\n  flex: none;\n  top: 0px;\n  right: 0px;\n  max-height: 100%;\n  max-width: 50%;\n  background: transparent;\n  overflow: hidden;\n  user-select: none;\n}\n.${exports.popupMessageClassName}-group {\n  ${style_1.CssPV.flex_r_c}\n  flex: none;\n  max-width: 100%;\n  background: ${style_1.CssVar.bg.c};\n}\n.${exports.popupMessageClassName}-body {\n  ${style_1.CssPV.flex_c}\n  ${style_1.CssPV.f_x}\n}\n.${exports.popupMessageClassName}-item {\n  ${style_1.CssPV.flex_r}\n  flex: none;\n  white-space: nowrap;\n  overflow: hidden;\n  padding: 1px 10px 0px 10px;\n  height: ${style_1.CssVar.size};\n}\n${"material"===e?`\n.${exports.popupMessageClassName} {\n  filter: drop-shadow(0px 8px 5px ${style_1.CssVar.shadow.dc});\n  top: 5px;\n  right: 5px;\n}\n.${exports.popupMessageClassName}-group {\n  border: 3px double ${style_1.CssVar.bdc};\n  border-radius: ${style_1.CssParam.m.r};\n  min-width: 150px;\n}\n.${exports.popupMessageClassName}-group.bh-warn {\n  background: ${style_1.CssVar.warn.bg.c};\n  border-color: ${style_1.CssVar.warn.bdc};\n}\n.${exports.popupMessageClassName}-group.bh-err {\n  background: ${style_1.CssVar.err.bg.c};\n  border-color: ${style_1.CssVar.err.bdc};\n}\n`:""}\n${"neumorphism"===e?`\n.${exports.popupMessageClassName} {\n  filter: drop-shadow(0px 8px 5px ${style_1.CssVar.shadow.dc});\n  top: 5px;\n  right: 5px;\n}\n.${exports.popupMessageClassName}-group {\n  border-radius: ${style_1.CssParam.n.r};\n  min-width: 150px;\n  box-shadow: ${style_1.CssParam.n.border.cvxSd};\n  background: ${style_1.CssParam.n.cvxBg};\n  padding: ${style_1.CssParam.n.r};\n}\n.${exports.popupMessageClassName}-group.bh-warn {\n  background: ${style_1.CssParam.n.warn.cvxBg};\n}\n.${exports.popupMessageClassName}-group.bh-err {\n  background: ${style_1.CssParam.n.err.cvxBg};\n}\n`:""}\n`});const MessageHistoryStyle=react_1.default.createElement(style_1.default,{id:exports.messageHistoryClassName,notDepsColor:!0,css:({design:e})=>`\n.${exports.messageHistoryClassName} {\n  z-index: 2100000000;\n  box-sizing: border-box;\n  position: fixed;\n  display: flex;\n  flex-flow: column nowrap;\n  justify-content: flex-start;\n  align-items: flex-start;\n  flex: none;\n  top: 0px;\n  right: 0px;\n  height: 100%;\n  min-width: 400px;\n  max-width: 50%;\n  background: ${style_1.CssVar.bg.c};\n  overflow: hidden;\n}\n.${exports.messageHistoryClassName}-header {\n  ${style_1.CssPV.flex_r}\n  flex: none;\n  height: ${style_1.CssVar.size};\n  width: 100%;\n  overflow: hidden;\n}\n.${exports.messageHistoryClassName}-header-content {\n  ${style_1.CssPV.flex_r}\n  ${style_1.CssPV.f_x}\n}\n.${exports.messageHistoryClassName}-header-button,\n.${exports.messageHistoryClassName}-header-icon,\n.${exports.messageHistoryClassName}-item-button {\n  box-sizing: border-box;\n  position: relative;\n  height: ${style_1.CssVar.size};\n  width: ${style_1.CssVar.size};\n  flex: none;\n}\n.${exports.messageHistoryClassName}-header-button,\n.${exports.messageHistoryClassName}-item-button {\n  cursor: pointer;\n}\n.${exports.messageHistoryClassName}-header-button > .${icon_1.iconClassName},\n.${exports.messageHistoryClassName}-item-button > .${icon_1.iconClassName} {\n  height: 100%;\n  width: 100%;\n}\n.${exports.messageHistoryClassName}-header-icon {\n  margin-left: 10px\n}\n.${exports.messageHistoryClassName}-header-count {\n  padding: 2px 0px 0px 3px;\n}\n.${exports.messageHistoryClassName}-body {\n  ${style_1.CssPV.flex}\n  flex-flow: column nowrap;\n  justify-content: flex-start;\n  align-items: stretch;\n  ${style_1.CssPV.f_y}\n}\n.${exports.messageHistoryClassName}-item {\n  ${style_1.CssPV.flex}\n  flex-flow: column nowrap;\n  justify-content: flex-start;\n  align-items: stretch;\n  flex: none;\n  max-width: 100%;\n}\n.${exports.messageHistoryClassName}-item-header {\n  ${style_1.CssPV.flex_r}\n  flex: none;\n  width: 100%;\n}\n.${exports.messageHistoryClassName}-item-title {\n  ${style_1.CssPV.flex_r}\n  ${style_1.CssPV.f_x}\n  padding: 1px 0px 0px 5px;\n}\n.${exports.messageHistoryClassName}-item-timestamp {\n  box-sizing: border-box;\n  font-size: 10px;\n  padding: 2px 3px 0px 3px;\n}\n.${exports.messageHistoryClassName}-item-body {\n  ${style_1.CssPV.flex_c}\n  padding-left: calc(${style_1.CssVar.size} / 2);\n}\n.${exports.messageHistoryClassName}-item-message {\n  box-sizing: border-box;\n  white-space: wrap;\n  max-width: 100%;\n}\n${"material"===e?`\n.${exports.messageHistoryClassName} {\n  border-left: 1px solid ${style_1.CssVar.bdc};\n  box-shadow: ${style_1.CssParam.m.sdLeft};\n}\n.${exports.messageHistoryClassName}-header {\n  border-bottom: 1px solid ${style_1.CssVar.bdc};\n  box-shadow: ${style_1.CssParam.m.sdBtm};\n  height: calc(${style_1.CssVar.size} + ${style_1.CssParam.m.sdPdd} * 2);\n  padding: ${style_1.CssParam.m.sdPdd};\n  margin-bottom: ${style_1.CssParam.m.sdPdd};\n  background: ${style_1.CssVar.bg.c_h};\n}\n.${exports.messageHistoryClassName}-header-button,\n.${exports.messageHistoryClassName}-item-button {\n  border-radius: ${style_1.CssParam.m.r};\n  border: 1px solid transparent;\n}\n.${exports.messageHistoryClassName}-header-button + .${exports.messageHistoryClassName}-header-button {\n  margin-left: 5px;\n}\n.${exports.messageHistoryClassName}-header-button:hover,\n.${exports.messageHistoryClassName}-item-button:hover {\n  margin-top: calc(${style_1.CssParam.m.updownMargin} * -0.5);\n  margin-bottom: calc(${style_1.CssParam.m.updownMargin} * 0.5);\n  box-shadow: ${style_1.CssParam.m.sdBtm_f};\n  border-color: ${style_1.CssVar.bdc};\n}\n.${exports.messageHistoryClassName}-header-button:hover:active,\n.${exports.messageHistoryClassName}-item-button:hover:active {\n  margin-top: calc(${style_1.CssParam.m.updownMargin} * 0.5);\n  margin-bottom: calc(${style_1.CssParam.m.updownMargin} * -0.5);\n  box-shadow: none;\n}\n.${exports.messageHistoryClassName}-body {\n  padding: 5px;\n}\n.${exports.messageHistoryClassName}-item {\n  border: 1px solid ${style_1.CssVar.bdc};\n  border-radius: ${style_1.CssParam.m.r};\n  padding: 5px;\n}\n.${exports.messageHistoryClassName}-item + .${exports.messageHistoryClassName}-item {\n  margin-top: 5px;\n}\n.${exports.messageHistoryClassName}-item.bh-verified {\n  border-style: dashed;\n}\n.${exports.messageHistoryClassName}-item.bh-warn {\n  border-color: ${style_1.CssVar.warn.bdc};\n  background: ${style_1.CssVar.warn.bg.c};\n}\n.${exports.messageHistoryClassName}-item.bh-err {\n  border-color: ${style_1.CssVar.err.bdc};\n  background: ${style_1.CssVar.err.bg.c};\n}\n`:""}\n${"neumorphism"===e?`\n.${exports.messageHistoryClassName} {\n  box-shadow: ${style_1.CssParam.n.accent.cvxSd};\n  background: ${style_1.CssParam.n.cvxBg};\n  padding: ${style_1.CssParam.n.accent.sdPdd};\n}\n.${exports.messageHistoryClassName}-header {\n  box-shadow: ${style_1.CssParam.n.accent.cvxSd};\n  background: ${style_1.CssParam.n.headerCvxBg};\n  border-radius: ${style_1.CssParam.n.r};\n  height: calc(${style_1.CssVar.size} + ${style_1.CssParam.n.sdPdd} * 2);\n  padding: ${style_1.CssParam.n.sdPdd};\n  margin-bottom: ${style_1.CssParam.n.accent.sdPdd};\n}\n.${exports.messageHistoryClassName}-header-button,\n.${exports.messageHistoryClassName}-item-button {\n  border-radius: ${style_1.CssParam.n.r};\n}\n.${exports.messageHistoryClassName}-header-button + .${exports.messageHistoryClassName}-header-button {\n  margin-left: ${style_1.CssParam.n.sdPdd};\n}\n.${exports.messageHistoryClassName}-header-button:hover,\n.${exports.messageHistoryClassName}-item-button:hover {\n  box-shadow: ${style_1.CssParam.n.cvxSd_f};\n  background: ${style_1.CssParam.n.cvxBg};\n}\n.${exports.messageHistoryClassName}-header-button:hover:active,\n.${exports.messageHistoryClassName}-item-button:hover:active {\n  box-shadow: ${style_1.CssParam.n.ccvSd};\n  background: ${style_1.CssParam.n.ccvBg};\n  padding-top: 1px;\n} \n.${exports.messageHistoryClassName}-item {\n  box-shadow: ${style_1.CssParam.n.cvxSd};\n  background: ${style_1.CssParam.n.cvxBg};\n  border-radius: ${style_1.CssParam.n.r};\n  padding: ${style_1.CssParam.n.sdPdd};\n  margin: ${style_1.CssParam.n.sdPdd};\n}\n.${exports.messageHistoryClassName}-item.bh-verified {\n  box-shadow: ${style_1.CssParam.n.border.ccvSd};\n  background: ${style_1.CssParam.n.ccvBg};\n}\n.${exports.messageHistoryClassName}-item-header .${exports.messageHistoryClassName}-item-button {\n  margin-left: ${style_1.CssParam.n.sdPdd};\n}\n.${exports.messageHistoryClassName}-item.bh-warn {\n  background: ${style_1.CssParam.n.warn.cvxBg};\n}\n.${exports.messageHistoryClassName}-item.bh-warn.bh-verified {\n  background: ${style_1.CssParam.n.warn.ccvBg};\n}\n.${exports.messageHistoryClassName}-item.bh-err {\n  background: ${style_1.CssParam.n.err.cvxBg};\n}\n.${exports.messageHistoryClassName}-item.bh-err.bh-verified {\n  background: ${style_1.CssParam.n.err.ccvBg};\n}\n`:""}\n`}),useMessage=e=>{const s=(0,react_1.useContext)(message_utils_1.MessagesContext),t=(0,style_1.useLayout)(),a=(0,react_1.useCallback)((e=>{if(null==e||0===e.length)return;const t=[];let a="",r="";for(const s of e){s.type===a&&s.title===r||(a=s.type,r=s.title,t.push({type:s.type,title:s.title,messages:[],timestamp:Date.now()}));const e=t[t.length-1];e.messages.push({type:s.type,title:e.title,message:s.message,timestamp:e.timestamp})}s.append(t),s.popup(t)}),[]),r=(0,react_1.useCallback)((e=>{console.log(e),a([{title:"システムエラー",message:"システムエラーが発生しました",type:"err"}])}),[]),n=(0,react_1.useCallback)((()=>{s.clear()}),[]),l=(0,react_1.useCallback)((()=>{s.showHistory()}),[]),o=(0,react_1.useCallback)((()=>{s.closeHistory()}),[]);return(0,react_1.useEffect)((()=>{let e;e=document.getElementById("bhMessageHistory"),null==e&&(e=document.createElement("div"),e.id="bhMessageHistory",document.body.appendChild(e)),react_dom_1.default.render(react_1.default.createElement(style_1.StyleContext.Provider,{value:t},react_1.default.createElement(exports.MessageHistory,null)),e),e=document.getElementById("bhPopupMessage"),null==e&&(e=document.createElement("div"),e.id="bhPopupMessage",document.body.appendChild(e)),react_dom_1.default.render(react_1.default.createElement(style_1.StyleContext.Provider,{value:t},react_1.default.createElement(exports.PopupMessage,null)),e)}),[t]),(0,react_1.useEffect)((()=>{if(e)return s.callbacks.push(e),e(s.getCounts()),()=>{for(let t=0,a=s.callbacks.length;t<a;t++)if(s.callbacks[t]===e){s.callbacks.splice(t,1);break}}}),[e]),{append:a,error:r,clear:n,showHistory:l,closeHistory:o}};exports.default=useMessage;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PopupMessageStyle = exports.MessageHistory = exports.PopupMessage = exports.messageHistoryClassName = exports.popupMessageClassName = void 0;
+const string_utils_1 = __importDefault(require("@bizhermit/basic-utils/dist/string-utils"));
+const react_1 = __importStar(require("react"));
+const react_dom_1 = __importDefault(require("react-dom"));
+const icon_1 = __importStar(require("../graphics/icon"));
+const style_1 = __importStar(require("../layouts/style"));
+const classname_utils_1 = require("../utils/classname-utils");
+const message_utils_1 = require("../utils/message-utils");
+const popup_1 = require("./popup");
+exports.popupMessageClassName = "bh-ppu_msg";
+exports.messageHistoryClassName = "bh-msg_his";
+const PopupMessage = () => {
+    const eref = (0, react_1.useRef)();
+    const rref = (0, react_1.useRef)(0);
+    const mm = (0, react_1.useContext)(message_utils_1.MessagesContext);
+    const [groups, setGroups] = (0, react_1.useState)([]);
+    const click = (0, react_1.useCallback)(() => {
+        eref.current.style.display = "none";
+    }, []);
+    const nodes = () => {
+        const nodes = [];
+        for (let i = groups.length - 1; i >= 0; i--) {
+            const group = groups[i];
+            const cnodes = [];
+            let typeClassName = "";
+            switch (group.type) {
+                case "err":
+                    typeClassName = "bh-err";
+                    break;
+                case "warn":
+                    typeClassName = "bh-warn";
+                    break;
+                default:
+                    typeClassName = "bh-info";
+                    break;
+            }
+            let ckeycount = 0;
+            if (string_utils_1.default.isEmpty(group.title)) {
+                for (const item of group.messages) {
+                    cnodes.push(react_1.default.createElement("div", { key: ckeycount++, className: `${exports.popupMessageClassName}-item` }, item.message));
+                }
+            }
+            else {
+                cnodes.push(react_1.default.createElement("div", { key: ckeycount++, className: `${exports.popupMessageClassName}-item` }, group.title));
+            }
+            nodes.push(react_1.default.createElement("div", { key: i, className: (0, classname_utils_1.className)(`${exports.popupMessageClassName}-group`, typeClassName) },
+                react_1.default.createElement("div", { className: `${exports.popupMessageClassName}-item-icon` },
+                    react_1.default.createElement(icon_1.default, { image: group.type ?? "info" })),
+                react_1.default.createElement("div", { className: `${exports.popupMessageClassName}-body` }, cnodes)));
+        }
+        return nodes;
+    };
+    (0, react_1.useEffect)(() => {
+        if (groups.length > 0) {
+            eref.current?.style.removeProperty("display");
+            // let opacity = 1.0;
+            // if (eref.current) eref.current.style.opacity = String(opacity);
+            // const func = () => {
+            //     if (rev !== messageManager.revistion) return;
+            //     opacity -= 0.1;
+            //     if (opacity < 0) {
+            //         if (eref.current) eref.current.style.display = "none";
+            //         return;        
+            //     }
+            //     if (eref.current) eref.current.style.opacity = String(opacity);
+            //     setTimeout(() => {
+            //         func();
+            //     }, 100);
+            // };
+            let rate = 100;
+            eref.current?.style.removeProperty("width");
+            const curWidth = eref.current?.getBoundingClientRect().width || 0;
+            const rev = ++rref.current;
+            const func = () => {
+                if (rev !== rref.current)
+                    return;
+                rate -= 1;
+                if (rate < 0) {
+                    // if (eref.current) eref.current.style.display = "none";
+                    return;
+                }
+                if (eref.current)
+                    eref.current.style.width = Math.floor(curWidth * (rate / 100)) + "px";
+                setTimeout(() => func(), 5);
+            };
+            setTimeout(() => func(), 5000);
+        }
+    }, [groups]);
+    (0, react_1.useEffect)(() => {
+        mm.popup = (groups) => setGroups(groups ?? []);
+    }, []);
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { ref: eref, className: `${exports.popupMessageClassName}`, onClick: click }, nodes()),
+        exports.PopupMessageStyle,
+        popup_1.PopupStyle));
+};
+exports.PopupMessage = PopupMessage;
+const MessageHistory = () => {
+    const mm = (0, react_1.useContext)(message_utils_1.MessagesContext);
+    const [rev, setRevision] = (0, react_1.useState)(0);
+    const [showed, setShowed] = (0, react_1.useState)(false);
+    const groups = (0, react_1.useRef)([]);
+    const getCounts = (0, react_1.useCallback)(() => {
+        return {
+            total: groups.current.length,
+            info: groups.current.filter((item) => item.type === "info").length,
+            warn: groups.current.filter((item) => item.type === "warn").length,
+            err: groups.current.filter((item) => item.type === "err").length,
+            verified: groups.current.filter((item) => item.verified !== true).length,
+        };
+    }, []);
+    ;
+    const callCallbacks = (0, react_1.useCallback)(() => {
+        const counts = getCounts();
+        mm.callbacks.forEach(cb => cb(counts));
+    }, []);
+    const clearAll = (0, react_1.useCallback)(() => {
+        groups.current.splice(0, groups.current.length);
+        setRevision(c => c + 1);
+        callCallbacks();
+    }, []);
+    const clear = (0, react_1.useCallback)((group) => {
+        for (let i = 0, il = groups.current.length; i < il; i++) {
+            const grp = groups.current[i];
+            if (grp !== group)
+                continue;
+            groups.current.splice(i, 1);
+            break;
+        }
+        setRevision(c => c + 1);
+        callCallbacks();
+    }, []);
+    const close = (0, react_1.useCallback)(() => {
+        setShowed(false);
+    }, []);
+    const { hnodes, bnodes } = (0, react_1.useMemo)(() => {
+        const bnodes = [];
+        if (!showed)
+            return { hnodes: react_1.default.createElement(react_1.default.Fragment, null), bnodes };
+        let icnt = 0, wcnt = 0, ecnt = 0;
+        for (let i = groups.current.length - 1; i >= 0; i--) {
+            const group = groups.current[i];
+            const nodes = [];
+            let typeClassName = "";
+            switch (group.type) {
+                case "err":
+                    ecnt++;
+                    typeClassName = "bh-err";
+                    break;
+                case "warn":
+                    wcnt++;
+                    typeClassName = "bh-warn";
+                    break;
+                default:
+                    icnt++;
+                    typeClassName = "bh-info";
+                    break;
+            }
+            let ckeycount = 0;
+            for (const item of group.messages) {
+                nodes.push(react_1.default.createElement("div", { key: ckeycount++, className: `${exports.messageHistoryClassName}-item-message` }, item.message));
+            }
+            bnodes.push(react_1.default.createElement("div", { key: i, className: (0, classname_utils_1.className)(`${exports.messageHistoryClassName}-item`, typeClassName, group.verified === true ? "bh-verified" : "") },
+                react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-item-header` },
+                    react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-item-icon` },
+                        react_1.default.createElement(icon_1.default, { image: group.type ?? "info" })),
+                    react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-item-title` }, group.title),
+                    react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-item-timestamp` }, mm.getTimeText(group.timestamp)),
+                    react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-item-button`, onClick: () => { clear(group); } },
+                        react_1.default.createElement(icon_1.default, { image: "delete" }))),
+                react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-item-body` }, nodes)));
+        }
+        const hnodes = react_1.default.createElement(react_1.default.Fragment, null,
+            icnt === 0 ? react_1.default.createElement(react_1.default.Fragment, null) : react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-header-icon` },
+                    react_1.default.createElement(icon_1.default, { image: "info" })),
+                react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-header-count` }, icnt)),
+            wcnt === 0 ? react_1.default.createElement(react_1.default.Fragment, null) : react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-header-icon` },
+                    react_1.default.createElement(icon_1.default, { image: "warn" })),
+                react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-header-count` }, wcnt)),
+            ecnt === 0 ? react_1.default.createElement(react_1.default.Fragment, null) : react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-header-icon` },
+                    react_1.default.createElement(icon_1.default, { image: "err" })),
+                react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-header-count` }, ecnt)));
+        return { hnodes, bnodes };
+    }, [rev, showed]);
+    (0, react_1.useEffect)(() => {
+        if (showed) {
+            groups.current.forEach((grp) => grp.verified = true);
+            callCallbacks();
+        }
+    }, [rev, showed]);
+    (0, react_1.useEffect)(() => {
+        if (showed) {
+            window.addEventListener("click", close);
+            return () => {
+                window.removeEventListener("click", close);
+            };
+        }
+    }, [showed]);
+    (0, react_1.useEffect)(() => {
+        mm.showHistory = () => setShowed(true);
+        mm.closeHistory = () => close();
+        mm.append = (gs) => {
+            for (const group of gs) {
+                groups.current.push(group);
+            }
+            setRevision(c => c + 1);
+            callCallbacks();
+        };
+        mm.clear = () => clearAll();
+        mm.getCounts = () => getCounts();
+    }, []);
+    return (showed ?
+        react_1.default.createElement(react_1.default.Fragment, null,
+            react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}`, onClick: e => e.stopPropagation() },
+                react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-header` },
+                    react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-header-button`, onClick: () => setRevision(c => c + 1) },
+                        react_1.default.createElement(icon_1.default, { image: "reload" })),
+                    react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-header-content` }, hnodes),
+                    react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-header-button`, onClick: clearAll },
+                        react_1.default.createElement(icon_1.default, { image: "delete" })),
+                    react_1.default.createElement("div", { className: `${exports.messageHistoryClassName}-header-button`, onClick: close },
+                        react_1.default.createElement(icon_1.default, { image: "close" }))),
+                react_1.default.createElement("div", { className: `${style_1.scrollbarClassName} ${exports.messageHistoryClassName}-body` }, bnodes)),
+            MessageHistoryStyle) : react_1.default.createElement(react_1.default.Fragment, null));
+};
+exports.MessageHistory = MessageHistory;
+exports.PopupMessageStyle = react_1.default.createElement(style_1.default, { id: exports.popupMessageClassName, depsDesign: true, css: ({ design }) => `
+.${exports.popupMessageClassName} {
+  z-index: 2100000001;
+  box-sizing: border-box;
+  position: fixed;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex: none;
+  top: 0px;
+  right: 0px;
+  max-height: 100%;
+  max-width: 50%;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+}
+.${exports.popupMessageClassName}-group {
+  ${style_1.CssPV.flex_r_c}
+  flex: none;
+  max-width: 100%;
+  background: ${style_1.CssVar.bg.c};
+}
+.${exports.popupMessageClassName}-body {
+  ${style_1.CssPV.flex_c}
+  ${style_1.CssPV.f_x}
+}
+.${exports.popupMessageClassName}-item {
+  ${style_1.CssPV.flex_r}
+  flex: none;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 1px 10px 0px 10px;
+  height: ${style_1.CssVar.size};
+}
+${design === "material" ? `
+.${exports.popupMessageClassName} {
+  filter: drop-shadow(0px 8px 5px ${style_1.CssVar.shadow.dc});
+  top: 5px;
+  right: 5px;
+}
+.${exports.popupMessageClassName}-group {
+  border: 3px double ${style_1.CssVar.bdc};
+  border-radius: ${style_1.CssParam.m.r};
+  min-width: 150px;
+}
+.${exports.popupMessageClassName}-group.bh-warn {
+  background: ${style_1.CssVar.warn.bg.c};
+  border-color: ${style_1.CssVar.warn.bdc};
+}
+.${exports.popupMessageClassName}-group.bh-err {
+  background: ${style_1.CssVar.err.bg.c};
+  border-color: ${style_1.CssVar.err.bdc};
+}
+` : ""}
+${design === "neumorphism" ? `
+.${exports.popupMessageClassName} {
+  filter: drop-shadow(0px 8px 5px ${style_1.CssVar.shadow.dc});
+  top: 5px;
+  right: 5px;
+}
+.${exports.popupMessageClassName}-group {
+  border-radius: ${style_1.CssParam.n.r};
+  min-width: 150px;
+  box-shadow: ${style_1.CssParam.n.border.cvxSd};
+  background: ${style_1.CssParam.n.cvxBg};
+  padding: ${style_1.CssParam.n.r};
+}
+.${exports.popupMessageClassName}-group.bh-warn {
+  background: ${style_1.CssParam.n.warn.cvxBg};
+}
+.${exports.popupMessageClassName}-group.bh-err {
+  background: ${style_1.CssParam.n.err.cvxBg};
+}
+` : ""}
+` });
+const MessageHistoryStyle = react_1.default.createElement(style_1.default, { id: exports.messageHistoryClassName, depsDesign: true, css: ({ design }) => `
+.${exports.messageHistoryClassName} {
+  z-index: 2100000000;
+  box-sizing: border-box;
+  position: fixed;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex: none;
+  top: 0px;
+  right: 0px;
+  height: 100%;
+  min-width: 400px;
+  max-width: 50%;
+  background: ${style_1.CssVar.bg.c};
+  overflow: hidden;
+}
+.${exports.messageHistoryClassName}-header {
+  ${style_1.CssPV.flex_r}
+  flex: none;
+  height: ${style_1.CssVar.size};
+  width: 100%;
+  overflow: hidden;
+}
+.${exports.messageHistoryClassName}-header-content {
+  ${style_1.CssPV.flex_r}
+  ${style_1.CssPV.f_x}
+}
+.${exports.messageHistoryClassName}-header-button,
+.${exports.messageHistoryClassName}-header-icon,
+.${exports.messageHistoryClassName}-item-button {
+  box-sizing: border-box;
+  position: relative;
+  height: ${style_1.CssVar.size};
+  width: ${style_1.CssVar.size};
+  flex: none;
+}
+.${exports.messageHistoryClassName}-header-button,
+.${exports.messageHistoryClassName}-item-button {
+  cursor: pointer;
+}
+.${exports.messageHistoryClassName}-header-button > .${icon_1.iconClassName},
+.${exports.messageHistoryClassName}-item-button > .${icon_1.iconClassName} {
+  height: 100%;
+  width: 100%;
+}
+.${exports.messageHistoryClassName}-header-icon {
+  margin-left: 10px
+}
+.${exports.messageHistoryClassName}-header-count {
+  padding: 2px 0px 0px 3px;
+}
+.${exports.messageHistoryClassName}-body {
+  ${style_1.CssPV.flex}
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  ${style_1.CssPV.f_y}
+}
+.${exports.messageHistoryClassName}-item {
+  ${style_1.CssPV.flex}
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex: none;
+  max-width: 100%;
+}
+.${exports.messageHistoryClassName}-item-header {
+  ${style_1.CssPV.flex_r}
+  flex: none;
+  width: 100%;
+}
+.${exports.messageHistoryClassName}-item-title {
+  ${style_1.CssPV.flex_r}
+  ${style_1.CssPV.f_x}
+  padding: 1px 0px 0px 5px;
+}
+.${exports.messageHistoryClassName}-item-timestamp {
+  box-sizing: border-box;
+  font-size: 10px;
+  padding: 2px 3px 0px 3px;
+}
+.${exports.messageHistoryClassName}-item-body {
+  ${style_1.CssPV.flex_c}
+  padding-left: calc(${style_1.CssVar.size} / 2);
+}
+.${exports.messageHistoryClassName}-item-message {
+  box-sizing: border-box;
+  white-space: wrap;
+  max-width: 100%;
+}
+${design === "material" ? `
+.${exports.messageHistoryClassName} {
+  border-left: 1px solid ${style_1.CssVar.bdc};
+  box-shadow: ${style_1.CssParam.m.sdLeft};
+}
+.${exports.messageHistoryClassName}-header {
+  border-bottom: 1px solid ${style_1.CssVar.bdc};
+  box-shadow: ${style_1.CssParam.m.sdBtm};
+  height: calc(${style_1.CssVar.size} + ${style_1.CssParam.m.sdPdd} * 2);
+  padding: ${style_1.CssParam.m.sdPdd};
+  margin-bottom: ${style_1.CssParam.m.sdPdd};
+  background: ${style_1.CssVar.bg.c_h};
+}
+.${exports.messageHistoryClassName}-header-button,
+.${exports.messageHistoryClassName}-item-button {
+  border-radius: ${style_1.CssParam.m.r};
+  border: 1px solid transparent;
+}
+.${exports.messageHistoryClassName}-header-button + .${exports.messageHistoryClassName}-header-button {
+  margin-left: 5px;
+}
+.${exports.messageHistoryClassName}-header-button:hover,
+.${exports.messageHistoryClassName}-item-button:hover {
+  margin-top: calc(${style_1.CssParam.m.updownMargin} * -0.5);
+  margin-bottom: calc(${style_1.CssParam.m.updownMargin} * 0.5);
+  box-shadow: ${style_1.CssParam.m.sdBtm_f};
+  border-color: ${style_1.CssVar.bdc};
+}
+.${exports.messageHistoryClassName}-header-button:hover:active,
+.${exports.messageHistoryClassName}-item-button:hover:active {
+  margin-top: calc(${style_1.CssParam.m.updownMargin} * 0.5);
+  margin-bottom: calc(${style_1.CssParam.m.updownMargin} * -0.5);
+  box-shadow: none;
+}
+.${exports.messageHistoryClassName}-body {
+  padding: 5px;
+}
+.${exports.messageHistoryClassName}-item {
+  border: 1px solid ${style_1.CssVar.bdc};
+  border-radius: ${style_1.CssParam.m.r};
+  padding: 5px;
+}
+.${exports.messageHistoryClassName}-item + .${exports.messageHistoryClassName}-item {
+  margin-top: 5px;
+}
+.${exports.messageHistoryClassName}-item.bh-verified {
+  border-style: dashed;
+}
+.${exports.messageHistoryClassName}-item.bh-warn {
+  border-color: ${style_1.CssVar.warn.bdc};
+  background: ${style_1.CssVar.warn.bg.c};
+}
+.${exports.messageHistoryClassName}-item.bh-err {
+  border-color: ${style_1.CssVar.err.bdc};
+  background: ${style_1.CssVar.err.bg.c};
+}
+` : ""}
+${design === "neumorphism" ? `
+.${exports.messageHistoryClassName} {
+  box-shadow: ${style_1.CssParam.n.accent.cvxSd};
+  background: ${style_1.CssParam.n.cvxBg};
+  padding: ${style_1.CssParam.n.accent.sdPdd};
+}
+.${exports.messageHistoryClassName}-header {
+  box-shadow: ${style_1.CssParam.n.accent.cvxSd};
+  background: ${style_1.CssParam.n.headerCvxBg};
+  border-radius: ${style_1.CssParam.n.r};
+  height: calc(${style_1.CssVar.size} + ${style_1.CssParam.n.sdPdd} * 2);
+  padding: ${style_1.CssParam.n.sdPdd};
+  margin-bottom: ${style_1.CssParam.n.accent.sdPdd};
+}
+.${exports.messageHistoryClassName}-header-button,
+.${exports.messageHistoryClassName}-item-button {
+  border-radius: ${style_1.CssParam.n.r};
+}
+.${exports.messageHistoryClassName}-header-button + .${exports.messageHistoryClassName}-header-button {
+  margin-left: ${style_1.CssParam.n.sdPdd};
+}
+.${exports.messageHistoryClassName}-header-button:hover,
+.${exports.messageHistoryClassName}-item-button:hover {
+  box-shadow: ${style_1.CssParam.n.cvxSd_f};
+  background: ${style_1.CssParam.n.cvxBg};
+}
+.${exports.messageHistoryClassName}-header-button:hover:active,
+.${exports.messageHistoryClassName}-item-button:hover:active {
+  box-shadow: ${style_1.CssParam.n.ccvSd};
+  background: ${style_1.CssParam.n.ccvBg};
+  padding-top: 1px;
+} 
+.${exports.messageHistoryClassName}-item {
+  box-shadow: ${style_1.CssParam.n.cvxSd};
+  background: ${style_1.CssParam.n.cvxBg};
+  border-radius: ${style_1.CssParam.n.r};
+  padding: ${style_1.CssParam.n.sdPdd};
+  margin: ${style_1.CssParam.n.sdPdd};
+}
+.${exports.messageHistoryClassName}-item.bh-verified {
+  box-shadow: ${style_1.CssParam.n.border.ccvSd};
+  background: ${style_1.CssParam.n.ccvBg};
+}
+.${exports.messageHistoryClassName}-item-header .${exports.messageHistoryClassName}-item-button {
+  margin-left: ${style_1.CssParam.n.sdPdd};
+}
+.${exports.messageHistoryClassName}-item.bh-warn {
+  background: ${style_1.CssParam.n.warn.cvxBg};
+}
+.${exports.messageHistoryClassName}-item.bh-warn.bh-verified {
+  background: ${style_1.CssParam.n.warn.ccvBg};
+}
+.${exports.messageHistoryClassName}-item.bh-err {
+  background: ${style_1.CssParam.n.err.cvxBg};
+}
+.${exports.messageHistoryClassName}-item.bh-err.bh-verified {
+  background: ${style_1.CssParam.n.err.ccvBg};
+}
+` : ""}
+` });
+const useMessage = (callback) => {
+    const mm = (0, react_1.useContext)(message_utils_1.MessagesContext);
+    const layout = (0, style_1.useLayout)();
+    const append = (0, react_1.useCallback)((messages) => {
+        if (messages == null || messages.length === 0)
+            return;
+        const groups = [];
+        let type = "", title = "";
+        for (const msg of messages) {
+            if (msg.type !== type || msg.title !== title) {
+                type = msg.type;
+                title = msg.title;
+                groups.push({
+                    type: msg.type,
+                    title: msg.title,
+                    messages: [],
+                    timestamp: Date.now(),
+                });
+            }
+            const grp = groups[groups.length - 1];
+            grp.messages.push({
+                type: msg.type,
+                title: grp.title,
+                message: msg.message,
+                timestamp: grp.timestamp,
+            });
+        }
+        mm.append(groups);
+        mm.popup(groups);
+    }, []);
+    const error = (0, react_1.useCallback)((e) => {
+        console.log(e);
+        append([{
+                title: "システムエラー",
+                message: "システムエラーが発生しました",
+                type: "err",
+            }]);
+    }, []);
+    const clear = (0, react_1.useCallback)(() => {
+        mm.clear();
+    }, []);
+    const showHistory = (0, react_1.useCallback)(() => {
+        mm.showHistory();
+    }, []);
+    const closeHistory = (0, react_1.useCallback)(() => {
+        mm.closeHistory();
+    }, []);
+    (0, react_1.useEffect)(() => {
+        let elem;
+        elem = document.getElementById("bhMessageHistory");
+        if (elem == null) {
+            elem = document.createElement("div");
+            elem.id = "bhMessageHistory";
+            document.body.appendChild(elem);
+        }
+        react_dom_1.default.render(react_1.default.createElement(style_1.StyleContext.Provider, { value: layout },
+            react_1.default.createElement(exports.MessageHistory, null)), elem);
+        elem = document.getElementById("bhPopupMessage");
+        if (elem == null) {
+            elem = document.createElement("div");
+            elem.id = "bhPopupMessage";
+            document.body.appendChild(elem);
+        }
+        react_dom_1.default.render(react_1.default.createElement(style_1.StyleContext.Provider, { value: layout },
+            react_1.default.createElement(exports.PopupMessage, null)), elem);
+    }, [layout]);
+    (0, react_1.useEffect)(() => {
+        if (callback) {
+            mm.callbacks.push(callback);
+            callback(mm.getCounts());
+            return () => {
+                for (let i = 0, il = mm.callbacks.length; i < il; i++) {
+                    if (mm.callbacks[i] !== callback)
+                        continue;
+                    mm.callbacks.splice(i, 1);
+                    break;
+                }
+            };
+        }
+    }, [callback]);
+    return { append, error, clear, showHistory, closeHistory };
+};
+exports.default = useMessage;

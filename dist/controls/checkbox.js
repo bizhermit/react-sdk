@@ -1,1 +1,143 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,t,r,s){void 0===s&&(s=r),Object.defineProperty(e,s,{enumerable:!0,get:function(){return t[r]}})}:function(e,t,r,s){void 0===s&&(s=r),e[s]=t[r]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)"default"!==r&&Object.prototype.hasOwnProperty.call(e,r)&&__createBinding(t,e,r);return __setModuleDefault(t,e),t},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.CheckBoxStyle=exports.checkBoxClassName=void 0;const react_1=__importStar(require("react")),controller_1=require("../hooks/controller"),prop_1=__importDefault(require("../hooks/prop")),value_1=__importDefault(require("../hooks/value")),input_1=__importStar(require("../layouts/input")),style_1=__importStar(require("../layouts/style")),classname_utils_1=require("../utils/classname-utils"),dom_utils_1=require("../utils/dom-utils");exports.checkBoxClassName="bh-ckb";const CheckBox=e=>{const t=(0,react_1.useRef)(),r=(0,prop_1.default)(e.checkedValue??!0),s=(0,prop_1.default)(e.uncheckedValue??!1),{getValue:a,setValue:o}=(0,value_1.default)(e,{}),n=a()===r.current,l=()=>{!0!==e.disabled&&o(n?s.current:r.current)};return(0,controller_1.initController)(e.controller,(e=>{e.focus=()=>(t.current?.focus(),e),e.blur=()=>(t.current?.blur(),e),e.isChecked=()=>a()===r.current,e.setChecked=t=>(o(t?r.current:s.current),e),e.getValue=()=>a(),e.setValue=t=>(t===r.current?o(t):o(s.current),e)})),react_1.default.createElement(react_1.default.Fragment,null,react_1.default.createElement("div",{ref:t,style:e.style,className:(0,classname_utils_1.className)(input_1.InputClassNames.wrap,`${exports.checkBoxClassName}`,e.className),title:e.title,tabIndex:!0===e.disabled?null:e.tabIndex??0,"data-disabled":!0===e.disabled,onClick:l,onFocus:()=>{e.focus?.(a())},onBlur:()=>{e.blur?.(a())},onKeyDown:e=>{(0,dom_utils_1.pressPositiveKey)(e,(()=>l()),!0)}},react_1.default.createElement("div",{className:`${exports.checkBoxClassName}-body`,"data-disabled":!0===e.disabled,"data-required":e.required,"data-checked":n}),null==e.children?react_1.default.createElement(react_1.default.Fragment,null):react_1.default.createElement("div",{className:input_1.InputClassNames.lbl},e.children)),input_1.default,exports.CheckBoxStyle)};exports.default=CheckBox,exports.CheckBoxStyle=react_1.default.createElement(style_1.default,{id:exports.checkBoxClassName,notDepsColor:!0,css:({design:e})=>`\n.${exports.checkBoxClassName} {\n  width: unset;\n}\n.${exports.checkBoxClassName}-body {\n  box-sizing: border-box;\n  position: relative;\n  overflow: hidden;\n  height: ${style_1.CssVar.size};\n  width: ${style_1.CssVar.size};\n}\n.${exports.checkBoxClassName}[data-disabled="false"],\n.${exports.checkBoxClassName}-body[data-disabled="false"] {\n  cursor: pointer;\n}\n.${exports.checkBoxClassName}-body::before,\n.${exports.checkBoxClassName}-body::after {\n  box-sizing: border-box;\n  position: absolute;\n  content: "";\n}\n.${exports.checkBoxClassName}-body::before {\n  height: 80%;\n  width: 80%;\n  top: 10%;\n  left: 10%;\n}\n.${exports.checkBoxClassName}-body[data-disabled="true"]::before {\n  opacity: 0.6;\n}\n.${exports.checkBoxClassName}-body[data-checked="true"]::after {\n  height: 60%;\n  width: 40%;\n  top: 10%;\n  left: 32%;\n  transform: rotate(40deg);\n  border-bottom: 2px solid ${style_1.CssVar.fc};\n  border-right: 2px solid ${style_1.CssVar.fc};\n}\n.${exports.checkBoxClassName} > .${input_1.InputClassNames.lbl} {\n  padding-left: 3px;\n}\n.${exports.checkBoxClassName}[data-disabled="false"] > .${input_1.InputClassNames.lbl} {\n  user-select: none;\n}\n${"material"===e?`\n.${exports.checkBoxClassName}-body::before {\n  border-radius: ${style_1.CssParam.m.r};\n  border: 1px solid ${style_1.CssVar.bdc};\n}\n`:""}\n${"neumorphism"===e?`\n.${exports.checkBoxClassName}-body::before {\n  border-radius: ${style_1.CssParam.n.r};\n  box-shadow: ${style_1.CssParam.n.ccvSd};\n  background: ${style_1.CssParam.n.ccvBg};\n}\n.${exports.checkBoxClassName}-body[data-disabled="true"]::before {\n  background: transparent;\n  box-shadow: ${style_1.CssParam.n.border.ccvSd};\n}\n`:""}\n`});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CheckBoxStyle = exports.checkBoxClassName = void 0;
+const react_1 = __importStar(require("react"));
+const controller_1 = require("../hooks/controller");
+const prop_1 = __importDefault(require("../hooks/prop"));
+const value_1 = __importDefault(require("../hooks/value"));
+const input_1 = __importStar(require("../layouts/input"));
+const style_1 = __importStar(require("../layouts/style"));
+const classname_utils_1 = require("../utils/classname-utils");
+const dom_utils_1 = require("../utils/dom-utils");
+exports.checkBoxClassName = "bh-ckb";
+;
+const CheckBox = (props) => {
+    const ref = (0, react_1.useRef)();
+    const checkedValue = (0, prop_1.default)((props.checkedValue ?? true));
+    const uncheckedValue = (0, prop_1.default)((props.uncheckedValue ?? false));
+    const { getValue, setValue } = (0, value_1.default)(props, {});
+    const isChecked = getValue() === checkedValue.current;
+    const toggleCheck = () => {
+        if (props.disabled === true)
+            return;
+        setValue(isChecked ? uncheckedValue.current : checkedValue.current);
+    };
+    (0, controller_1.initController)(props.controller, (con) => {
+        con.focus = () => {
+            ref.current?.focus();
+            return con;
+        };
+        con.blur = () => {
+            ref.current?.blur();
+            return con;
+        };
+        con.isChecked = () => getValue() === checkedValue.current;
+        con.setChecked = (checked) => {
+            setValue(checked ? checkedValue.current : uncheckedValue.current);
+            return con;
+        };
+        con.getValue = () => getValue();
+        con.setValue = (v) => {
+            if (v === checkedValue.current)
+                setValue(v);
+            else
+                setValue(uncheckedValue.current);
+            return con;
+        };
+    });
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { ref: ref, style: props.style, className: (0, classname_utils_1.className)(input_1.InputClassNames.wrap, `${exports.checkBoxClassName}`, props.className), title: props.title, tabIndex: props.disabled === true ? null : props.tabIndex ?? 0, "data-disabled": props.disabled === true, onClick: toggleCheck, onFocus: () => { props.focus?.(getValue()); }, onBlur: () => { props.blur?.(getValue()); }, onKeyDown: (e) => { (0, dom_utils_1.pressPositiveKey)(e, () => toggleCheck(), true); } },
+            react_1.default.createElement("div", { className: `${exports.checkBoxClassName}-body`, "data-disabled": props.disabled === true, "data-required": props.required, "data-checked": isChecked }),
+            props.children == null ? react_1.default.createElement(react_1.default.Fragment, null) : react_1.default.createElement("div", { className: input_1.InputClassNames.lbl }, props.children)),
+        input_1.default,
+        exports.CheckBoxStyle));
+};
+exports.default = CheckBox;
+exports.CheckBoxStyle = react_1.default.createElement(style_1.default, { id: exports.checkBoxClassName, depsDesign: true, css: ({ design }) => `
+.${exports.checkBoxClassName} {
+  width: unset;
+}
+.${exports.checkBoxClassName}-body {
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  height: ${style_1.CssVar.size};
+  width: ${style_1.CssVar.size};
+}
+.${exports.checkBoxClassName}[data-disabled="false"],
+.${exports.checkBoxClassName}-body[data-disabled="false"] {
+  cursor: pointer;
+}
+.${exports.checkBoxClassName}-body::before,
+.${exports.checkBoxClassName}-body::after {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+}
+.${exports.checkBoxClassName}-body::before {
+  height: 80%;
+  width: 80%;
+  top: 10%;
+  left: 10%;
+}
+.${exports.checkBoxClassName}-body[data-disabled="true"]::before {
+  opacity: 0.6;
+}
+.${exports.checkBoxClassName}-body[data-checked="true"]::after {
+  height: 60%;
+  width: 40%;
+  top: 10%;
+  left: 32%;
+  transform: rotate(40deg);
+  border-bottom: 2px solid ${style_1.CssVar.fc};
+  border-right: 2px solid ${style_1.CssVar.fc};
+}
+.${exports.checkBoxClassName} > .${input_1.InputClassNames.lbl} {
+  padding-left: 3px;
+}
+.${exports.checkBoxClassName}[data-disabled="false"] > .${input_1.InputClassNames.lbl} {
+  user-select: none;
+}
+${design === "material" ? `
+.${exports.checkBoxClassName}-body::before {
+  border-radius: ${style_1.CssParam.m.r};
+  border: 1px solid ${style_1.CssVar.bdc};
+}
+.${exports.checkBoxClassName}-body[data-disabled="false"]::before {
+  background: ${style_1.CssVar.bg.dc};
+}
+` : ""}
+${design === "neumorphism" ? `
+.${exports.checkBoxClassName}-body::before {
+  border-radius: ${style_1.CssParam.n.r};
+  box-shadow: ${style_1.CssParam.n.ccvSd};
+  background: ${style_1.CssParam.n.ccvBg};
+}
+.${exports.checkBoxClassName}-body[data-disabled="true"]::before {
+  background: transparent;
+  box-shadow: ${style_1.CssParam.n.border.ccvSd};
+}
+` : ""}
+` });

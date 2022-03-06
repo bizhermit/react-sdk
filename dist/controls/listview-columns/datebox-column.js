@@ -1,1 +1,106 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,t,l,a){void 0===a&&(a=l),Object.defineProperty(e,a,{enumerable:!0,get:function(){return t[l]}})}:function(e,t,l,a){void 0===a&&(a=l),e[a]=t[l]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var l in e)"default"!==l&&Object.prototype.hasOwnProperty.call(e,l)&&__createBinding(t,e,l);return __setModuleDefault(t,e),t},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),exports.ListViewDateBoxColumnStyle=exports.listViewDateBoxColumnClassName=void 0;const datetime_utils_1=__importDefault(require("@bizhermit/basic-utils/dist/datetime-utils")),react_1=__importStar(require("react")),react_dom_1=__importDefault(require("react-dom")),controller_1=__importDefault(require("../../hooks/controller")),input_column_1=__importStar(require("../../layouts/input-column")),style_1=__importStar(require("../../layouts/style")),datebox_1=__importDefault(require("../datebox")),listview_1=require("../listview");exports.listViewDateBoxColumnClassName="bh-lv_c-dtb";const ListViewDateBoxColumn=e=>{const t=e.labelDataName??`_lbl_${e.name}`,l=null==e.labelFormat?e=>datetime_utils_1.default.format(e,"yyyy/MM/dd"):"string"==typeof e.labelFormat?t=>datetime_utils_1.default.format(t,e.labelFormat):e.labelFormat,a=e=>l(datetime_utils_1.default.convert(e));let i={value:null};return{...e,name:t,width:e.width??150,cellTextAlign:e.cellTextAlign??"center",initialize:()=>(0,listview_1.createListViewEditColumnElement)(),cellInitialize:(e,t)=>{e.element.classList.add(input_column_1.listViewInputColumnClassName,exports.listViewDateBoxColumnClassName);const l=(0,listview_1.cloneListViewEditColumnElement)(t);l.wrapElem.appendChild(l.lblElem),e.element.appendChild(l.wrapElem),e.contentElements.push(l.lblElem)},bindedItems:l=>{l.forEach((l=>l[t]=a(l[e.name])))},_beginEdit:({target:l,editElement:a,styleCtx:o})=>{!0!==e.disabled&&react_dom_1.default.render(react_1.default.createElement(style_1.StyleContext.Provider,{value:o},react_1.default.createElement(DateBoxColumn,{bind:i={value:l.data[e.name]??null},options:e.dateBoxOptions})),a,(()=>{e.beganEdit?.({value:l.data[e.name],label:l.data[t]},l)}))},_endEdit:(a,o,n)=>{const r={value:a.data[e.name],label:a.data[t]},u=i.value;let d="";if(o){const o=i.value;a.data[e.name]=o,a.data[t]=d=null==o||""===o?"":"string"==typeof l?datetime_utils_1.default.format(o,l):l(o)}react_dom_1.default.unmountComponentAtNode(n),e.endedEdit&&e.endedEdit({before:r,after:o?{value:u,label:d}:r},a,o)},editedRowData:e.optimizeEditedRowData?l=>{l[t]=a(l[e.name]),e.editedRowData&&e.editedRowData(l)}:e.editedRowData,jsxStyle:react_1.default.createElement(react_1.default.Fragment,null,input_column_1.default,exports.ListViewDateBoxColumnStyle)}};exports.default=ListViewDateBoxColumn;const DateBoxColumn=({bind:e,options:t})=>{const l=(0,controller_1.default)();return(0,react_1.useEffect)((()=>{l.focus()}),[]),react_1.default.createElement(datebox_1.default,{controller:l,name:"value",bind:e,style:{height:"100%",width:"100%"},pulldownButton:!1,...t})};exports.ListViewDateBoxColumnStyle=react_1.default.createElement(style_1.default,{id:exports.listViewDateBoxColumnClassName,notDepsColor:!0,notDepsDesign:!0,css:()=>"\n"});
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.listViewDateBoxColumnClassName = void 0;
+const datetime_utils_1 = __importDefault(require("@bizhermit/basic-utils/dist/datetime-utils"));
+const react_1 = __importStar(require("react"));
+const react_dom_1 = __importDefault(require("react-dom"));
+const controller_1 = __importDefault(require("../../hooks/controller"));
+const input_column_1 = __importStar(require("../../layouts/input-column"));
+const style_1 = require("../../layouts/style");
+const datebox_1 = __importDefault(require("../datebox"));
+const listview_1 = require("../listview");
+exports.listViewDateBoxColumnClassName = "bh-lv_c-dtb";
+const ListViewDateBoxColumn = (props) => {
+    const labelDataName = props.labelDataName ?? `_lbl_${props.name}`;
+    const format = props.labelFormat == null ? (date) => datetime_utils_1.default.format(date, "yyyy/MM/dd")
+        : (typeof props.labelFormat === "string" ? (date) => datetime_utils_1.default.format(date, props.labelFormat) : props.labelFormat);
+    const convertToLabel = (value) => {
+        return format(datetime_utils_1.default.convert(value));
+    };
+    let bind = { value: null };
+    return {
+        ...props,
+        name: labelDataName,
+        width: props.width ?? 150,
+        cellTextAlign: props.cellTextAlign ?? "center",
+        initialize: () => {
+            return (0, listview_1.createListViewEditColumnElement)();
+        },
+        cellInitialize: (cell, initParams) => {
+            cell.element.classList.add(input_column_1.listViewInputColumnClassName, exports.listViewDateBoxColumnClassName);
+            const elems = (0, listview_1.cloneListViewEditColumnElement)(initParams);
+            elems.wrapElem.appendChild(elems.lblElem);
+            cell.element.appendChild(elems.wrapElem);
+            cell.contentElements.push(elems.lblElem);
+        },
+        rowDataInitialize: (data) => {
+            data[labelDataName] = convertToLabel(data[props.name]);
+        },
+        _beginEdit: ({ target, editElement, styleCtx }) => {
+            if (props.disabled === true)
+                return;
+            react_dom_1.default.render(react_1.default.createElement(style_1.StyleContext.Provider, { value: styleCtx },
+                react_1.default.createElement(DateBoxColumn, { bind: bind = { value: target.data[props.name] ?? null }, options: props.dateBoxOptions })), editElement, () => {
+                props.beganEdit?.({ value: target.data[props.name], label: target.data[labelDataName] }, target);
+            });
+        },
+        _endEdit: (target, commit, editElement) => {
+            const bvals = { value: target.data[props.name], label: target.data[labelDataName] }, aval = bind.value;
+            let albl = "";
+            if (commit) {
+                const val = bind.value;
+                target.data[props.name] = val;
+                if (val == null || val === "") {
+                    target.data[labelDataName] = albl = "";
+                }
+                else {
+                    if (typeof format === "string") {
+                        target.data[labelDataName] = albl = datetime_utils_1.default.format(val, format);
+                    }
+                    else {
+                        target.data[labelDataName] = albl = format(val);
+                    }
+                }
+            }
+            react_dom_1.default.unmountComponentAtNode(editElement);
+            if (props.endedEdit)
+                props.endedEdit({ before: bvals, after: commit ? { value: aval, label: albl } : bvals }, target, commit);
+        },
+        editedRowData: props.optimizeEditedRowData ? (data) => {
+            data[labelDataName] = convertToLabel(data[props.name]);
+            if (props.editedRowData)
+                props.editedRowData(data);
+        } : props.editedRowData,
+        jsxStyle: input_column_1.default,
+    };
+};
+exports.default = ListViewDateBoxColumn;
+const DateBoxColumn = ({ bind, options }) => {
+    const con = (0, controller_1.default)();
+    (0, react_1.useEffect)(() => {
+        con.focus();
+    }, []);
+    return react_1.default.createElement(datebox_1.default, { controller: con, name: "value", bind: bind, style: { height: "100%", width: "100%" }, pulldownButton: false, ...options });
+};
